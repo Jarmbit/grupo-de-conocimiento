@@ -1,0 +1,101 @@
+---
+import { pillars } from "../data/content";
+---
+
+<section id="sobre" data-screen-label="Sobre nosotros" class="about">
+  <div class="intro">
+    <span class="kicker">Nuestra misión</span>
+    <h2>Fe y razón caminan juntas</h2>
+    <p>
+      Creemos que la evidencia histórica, el testimonio personal y el encuentro comunitario son
+      caminos complementarios hacia Dios. Nuestro trabajo acompaña, con serenidad y respeto a las
+      enseñanzas de la Iglesia, a quienes buscan una fe fundamentada.
+    </p>
+  </div>
+  <div class="grid">
+    {
+      pillars.map((pillar) => (
+        <div class="card">
+          <span class="icon" />
+          <h3>{pillar.title}</h3>
+          <p>{pillar.text}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .about {
+    padding: clamp(56px, 10vw, 110px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .intro p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    background: var(--bg-alt);
+    border-radius: 14px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    flex: none;
+  }
+
+  .card h3 {
+    font-family: "Lora", serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .card p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+</style>

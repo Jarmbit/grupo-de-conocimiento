@@ -1,0 +1,150 @@
+---
+import { events, showEventSpots } from "../data/content";
+---
+
+<section id="eventos" data-screen-label="Eventos" class="events">
+  <div class="intro">
+    <span class="kicker">Agenda</span>
+    <h2>Próximos eventos</h2>
+    <p>Reserva tu plaza; el aforo es limitado.</p>
+  </div>
+  <div class="list">
+    {
+      events.map((ev) => (
+        <div class="row">
+          <div class="date">
+            <span class="month">{ev.month}</span>
+            <span class="day">{ev.day}</span>
+          </div>
+          <div class="details">
+            <h3>{ev.title}</h3>
+            <span class="location">{ev.location}</span>
+            {showEventSpots && <span class="spots">{ev.spots}</span>}
+          </div>
+          {/* TODO: enlazar a un sistema de reservas real (Calendly, formulario propio, Eventbrite...) */}
+          <a href="#" class="btn">Reservar plaza</a>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .events {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    color: var(--ink-muted);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 26px 28px;
+    background: var(--bg-alt);
+    border-radius: 14px;
+  }
+
+  .date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 12px 0;
+    border: 1px solid var(--border-subtle);
+    width: 100px;
+    flex: none;
+  }
+
+  .month {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .day {
+    font-family: "Lora", serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 200px;
+  }
+
+  .details h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .location {
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .spots {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .btn {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 100px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  .btn:hover {
+    background: var(--navy-dark);
+  }
+</style>

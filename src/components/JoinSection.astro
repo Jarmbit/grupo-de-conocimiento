@@ -1,0 +1,247 @@
+---
+import { socials } from "../data/content";
+---
+
+<section id="unete" data-screen-label="Únete" class="join">
+  <div class="intro">
+    <span class="kicker">Comunidad</span>
+    <h2>Mantente cerca</h2>
+    <p>Recibe testimonios, avisos de eventos y contenido nuevo donde prefieras.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <span class="icon whatsapp"></span>
+      <h3>WhatsApp</h3>
+      <p>Únete al canal de difusión para recibir avisos directos.</p>
+      <!-- TODO: sustituir por el enlace real al canal de WhatsApp de la asociación -->
+      <a href="#" class="btn">Unirme al canal</a>
+    </div>
+    <div class="card">
+      <span class="icon instagram"></span>
+      <h3>Instagram</h3>
+      <p>Testimonios cortos, avisos y detrás de cámaras de cada evento.</p>
+      <!-- TODO: sustituir por el enlace real al perfil de Instagram de la asociación -->
+      <a href="#" class="btn">Seguir</a>
+    </div>
+    <div class="card">
+      <span class="icon email"></span>
+      <h3>Boletín por email</h3>
+      <p>Un resumen mensual con noticias, vídeos y próximos eventos.</p>
+      <!-- TODO: conectar a un servicio real de email marketing (Mailchimp, Brevo...) -->
+      <form id="subscribe-form" novalidate>
+        <div class="field-row">
+          <input
+            type="email"
+            id="subscribe-email"
+            name="email"
+            placeholder="tu@email.com"
+            required
+          />
+          <button type="submit">Suscribirme</button>
+        </div>
+        <p id="subscribe-confirmation" class="confirmation" hidden>
+          ¡Gracias! Revisa tu correo para confirmar.
+        </p>
+      </form>
+    </div>
+  </div>
+  <div class="socials">
+    <span class="socials-label">Síguenos también en:</span>
+    {
+      socials.map((s) => (
+        <a href={s.href} class="social-icon" aria-label={s.label}>
+          {s.initial}
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .join {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    color: var(--ink-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 30px;
+    border-radius: 14px;
+    background: var(--bg-alt);
+  }
+
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .icon.whatsapp {
+    background: #25d366;
+  }
+
+  .icon.instagram {
+    background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  }
+
+  .icon.email {
+    background: var(--gold);
+  }
+
+  .card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+
+  .btn {
+    align-self: flex-start;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 11px 20px;
+    border-radius: 100px;
+    transition: background 0.15s ease;
+  }
+
+  .btn:hover {
+    background: var(--navy-dark);
+  }
+
+  .field-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  input[type="email"] {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 14px;
+    border-radius: 100px;
+    border: 1px solid #d6dada;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  form button {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 11px 20px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  form button:hover {
+    background: var(--navy-dark);
+  }
+
+  .confirmation {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy-dark);
+    margin-top: 12px;
+  }
+
+  .socials {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+  }
+
+  .socials-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  .social-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--navy-dark);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.15s ease;
+  }
+
+  .social-icon:hover {
+    background: var(--navy);
+  }
+</style>
+
+<script>
+  const form = document.getElementById("subscribe-form") as HTMLFormElement | null;
+  const emailInput = document.getElementById("subscribe-email") as HTMLInputElement | null;
+  const confirmation = document.getElementById("subscribe-confirmation");
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = emailInput?.value.trim() ?? "";
+    if (!email || !emailInput?.checkValidity()) {
+      emailInput?.reportValidity();
+      return;
+    }
+
+    // TODO: sustituir por una llamada real a un servicio de email marketing.
+    form.querySelector(".field-row")?.setAttribute("hidden", "");
+    confirmation?.removeAttribute("hidden");
+  });
+</script>

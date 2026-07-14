@@ -1,0 +1,132 @@
+---
+import { videos } from "../data/content";
+---
+
+<section id="videos" data-screen-label="Vídeos" class="videos">
+  <div class="intro">
+    <span class="kicker">Vídeos</span>
+    <h2>Testimonios y evidencias para ver y compartir</h2>
+  </div>
+  <div class="grid">
+    {
+      videos.map((v) => (
+        <a href="#" class="card">
+          <div class="thumbnail">
+            <span class="play">
+              <span class="triangle" />
+            </span>
+            <span class="duration">{v.duration}</span>
+          </div>
+          <span class="title">{v.title}</span>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .videos {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--navy-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: opacity 0.15s ease;
+  }
+
+  .card:hover {
+    opacity: 0.92;
+  }
+
+  .thumbnail {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    background: repeating-linear-gradient(
+      135deg,
+      #1c3352,
+      #1c3352 18px,
+      #223d61 18px,
+      #223d61 36px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .triangle {
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 14px solid var(--white);
+    margin-left: 4px;
+  }
+
+  .duration {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-size: 11px;
+    color: var(--white);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.4;
+  }
+</style>

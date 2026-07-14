@@ -1,0 +1,120 @@
+---
+import { donationModels, highlightDonation } from "../data/content";
+---
+
+<section id="apoya" data-screen-label="Apoya" class="support">
+  <div class="intro">
+    <span class="kicker">Colabora</span>
+    <h2>Apoya nuestra misión</h2>
+    <p>Tu ayuda hace posible cada testimonio, cada vídeo y cada encuentro.</p>
+  </div>
+  <div class="grid">
+    {
+      donationModels.map((d) => (
+        <div class={`card ${d.key === highlightDonation ? "highlighted" : ""}`}>
+          <h3>{d.title}</h3>
+          <span class="detail">{d.detail}</span>
+          <p>{d.text}</p>
+          {/* TODO: enlazar al flujo de pago/donación real */}
+          <a href="#" class="btn">{d.cta}</a>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .support {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .intro p {
+    font-size: 16px;
+    color: #c9d2dc;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 26px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .card.highlighted {
+    background: var(--white);
+    border-color: var(--gold);
+  }
+
+  .card h3 {
+    font-family: "Lora", serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .detail {
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+
+  .btn {
+    align-self: flex-start;
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 11px 20px;
+    border-radius: 100px;
+    transition: background 0.15s ease;
+  }
+
+  .btn:hover {
+    background: var(--gold-light);
+  }
+</style>
