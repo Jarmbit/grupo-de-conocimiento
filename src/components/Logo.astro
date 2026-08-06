@@ -1,17 +1,14 @@
 ---
-import LogoMark from "./icons/LogoMark.astro";
-
 interface Props {
   wordmarkColor?: string;
   size?: number;
 }
 
-const { wordmarkColor = "var(--navy-dark)", size = 30 } = Astro.props;
-const gradientId = `gc-logo-gradient-${Math.random().toString(36).slice(2, 8)}`;
+const { wordmarkColor = "var(--navy-dark)", size = 32 } = Astro.props;
 ---
 
 <a href="#top" class="logo">
-  <LogoMark size={size} gradientId={gradientId} />
+  <img src="/logo-mark.png" alt="" width={size} height={size} class="mark" />
   <span class="wordmark" style={`color:${wordmarkColor}`}>Grupo de Conocimiento</span>
 </a>
 
@@ -20,6 +17,11 @@ const gradientId = `gc-logo-gradient-${Math.random().toString(36).slice(2, 8)}`;
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .mark {
+    flex: none;
+    display: block;
   }
 
   .wordmark {
