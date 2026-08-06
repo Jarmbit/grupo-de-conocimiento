@@ -1,0 +1,115 @@
+---
+import { howWeDoIt } from "../data/content";
+---
+
+<section id="como-lo-hacemos" data-screen-label="Cómo lo hacemos" class="how">
+  <div class="intro">
+    <span class="kicker">{howWeDoIt.kicker}</span>
+    <h2>{howWeDoIt.title}</h2>
+    <p>{howWeDoIt.intro}</p>
+  </div>
+  <div class="grid">
+    {
+      howWeDoIt.traits.map((trait) => (
+        <div class="card">
+          <span class="icon" />
+          <h3>{trait.title}</h3>
+          <p>{trait.text}</p>
+        </div>
+      ))
+    }
+  </div>
+  <p class="closing">{howWeDoIt.closing}</p>
+</section>
+
+<style>
+  .how {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--bg-alt);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 24px 18px;
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    flex: none;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+
+  .closing {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--navy-dark);
+  }
+</style>

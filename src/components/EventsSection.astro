@@ -20,6 +20,7 @@ import { events, showEventSpots } from "../data/content";
             <h3>{ev.title}</h3>
             <span class="location">{ev.location}</span>
             {showEventSpots && <span class="spots">{ev.spots}</span>}
+            <a href="#apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
           </div>
           {/* TODO: enlazar a un sistema de reservas real (Calendly, formulario propio, Eventbrite...) */}
           <a href="#" class="btn">Reservar plaza</a>
@@ -131,6 +132,19 @@ import { events, showEventSpots } from "../data/content";
     font-size: 13px;
     color: var(--gold);
     font-weight: 600;
+  }
+
+  .volunteer-link {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-top: 2px;
+  }
+
+  .volunteer-link:hover {
+    color: var(--navy-dark);
   }
 
   .btn {

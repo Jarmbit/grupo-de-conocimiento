@@ -1,17 +1,30 @@
 ---
-import { pillars } from "../data/content";
+import { identity, objective, pillars } from "../data/content";
 ---
 
 <section id="sobre" data-screen-label="Sobre nosotros" class="about">
   <div class="intro">
-    <span class="kicker">Nuestra misión</span>
-    <h2>Fe y razón caminan juntas</h2>
-    <p>
-      Creemos que la evidencia histórica, el testimonio personal y el encuentro comunitario son
-      caminos complementarios hacia Dios. Nuestro trabajo acompaña, con serenidad y respeto a las
-      enseñanzas de la Iglesia, a quienes buscan una fe fundamentada.
-    </p>
+    <span class="kicker">{identity.kicker}</span>
+    <h2>{identity.title}</h2>
+    <p>{identity.intro}</p>
   </div>
+
+  <blockquote class="quote">{identity.quote}</blockquote>
+
+  <div class="objective">
+    <p class="objective-title">{objective.title}</p>
+    <div class="audiences">
+      {
+        objective.audiences.map((a) => (
+          <div class="audience-card">
+            <h3>{a.title}</h3>
+            <p>{a.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
   <div class="grid">
     {
       pillars.map((pillar) => (
@@ -63,17 +76,75 @@ import { pillars } from "../data/content";
     color: var(--ink-muted);
   }
 
+  .quote {
+    margin: 0;
+    max-width: 760px;
+    padding: 28px 32px;
+    border-left: 3px solid var(--gold);
+    background: var(--bg-alt);
+    border-radius: 0 14px 14px 0;
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--navy-dark);
+  }
+
+  .objective {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .objective-title {
+    max-width: 720px;
+    font-family: "Lora", serif;
+    font-size: 22px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .audiences {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .audience-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px;
+    background: var(--navy);
+    border-radius: 14px;
+  }
+
+  .audience-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+
+  .audience-card p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #dbe2ea;
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
   }
 
   .card {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 28px;
+    padding: 24px;
     background: var(--bg-alt);
     border-radius: 14px;
   }
@@ -88,13 +159,13 @@ import { pillars } from "../data/content";
 
   .card h3 {
     font-family: "Lora", serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--navy-dark);
   }
 
   .card p {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.6;
     color: var(--ink-muted);
   }

@@ -1,53 +1,25 @@
 ---
+import LogoMark from "./icons/LogoMark.astro";
+
 interface Props {
-  color?: string;
   wordmarkColor?: string;
-  size?: "default" | "small";
+  size?: number;
 }
 
-const { color = "var(--navy)", wordmarkColor = "var(--navy-dark)", size = "default" } = Astro.props;
+const { wordmarkColor = "var(--navy-dark)", size = 30 } = Astro.props;
+const gradientId = `gc-logo-gradient-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 <a href="#top" class="logo">
-  <span class="symbol" style={`--symbol-color:${color}`}></span>
+  <LogoMark size={size} gradientId={gradientId} />
   <span class="wordmark" style={`color:${wordmarkColor}`}>Grupo de Conocimiento</span>
 </a>
 
-<style define:vars={{ size }}>
+<style>
   .logo {
     display: flex;
     align-items: center;
     gap: 12px;
-  }
-
-  .symbol {
-    position: relative;
-    width: 22px;
-    height: 28px;
-    flex: none;
-    display: inline-block;
-  }
-
-  .symbol::before,
-  .symbol::after {
-    content: "";
-    position: absolute;
-    background: var(--symbol-color);
-    border-radius: 1px;
-  }
-
-  .symbol::before {
-    left: 9px;
-    top: 0;
-    width: 4px;
-    height: 28px;
-  }
-
-  .symbol::after {
-    left: 2px;
-    top: 7px;
-    width: 18px;
-    height: 4px;
   }
 
   .wordmark {

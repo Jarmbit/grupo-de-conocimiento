@@ -1,0 +1,117 @@
+---
+import { participation } from "../data/content";
+---
+
+<section id="crearlo-juntos" data-screen-label="Crearlo juntos" class="participation">
+  <div class="intro">
+    <span class="kicker">{participation.kicker}</span>
+    <h2>{participation.title}</h2>
+    <p>{participation.intro}</p>
+  </div>
+  <div class="grid">
+    {
+      participation.ways.map((way) => (
+        <div class="card">
+          <span class="icon" />
+          <h3>{way.title}</h3>
+          <p>{way.text}</p>
+        </div>
+      ))
+    }
+  </div>
+  <a href="#apoya" class="cta">Ver formas de colaborar →</a>
+</section>
+
+<style>
+  .participation {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 22px 16px;
+    background: var(--bg-alt);
+    border-radius: 14px;
+  }
+
+  .icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex: none;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+
+  .cta {
+    align-self: center;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    transition: background 0.15s ease;
+  }
+
+  .cta:hover {
+    background: var(--navy-dark);
+  }
+</style>
