@@ -1,5 +1,7 @@
 ---
-import { events, showEventSpots } from "../data/content";
+import { events, showEventSpots, eventRequest, contact } from "../data/content";
+
+const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRequest.subject)}&body=${encodeURIComponent(eventRequest.body)}`;
 ---
 
 <section id="eventos" data-screen-label="Eventos" class="events">
@@ -7,6 +9,10 @@ import { events, showEventSpots } from "../data/content";
     <span class="kicker">Agenda</span>
     <h2>Próximos eventos</h2>
     <p>Reserva tu plaza; el aforo es limitado.</p>
+    <p class="request">
+      ¿Quieres que organicemos un encuentro en tu hogar o comunidad?
+      <a href={mailtoHref}>Solicítalo aquí →</a>
+    </p>
   </div>
   <div class="list">
     {
@@ -65,6 +71,15 @@ import { events, showEventSpots } from "../data/content";
   .intro p {
     font-size: 16px;
     color: var(--ink-muted);
+  }
+
+  .request a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .request a:hover {
+    color: var(--primary-dark);
   }
 
   .list {

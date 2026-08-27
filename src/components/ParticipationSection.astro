@@ -1,8 +1,16 @@
 ---
-import { participation } from "../data/content";
+import { participation, homesNetwork, eventRequest, contact } from "../data/content";
+
+const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRequest.subject)}&body=${encodeURIComponent(eventRequest.body)}`;
 ---
 
 <section id="crearlo-juntos" data-screen-label="Crearlo juntos" class="participation">
+  <div class="homes">
+    <span class="kicker">{homesNetwork.kicker}</span>
+    <h2>{homesNetwork.title}</h2>
+    <p>{homesNetwork.text}</p>
+  </div>
+
   <div class="intro">
     <span class="kicker">{participation.kicker}</span>
     <h2>{participation.title}</h2>
@@ -11,7 +19,7 @@ import { participation } from "../data/content";
   <div class="grid">
     {
       participation.ways.map((way) => (
-        <div class="card">
+        <div class={`card ${way.highlighted ? "highlighted" : ""}`}>
           <span class="icon" />
           <h3>{way.title}</h3>
           <p>{way.text}</p>
@@ -19,7 +27,10 @@ import { participation } from "../data/content";
       ))
     }
   </div>
-  <a href="#apoya" class="cta">Ver formas de colaborar →</a>
+  <div class="cta-row">
+    <a href={mailtoHref} class="cta cta-outline">{eventRequest.label}</a>
+    <a href="#apoya" class="cta cta-solid">Ver formas de colaborar →</a>
+  </div>
 </section>
 
 <style>
@@ -30,6 +41,34 @@ import { participation } from "../data/content";
     gap: 44px;
     max-width: 1180px;
     margin: 0 auto;
+  }
+
+  .homes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(28px, 5vw, 40px);
+    border-radius: 20px;
+    background: var(--primary-dark);
+    background-image: var(--gradient-brand);
+    background-blend-mode: overlay;
+  }
+
+  .homes .kicker {
+    color: var(--white);
+    opacity: 0.85;
+  }
+
+  .homes h2 {
+    color: var(--white);
+    font-size: clamp(24px, 3.5vw, 32px);
+  }
+
+  .homes p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 760px;
   }
 
   .intro {
@@ -78,6 +117,13 @@ import { participation } from "../data/content";
     padding: 22px 16px;
     background: var(--bg-alt);
     border-radius: 14px;
+    border: 1.5px solid transparent;
+  }
+
+  .card.highlighted {
+    background: var(--white);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(230, 4, 139, 0.12);
   }
 
   .icon {
@@ -100,10 +146,14 @@ import { participation } from "../data/content";
     color: var(--ink-muted);
   }
 
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   .cta {
-    align-self: center;
-    background: var(--primary);
-    color: var(--white);
     font-weight: 600;
     font-size: 15px;
     padding: 14px 28px;
@@ -111,7 +161,22 @@ import { participation } from "../data/content";
     transition: background 0.15s ease;
   }
 
-  .cta:hover {
+  .cta-solid {
+    background: var(--primary);
+    color: var(--white);
+  }
+
+  .cta-solid:hover {
     background: var(--primary-dark);
+  }
+
+  .cta-outline {
+    background: transparent;
+    color: var(--primary-dark);
+    border: 1.5px solid var(--primary);
+  }
+
+  .cta-outline:hover {
+    background: var(--bg-alt);
   }
 </style>

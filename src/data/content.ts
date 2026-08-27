@@ -79,7 +79,15 @@ export const howWeDoIt = {
 export interface ParticipationWay {
   title: string;
   text: string;
+  highlighted?: boolean;
 }
+
+// Mensaje central: volver a vivir la fe como los primeros cristianos, en los hogares.
+export const homesNetwork = {
+  kicker: "Volver a lo esencial",
+  title: "Como los cristianos del siglo I: la fe vuelve a vivirse en los hogares",
+  text: "Antes de los grandes templos, la Iglesia nació y creció en las casas. Queremos que los encuentros con Jesús vuelvan a suceder ahí donde todo comenzó: en los hogares, donde hay menos barreras, más confianza y más apertura para escuchar y buscar la verdad. Si tienes un hogar y quieres abrir sus puertas, nosotros te acompañamos en todo el camino.",
+};
 
 export const participation = {
   kicker: "Crearlo juntos",
@@ -87,6 +95,11 @@ export const participation = {
   intro:
     "Esta misión no la hace una sola persona. Cada talento, por pequeño que sea, hace posible que más personas se encuentren con Jesucristo.",
   ways: [
+    {
+      title: "Abre tu hogar",
+      text: "Ofrece tu casa para acoger un encuentro. Te acompañamos con el contenido, la logística y la presencia de nuestro equipo.",
+      highlighted: true,
+    },
     { title: "Organizar encuentros", text: "Ayuda a crear espacios donde todo comienza." },
     { title: "Música", text: "Prepara el corazón y acompaña cada encuentro." },
     { title: "Comunicación", text: "Da a conocer la misión y lleva la luz más lejos." },
@@ -94,6 +107,12 @@ export const participation = {
     { title: "Oración", text: "Sostiene espiritualmente cada paso de la misión." },
     { title: "Recursos económicos", text: "Tu generosidad hace posible que esta misión continúe y llegue más lejos." },
   ] satisfies ParticipationWay[],
+};
+
+export const eventRequest = {
+  label: "Solicitar un encuentro",
+  subject: "Quiero solicitar un encuentro",
+  body: "Hola, me gustaría organizar un encuentro de Encuentros Siloé. Cuéntame cómo sería el siguiente paso.",
 };
 
 export interface Video {
