@@ -1,21 +1,22 @@
 ---
+import { identity } from "../data/content";
 ---
 
 <section id="top" class="hero">
   <div class="content">
     <span class="kicker">Asociación sin ánimo de lucro</span>
-    <h1>Dar a conocer a Dios, con evidencia y testimonio</h1>
+    <h1>{identity.tagline}</h1>
     <p>
       Acompañamos a quienes buscan respuestas sobre la existencia de Dios y la vida de
-      Jesucristo, a través de eventos, testimonios y vídeos que unen fe y razón.
+      Jesucristo, a través de encuentros, testimonios y vídeos que unen fe y razón.
     </p>
     <div class="cta-row">
       <a href="#videos" class="btn btn-solid">Ver vídeos</a>
       <a href="#eventos" class="btn btn-outline">Próximos eventos</a>
     </div>
   </div>
-  <div class="image-placeholder">
-    <span>foto: encuentro / comunidad orando</span>
+  <div class="image">
+    <img src="/images/evento-4.jpg" alt="Sala preparada para un encuentro de Encuentros Siloé" />
   </div>
 </section>
 
@@ -42,7 +43,7 @@
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.14em;
-    color: var(--gold);
+    color: var(--accent);
     text-transform: uppercase;
   }
 
@@ -51,7 +52,7 @@
     font-size: clamp(32px, 6vw, 52px);
     line-height: 1.12;
     font-weight: 600;
-    color: var(--navy-dark);
+    color: var(--primary-dark);
   }
 
   p {
@@ -76,47 +77,35 @@
   }
 
   .btn-solid {
-    background: var(--navy);
+    background: var(--primary);
     color: var(--white);
   }
 
   .btn-solid:hover {
-    background: var(--navy-dark);
+    background: var(--primary-dark);
   }
 
   .btn-outline {
     background: transparent;
-    color: var(--navy-dark);
-    border: 1.5px solid var(--navy);
+    color: var(--primary-dark);
+    border: 1.5px solid var(--primary);
   }
 
   .btn-outline:hover {
     background: var(--bg-alt);
   }
 
-  .image-placeholder {
+  .image {
     position: relative;
-    background: repeating-linear-gradient(
-      135deg,
-      var(--bg-alt),
-      var(--bg-alt) 22px,
-      #e4e8ea 22px,
-      #e4e8ea 44px
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex: 1 1 320px;
     min-height: 320px;
+    overflow: hidden;
   }
 
-  .image-placeholder span {
-    font-family: "Source Sans 3", monospace;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    color: var(--ink-muted);
-    background: rgba(246, 247, 246, 0.85);
-    padding: 8px 16px;
-    border-radius: 6px;
+  .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 </style>

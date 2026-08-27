@@ -26,7 +26,7 @@ import { donationModels, highlightDonation } from "../data/content";
 <style>
   .support {
     padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
-    background: var(--navy);
+    background: var(--primary);
     display: flex;
     flex-direction: column;
     gap: 48px;
@@ -45,7 +45,7 @@ import { donationModels, highlightDonation } from "../data/content";
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.12em;
-    color: var(--gold);
+    color: var(--accent);
     text-transform: uppercase;
   }
 
@@ -82,14 +82,14 @@ import { donationModels, highlightDonation } from "../data/content";
 
   .card.highlighted {
     background: var(--white);
-    border-color: var(--gold);
+    border-color: var(--accent);
   }
 
   .card h3 {
     font-family: "Lora", serif;
     font-size: 19px;
     font-weight: 600;
-    color: var(--navy-dark);
+    color: var(--primary-dark);
   }
 
   .detail {
@@ -105,8 +105,8 @@ import { donationModels, highlightDonation } from "../data/content";
 
   .btn {
     align-self: flex-start;
-    background: var(--gold);
-    color: var(--navy-dark);
+    background: var(--accent);
+    color: var(--primary-dark);
     font-weight: 600;
     font-size: 14px;
     padding: 11px 20px;
@@ -115,6 +115,6 @@ import { donationModels, highlightDonation } from "../data/content";
   }
 
   .btn:hover {
-    background: var(--gold-light);
+    background: var(--accent-light);
   }
 </style>

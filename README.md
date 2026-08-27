@@ -1,22 +1,22 @@
-# Grupo de Conocimiento — sitio web
+# Encuentros Siloé — sitio web
 
-Sitio web de una sola página para **Grupo de Conocimiento**, una asociación católica sin ánimo
-de lucro cuya misión es dar a conocer a Dios mediante eventos testimoniales y vídeos sobre la
-evidencia de la existencia de Dios y la vida de Jesucristo.
+Sitio web de una sola página para **Encuentros Siloé**, una asociación católica sin ánimo de
+lucro cuya misión es crear espacios donde las personas puedan encontrarse con Jesucristo,
+mediante encuentros testimoniales y vídeos sobre la evidencia de la existencia de Dios y la vida
+de Jesucristo.
 
-Construido con [Astro](https://astro.build), recreando el diseño de referencia (hifi) recibido
-en el handoff de diseño original.
+Construido con [Astro](https://astro.build).
 
 ## Estado del contenido
 
-El **layout y el estilo son finales** (colores, tipografía, espaciado y estructura respetan el
-design handoff). El **contenido es placeholder** y debe sustituirse antes de publicar:
+El **logo y la paleta de color son finales** (degradado azul-violeta-magenta del logo, aplicado
+como acento en toda la web). El resto del **contenido sigue siendo placeholder** y debe
+sustituirse antes de publicar:
 
 - `src/data/content.ts` — textos de eventos, vídeos, noticias y modelos de donación.
-- Fotografías: actualmente son marcadores con patrón diagonal (`Hero.astro`,
-  `VideosSection.astro`) — sustituir por fotografía real de eventos, comunidad y testimonios.
-- Logo: símbolo simple (cruz estilizada) en `src/components/Logo.astro` — sustituir por el logo
-  real de la asociación si existe.
+- Fotografías: la del Hero (`public/images/evento-4.jpg`) es una foto real de un encuentro; la
+  sección de vídeos (`VideosSection.astro`) sigue usando un marcador con patrón diagonal —
+  sustituir por miniaturas reales de cada vídeo.
 - Iconos de redes sociales: representados como iniciales en círculos — sustituir por iconos SVG
   reales o una librería de iconos (p. ej. [lucide](https://lucide.dev)).
 - Enlaces de WhatsApp/Instagram/redes sociales (`#` por ahora) — apuntar a los canales reales.
@@ -25,6 +25,8 @@ design handoff). El **contenido es placeholder** y debe sustituirse antes de pub
 - Formulario de suscripción por email (`JoinSection.astro`) — valida el email y muestra un
   mensaje de confirmación en el cliente, pero no está conectado a ningún servicio real. Hay que
   integrarlo con un proveedor de email marketing (Mailchimp, Brevo...).
+- Email de contacto (`contact.email` en `content.ts`) — usa un dominio provisional
+  (`encuentrossiloe.org`); actualizar si la asociación registra un dominio propio.
 
 ## Estructura del proyecto
 
@@ -37,6 +39,8 @@ design handoff). El **contenido es placeholder** y debe sustituirse antes de pub
 │   ├── pages/index.astro
 │   └── styles/global.css # Design tokens (colores, reset)
 └── public/
+    ├── logo-mark.png     # Logo oficial de Encuentros Siloé
+    └── images/            # Fotos reales de eventos
 ```
 
 ## Comandos

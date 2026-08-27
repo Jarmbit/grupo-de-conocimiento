@@ -23,6 +23,7 @@ export interface Pillar {
 export const identity = {
   kicker: "Nuestra misión",
   title: "Fe y razón caminan juntas",
+  tagline: "Creando espacios donde las personas puedan encontrarse con Jesucristo",
   intro:
     "Creemos que la evidencia histórica, el testimonio personal y el encuentro comunitario son caminos complementarios hacia Dios. Nuestro trabajo acompaña, con serenidad y respeto a las enseñanzas de la Iglesia, a quienes buscan una fe fundamentada.",
   mission:
@@ -59,22 +60,20 @@ export interface EventTrait {
 }
 
 export const howWeDoIt = {
-  kicker: "Cómo lo hacemos",
-  title: "A través de eventos",
+  kicker: "Cómo es un encuentro",
+  title: "Un espacio sencillo, humano y profundo",
   intro:
-    "Organizamos encuentros abiertos a todos donde, de una forma cercana, rigurosa y atractiva, presentamos la vida de Jesucristo, la credibilidad de los Evangelios y el poder transformador de su mensaje.",
+    "No alquilamos un auditorio: abrimos las puertas de una casa e invitamos a unos amigos. Hubo música, un testimonio, un vídeo, un coloquio. Compartimos la cena. Y ocurrió algo que no esperábamos: las personas comenzaron a decirnos «esto tiene que verlo más gente».",
   traits: [
-    { title: "Abiertos a todos", text: "Cualquier persona es bienvenida, crea o no crea." },
-    {
-      title: "Contenido de calidad",
-      text: "Presentaciones audiovisuales cuidadas, basadas en hechos históricos y testimonios.",
-    },
-    { title: "Diálogo y coloquio", text: "Espacios para preguntar, compartir y profundizar sin presiones." },
-    { title: "Experiencia integral", text: "Música, belleza, ambiente acogedor y atención personal." },
-    { title: "Acompañamiento", text: "Ofrecemos continuidad para quienes desean seguir caminando." },
+    { title: "Música", text: "Abrimos el corazón." },
+    { title: "Vídeo", text: "La verdad que ilumina la vida." },
+    { title: "Reflexión", text: "Ideas que ayudan a comprender y mirar más allá." },
+    { title: "Coloquio", text: "Compartimos, preguntamos y dialogamos juntos." },
+    { title: "Oración", text: "Nos encontramos con Dios." },
+    { title: "Amistad", text: "Nacen lazos verdaderos." },
+    { title: "Continuidad", text: "Seguimos el camino juntos." },
   ] satisfies EventTrait[],
-  closing:
-    "Cada evento es una oportunidad para que las personas puedan encontrarse con Jesucristo y descubrir que Él puede transformar su vida.",
+  closing: "Un encuentro que deja huella.",
 };
 
 export interface ParticipationWay {
@@ -84,16 +83,16 @@ export interface ParticipationWay {
 
 export const participation = {
   kicker: "Crearlo juntos",
-  title: "¿Cómo puedes participar desde hoy?",
+  title: "¿Cómo puedes formar parte?",
   intro:
-    "Esta misión no es solo de unos pocos. Es de todos los que creemos que Jesucristo puede transformar vidas. Te invitamos a ser parte desde el inicio, a aportar tu talento, tu tiempo, tu oración y tu generosidad para que juntos podamos acercar a más personas a Él.",
+    "Esta misión no la hace una sola persona. Cada talento, por pequeño que sea, hace posible que más personas se encuentren con Jesucristo.",
   ways: [
-    { title: "Comparte", text: "Habla de esta misión con tus amigos, familia y comunidad." },
-    { title: "Aporta", text: "Cada talento cuenta. Hay un lugar para ti en este proyecto." },
-    { title: "Ora", text: "Tu oración sostiene, abre caminos y transforma." },
-    { title: "Colabora", text: "Tu tiempo y tu compromiso hacen posible esta misión." },
-    { title: "Haz tu donación", text: "Tu generosidad permite que sigamos llegando a más personas." },
-    { title: "Asóciate", text: "Únete como socio y camina con nosotros a largo plazo." },
+    { title: "Organizar encuentros", text: "Ayuda a crear espacios donde todo comienza." },
+    { title: "Música", text: "Prepara el corazón y acompaña cada encuentro." },
+    { title: "Comunicación", text: "Da a conocer la misión y lleva la luz más lejos." },
+    { title: "Acogida", text: "Haz que cada persona se sienta bienvenida y en casa." },
+    { title: "Oración", text: "Sostiene espiritualmente cada paso de la misión." },
+    { title: "Recursos económicos", text: "Tu generosidad hace posible que esta misión continúe y llegue más lejos." },
   ] satisfies ParticipationWay[],
 };
 
@@ -107,7 +106,7 @@ export const videos: Video[] = [
   { title: "Testimonio: de la duda a la fe", duration: "11:07" },
   { title: "¿Existió realmente Jesús de Nazaret?", duration: "22:40" },
   { title: "Ciencia y fe: ¿son incompatibles?", duration: "15:32" },
-  { title: "Vídeo de nuestros eventos", duration: "03:12" },
+  { title: "Vídeo de nuestros encuentros", duration: "03:12" },
 ];
 
 export interface EventItem {
@@ -152,7 +151,7 @@ export interface NewsItem {
 export const news: NewsItem[] = [
   { date: "2 jul 2026", title: "Más de 300 personas en nuestro último encuentro en Valencia" },
   { date: "18 jun 2026", title: "Nueva serie de vídeos sobre los milagros eucarísticos" },
-  { date: "5 jun 2026", title: "Grupo de Conocimiento estrena boletín mensual" },
+  { date: "5 jun 2026", title: "Encuentros Siloé estrena boletín mensual" },
 ];
 
 export interface Social {
@@ -211,6 +210,6 @@ export const donationModels: DonationModel[] = [
 export const highlightDonation: DonationModel["key"] = "socio";
 
 export const contact = {
-  email: "hola@grupodeconocimiento.org",
+  email: "hola@encuentrossiloe.org",
   phone: "+34 900 000 000",
 };
