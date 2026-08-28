@@ -1,0 +1,197 @@
+---
+import { siloeStory } from "../data/content";
+---
+
+<section id="origen-del-nombre" data-screen-label="El origen del nombre" class="siloe-story">
+  <div class="intro">
+    <span class="kicker">{siloeStory.kicker}</span>
+    <h2>{siloeStory.title}</h2>
+    <span class="verse">({siloeStory.verse})</span>
+  </div>
+
+  <div class="steps">
+    {
+      siloeStory.steps.map((step) => (
+        <div class="step">
+          <span class="step-number">{step.number}</span>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="closing">{siloeStory.closing}</p>
+
+  <div class="bridge">
+    <div class="bridge-item">
+      <h4>{siloeStory.bridge.before.title}</h4>
+      <p>{siloeStory.bridge.before.text}</p>
+    </div>
+    <span class="arrow">→</span>
+    <div class="bridge-item bridge-highlight">
+      <h4>{siloeStory.bridge.during.title}</h4>
+      <p>{siloeStory.bridge.during.text}</p>
+    </div>
+    <span class="arrow">→</span>
+    <div class="bridge-item">
+      <h4>{siloeStory.bridge.after.title}</h4>
+      <p>{siloeStory.bridge.after.text}</p>
+    </div>
+  </div>
+
+  <p class="bridge-closing">{siloeStory.bridgeClosing}</p>
+</section>
+
+<style>
+  .siloe-story {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--primary-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .verse {
+    font-size: 14px;
+    color: var(--secondary);
+    font-weight: 600;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 24px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .step p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .closing {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .bridge {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .bridge-item {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .bridge-highlight {
+    background: rgba(91, 155, 213, 0.12);
+    border: 1px solid var(--secondary);
+  }
+
+  .bridge-item h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .bridge-item p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    color: var(--secondary);
+    font-size: 20px;
+    flex: 0 0 auto;
+  }
+
+  .bridge-closing {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+  }
+</style>

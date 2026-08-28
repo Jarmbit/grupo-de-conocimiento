@@ -232,3 +232,37 @@ export const contact = {
   email: "hola@encuentrossiloe.org",
   phone: "+34 900 000 000",
 };
+
+// El origen bíblico del nombre de la asociación (Juan 9,7).
+export const siloeStory = {
+  kicker: "El origen del nombre",
+  title: "Siloé: «Ve a lavarte»",
+  verse: "Juan 9,7",
+  steps: [
+    { number: 1, title: "Jesús lo encuentra", text: "Hace barro y se lo pone sobre los ojos." },
+    { number: 2, title: "Lo envía a Siloé", text: "«Ve a lavarte a la piscina de Siloé»." },
+    { number: 3, title: "Se lava… y vuelve viendo", text: "Sus ojos se abren. Su vida cambia." },
+  ],
+  closing: "Un encuentro con Jesús cambió su manera de ver.",
+  bridge: {
+    before: { title: "Jesús los trae", text: "Personas que todavía no pueden verle." },
+    during: { title: "Encuentros Siloé", text: "Creamos el espacio. El Espíritu Santo actúa." },
+    after: { title: "Salen viendo", text: "Quizá por primera vez descubren que Dios estaba allí." },
+  },
+  bridgeClosing: "Nosotros creamos el encuentro. El Espíritu Santo abre los ojos.",
+};
+
+// Qué ofrece la asociación después del primer encuentro.
+export const afterEncounter = {
+  kicker: "Continuidad",
+  title: "¿Y después qué?",
+  intro: "El encuentro no termina. Es el comienzo de un camino.",
+  ways: [
+    { title: "Reuniones por Zoom", text: "Seguimos conectados, compartimos y oramos." },
+    { title: "Lecturas y formación", text: "Profundizamos juntos en la verdad que transforma." },
+    { title: "Oración e intercesión", text: "Nos sostenemos unos a otros en la oración." },
+    { title: "Comunidad", text: "Creamos lazos verdaderos que acompañan la vida." },
+    { title: "Acompañamiento", text: "Caminamos juntos en los momentos importantes." },
+    { title: "Crecimiento", text: "Buscamos vivir lo que descubrimos en el día a día." },
+  ],
+};

@@ -1,0 +1,103 @@
+---
+import { afterEncounter } from "../data/content";
+---
+
+<section id="y-despues-que" data-screen-label="¿Y después qué?" class="after">
+  <div class="intro">
+    <span class="kicker">{afterEncounter.kicker}</span>
+    <h2>{afterEncounter.title}</h2>
+    <p>{afterEncounter.intro}</p>
+  </div>
+  <div class="grid">
+    {
+      afterEncounter.ways.map((way) => (
+        <div class="card">
+          <span class="icon" />
+          <h3>{way.title}</h3>
+          <p>{way.text}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .after {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--bg-alt);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 24px 18px;
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--secondary);
+    flex: none;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+</style>
