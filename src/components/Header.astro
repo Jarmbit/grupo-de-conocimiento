@@ -1,12 +1,14 @@
 ---
 import Logo from "./Logo.astro";
 import { navLinks } from "../data/content";
+
+const primaryNavLinks = navLinks.filter((link) => link.href !== "#apoya");
 ---
 
 <header class="site-header">
   <Logo />
   <nav>
-    {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+    {primaryNavLinks.map((link) => <a href={link.href}>{link.label}</a>)}
     <a href="#apoya" class="cta">Apóyanos</a>
   </nav>
 </header>

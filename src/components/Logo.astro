@@ -1,14 +1,23 @@
 ---
+import LogoMark from "./icons/LogoMark.astro";
+
 interface Props {
   wordmarkColor?: string;
+  crossColor?: string;
+  pathColor?: string;
   size?: number;
 }
 
-const { wordmarkColor = "var(--primary-dark)", size = 32 } = Astro.props;
+const {
+  wordmarkColor = "var(--primary-dark)",
+  crossColor = "var(--primary-dark)",
+  pathColor = "var(--secondary)",
+  size = 32,
+} = Astro.props;
 ---
 
 <a href="#top" class="logo">
-  <img src="/logo-mark.png" alt="" width={size} height={size} class="mark" />
+  <LogoMark size={size} crossColor={crossColor} pathColor={pathColor} />
   <span class="wordmark" style={`color:${wordmarkColor}`}>
     <span class="wordmark-line1">Encuentros</span>
     <span class="wordmark-line2">Siloé</span>
@@ -20,11 +29,6 @@ const { wordmarkColor = "var(--primary-dark)", size = 32 } = Astro.props;
     display: flex;
     align-items: center;
     gap: 12px;
-  }
-
-  .mark {
-    flex: none;
-    display: block;
   }
 
   .wordmark {
