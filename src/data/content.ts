@@ -57,6 +57,7 @@ export const pillars: Pillar[] = [
 export interface EventTrait {
   title: string;
   text: string;
+  image: string;
 }
 
 export const howWeDoIt = {
@@ -65,13 +66,13 @@ export const howWeDoIt = {
   intro:
     "No alquilamos un auditorio: abrimos las puertas de una casa e invitamos a unos amigos. Hubo música, un testimonio, un vídeo, un coloquio. Compartimos la cena. Y ocurrió algo que no esperábamos: las personas comenzaron a decirnos «esto tiene que verlo más gente».",
   traits: [
-    { title: "Música", text: "Abrimos el corazón." },
-    { title: "Vídeo", text: "La verdad que ilumina la vida." },
-    { title: "Reflexión", text: "Ideas que ayudan a comprender y mirar más allá." },
-    { title: "Coloquio", text: "Compartimos, preguntamos y dialogamos juntos." },
-    { title: "Oración", text: "Nos encontramos con Dios." },
-    { title: "Amistad", text: "Nacen lazos verdaderos." },
-    { title: "Continuidad", text: "Seguimos el camino juntos." },
+    { title: "Música", text: "Abrimos el corazón.", image: "/images/encuentro/musica.jpg" },
+    { title: "Vídeo", text: "La verdad que ilumina la vida.", image: "/images/encuentro/video.jpg" },
+    { title: "Reflexión", text: "Ideas que ayudan a comprender y mirar más allá.", image: "/images/encuentro/reflexion.jpg" },
+    { title: "Coloquio", text: "Compartimos, preguntamos y dialogamos juntos.", image: "/images/encuentro/coloquio.jpg" },
+    { title: "Oración", text: "Nos encontramos con Dios.", image: "/images/encuentro/oracion.jpg" },
+    { title: "Amistad", text: "Nacen lazos verdaderos.", image: "/images/encuentro/amistad.jpg" },
+    { title: "Continuidad", text: "Seguimos el camino juntos.", image: "/images/encuentro/continuidad.jpg" },
   ] satisfies EventTrait[],
   closing: "Un encuentro que deja huella.",
 };

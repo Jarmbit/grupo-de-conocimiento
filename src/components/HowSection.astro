@@ -12,7 +12,7 @@ import { howWeDoIt } from "../data/content";
     {
       howWeDoIt.traits.map((trait) => (
         <div class="card">
-          <span class="icon" />
+          <img src={trait.image} alt="" class="photo" loading="lazy" />
           <h3>{trait.title}</h3>
           <p>{trait.text}</p>
         </div>
@@ -82,11 +82,12 @@ import { howWeDoIt } from "../data/content";
     border: 1px solid var(--border-subtle);
   }
 
-  .icon {
-    width: 36px;
-    height: 36px;
+  .photo {
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    border: 1.5px solid var(--accent);
+    object-fit: cover;
+    border: 2px solid var(--accent);
     flex: none;
   }
 
