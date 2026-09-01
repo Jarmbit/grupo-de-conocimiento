@@ -119,14 +119,54 @@ export const eventRequest = {
 export interface Video {
   title: string;
   duration: string;
+  thumbnail: string;
+  src: string;
 }
 
+// Clips reales grabados en encuentros anteriores.
 export const videos: Video[] = [
-  { title: "La evidencia histórica de la Resurrección", duration: "18:24" },
-  { title: "Testimonio: de la duda a la fe", duration: "11:07" },
-  { title: "¿Existió realmente Jesús de Nazaret?", duration: "22:40" },
-  { title: "Ciencia y fe: ¿son incompatibles?", duration: "15:32" },
-  { title: "Vídeo de nuestros encuentros", duration: "03:12" },
+  {
+    title: "Un momento de nuestros encuentros",
+    duration: "0:15",
+    thumbnail: "/images/encuentro-videos/encuentro-01.jpg",
+    src: "/videos/encuentro-01.mp4",
+  },
+  {
+    title: "Un momento de nuestros encuentros",
+    duration: "0:19",
+    thumbnail: "/images/encuentro-videos/encuentro-02.jpg",
+    src: "/videos/encuentro-02.mp4",
+  },
+  {
+    title: "Momento musical en un encuentro",
+    duration: "0:16",
+    thumbnail: "/images/encuentro-videos/encuentro-03.jpg",
+    src: "/videos/encuentro-03.mp4",
+  },
+  {
+    title: "Momento musical en un encuentro",
+    duration: "1:20",
+    thumbnail: "/images/encuentro-videos/encuentro-04.jpg",
+    src: "/videos/encuentro-04.mp4",
+  },
+  {
+    title: "Un momento de nuestros encuentros",
+    duration: "0:36",
+    thumbnail: "/images/encuentro-videos/encuentro-05.jpg",
+    src: "/videos/encuentro-05.mp4",
+  },
+  {
+    title: "Momento musical en un encuentro",
+    duration: "0:16",
+    thumbnail: "/images/encuentro-videos/encuentro-06.jpg",
+    src: "/videos/encuentro-06.mp4",
+  },
+  {
+    title: "Un momento de nuestros encuentros",
+    duration: "0:27",
+    thumbnail: "/images/encuentro-videos/encuentro-07.jpg",
+    src: "/videos/encuentro-07.mp4",
+  },
 ];
 
 export interface EventItem {

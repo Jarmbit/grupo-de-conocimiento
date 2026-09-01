@@ -1,0 +1,110 @@
+---
+---
+
+<div id="splash" class="splash">
+  <img src="/images/splash-hero.jpg" alt="" class="splash-bg" />
+  <div class="splash-overlay"></div>
+  <button type="button" id="splash-dismiss" class="splash-dismiss" aria-label="Continuar a la web">
+    <span class="chevron"></span>
+  </button>
+</div>
+
+<style>
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  .splash.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .splash-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .splash-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(15, 33, 56, 0.15), rgba(15, 33, 56, 0.35));
+  }
+
+  .splash-dismiss {
+    position: relative;
+    margin-bottom: clamp(24px, 6vw, 56px);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  .chevron {
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid var(--white);
+    border-bottom: 2px solid var(--white);
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .splash-dismiss {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const splash = document.getElementById("splash");
+  const dismissBtn = document.getElementById("splash-dismiss");
+
+  function hideSplash() {
+    splash?.classList.add("is-hidden");
+  }
+
+  dismissBtn?.addEventListener("click", () => {
+    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
+    hideSplash();
+  });
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (window.scrollY > 40) hideSplash();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("wheel", () => hideSplash(), { passive: true, once: true });
+  window.addEventListener("touchmove", () => hideSplash(), { passive: true, once: true });
+</script>
