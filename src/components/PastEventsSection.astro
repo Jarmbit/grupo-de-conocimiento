@@ -69,7 +69,7 @@ import { pastEvents } from "../data/content";
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.12em;
-    color: var(--accent);
+    color: var(--accent-text);
     text-transform: uppercase;
   }
 
@@ -126,11 +126,12 @@ import { pastEvents } from "../data/content";
     border: none;
     padding: 0;
     cursor: pointer;
-    transition: opacity 0.15s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .photo:hover {
-    opacity: 0.88;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15, 33, 56, 0.16);
   }
 
   .photo img {

@@ -4,6 +4,9 @@
   --secondary: #5b9bd5;
   --accent: #d9a356;
   --accent-light: #e7c284;
+  /* Versión oscurecida de --accent para texto sobre fondo claro (kickers, "quedan N plazas"):
+     el dorado de marca no cumple contraste AA (4.5:1) como texto pequeño sobre blanco/bg-alt. */
+  --accent-text: #8e6020;
   --gradient-brand: linear-gradient(180deg, #0f2138, #1f3a5f 55%, #5b9bd5);
   --bg: #f6f7f6;
   --bg-alt: #edf0f3;
