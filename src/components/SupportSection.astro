@@ -22,7 +22,12 @@ function supportHref(title: string) {
           <span class="detail">{d.detail}</span>
           <p>{d.text}</p>
           {/* TODO: enlazar a una pasarela de pago real (Stripe, PayPal, TPV bancario) cuando esté disponible */}
-          <a href={supportHref(d.title)} class="btn">{d.cta}</a>
+          <a
+            href={supportHref(d.title)}
+            class={d.key === highlightDonation ? "btn-primary" : "btn-primary-on-dark"}
+          >
+            {d.cta}
+          </a>
         </div>
       ))
     }
@@ -112,18 +117,8 @@ function supportHref(title: string) {
     flex: 1;
   }
 
-  .btn {
+  :global(.btn-primary),
+  :global(.btn-primary-on-dark) {
     align-self: flex-start;
-    background: var(--accent);
-    color: var(--primary-dark);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 11px 20px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
-  }
-
-  .btn:hover {
-    background: var(--accent-light);
   }
 </style>

@@ -13,8 +13,8 @@ import eventoImg from "../assets/evento-4.jpg";
       Jesucristo, a través de encuentros, testimonios y vídeos que unen fe y razón.
     </p>
     <div class="cta-row">
-      <a href="#pide-un-encuentro" class="btn btn-solid">Pide un encuentro</a>
-      <a href="#videos" class="link-secondary">Ver vídeos →</a>
+      <a href="#pide-un-encuentro" class="btn-primary">Pide un encuentro</a>
+      <a href="#videos" class="link-arrow">Ver vídeos →</a>
     </div>
   </div>
   <div class="image">
@@ -78,31 +78,13 @@ import eventoImg from "../assets/evento-4.jpg";
     flex-wrap: wrap;
   }
 
-  .btn {
-    font-weight: 600;
+  .cta-row :global(.btn-primary) {
+    font-size: 16px;
+    padding: 15px 28px;
+  }
+
+  .cta-row :global(.link-arrow) {
     font-size: 15px;
-    padding: 14px 26px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
-  }
-
-  .btn-solid {
-    background: var(--primary);
-    color: var(--white);
-  }
-
-  .btn-solid:hover {
-    background: var(--primary-dark);
-  }
-
-  .link-secondary {
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--primary);
-  }
-
-  .link-secondary:hover {
-    color: var(--primary-dark);
   }
 
   .image {

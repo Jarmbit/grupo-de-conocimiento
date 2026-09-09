@@ -9,7 +9,7 @@ const primaryNavLinks = navLinks.filter((link) => link.href !== "/apoya");
   <Logo />
   <nav>
     {primaryNavLinks.map((link) => <a href={link.href}>{link.label}</a>)}
-    <a href="/apoya" class="cta">Apóyanos</a>
+    <a href="/apoya" class="btn-primary cta">Apóyanos</a>
   </nav>
 </header>
 
@@ -49,18 +49,8 @@ const primaryNavLinks = navLinks.filter((link) => link.href !== "/apoya");
     color: var(--primary);
   }
 
-  .cta {
-    background: var(--accent);
-    color: var(--primary-dark) !important;
-    font-weight: 600;
+  :global(.cta) {
     font-size: 14px;
     padding: 10px 20px;
-    border-radius: 100px;
-    white-space: nowrap;
-    transition: background 0.15s ease;
-  }
-
-  .cta:hover {
-    background: var(--accent-light);
   }
 </style>

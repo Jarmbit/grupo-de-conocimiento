@@ -15,7 +15,7 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
       <span class="icon email"></span>
       <h3>Boletín por email</h3>
       <p>Un resumen mensual con noticias, vídeos y próximos eventos.</p>
-      <a href={newsletterHref} class="btn">Suscribirme</a>
+      <a href={newsletterHref} class="btn-primary">Suscribirme</a>
     </div>
   </div>
   {socials.length > 0 && (
@@ -107,15 +107,8 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
     flex: 1;
   }
 
-  .btn {
+  :global(.btn-primary) {
     align-self: flex-start;
-    background: var(--primary);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 11px 20px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
   }
 
   .btn:hover {

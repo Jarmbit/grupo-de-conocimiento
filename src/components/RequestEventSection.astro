@@ -45,7 +45,7 @@ import { eventTypes, contact } from "../data/content";
               <span class="type-kicker">{type.kicker}</span>
               <h3>{type.title}</h3>
               <p>{type.text}</p>
-              <a href={mailtoHref} class="btn">Solicitar este encuentro →</a>
+              <a href={mailtoHref} class="btn-primary">Solicitar este encuentro →</a>
             </div>
           </div>
         );
@@ -232,20 +232,9 @@ import { eventTypes, contact } from "../data/content";
     color: var(--ink-muted);
   }
 
-  .btn {
+  :global(.btn-primary) {
     align-self: flex-start;
     margin-top: 8px;
-    background: var(--primary);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 15px;
-    padding: 13px 24px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
-  }
-
-  .btn:hover {
-    background: var(--primary-dark);
   }
 </style>
 

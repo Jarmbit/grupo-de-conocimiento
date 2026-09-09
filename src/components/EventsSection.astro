@@ -22,7 +22,7 @@ function reserveHref(title: string) {
     )}
     <p class="request">
       ¿Quieres que organicemos un encuentro en tu hogar o comunidad?
-      <a href="#pide-un-encuentro">Solicítalo aquí →</a>
+      <a href="#pide-un-encuentro" class="link-arrow">Solicítalo aquí →</a>
     </p>
   </div>
   {events.length > 0 && (
@@ -39,7 +39,7 @@ function reserveHref(title: string) {
             {showEventSpots && <span class="spots">{ev.spots}</span>}
             <a href="#apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
           </div>
-          <a href={reserveHref(ev.title)} class="btn">Reservar plaza</a>
+          <a href={reserveHref(ev.title)} class="btn-primary">Reservar plaza</a>
         </div>
       ))}
     </div>
@@ -83,15 +83,6 @@ function reserveHref(title: string) {
     font-size: var(--text-body-size);
     color: var(--ink-muted);
     line-height: var(--text-body-line);
-  }
-
-  .request a {
-    color: var(--primary);
-    font-weight: 600;
-  }
-
-  .request a:hover {
-    color: var(--primary-dark);
   }
 
   .list {
@@ -174,18 +165,7 @@ function reserveHref(title: string) {
     color: var(--primary-dark);
   }
 
-  .btn {
-    background: var(--primary);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 12px 22px;
-    border-radius: 100px;
-    white-space: nowrap;
-    transition: background 0.15s ease;
-  }
-
-  .btn:hover {
-    background: var(--primary-dark);
+  :global(.btn-primary) {
+    flex: none;
   }
 </style>

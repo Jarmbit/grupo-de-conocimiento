@@ -20,8 +20,8 @@ import { participation, eventRequest } from "../data/content";
     }
   </div>
   <div class="cta-row">
-    <a href="#pide-un-encuentro" class="cta cta-outline">{eventRequest.label}</a>
-    <a href="#apoya" class="cta cta-solid">Ver formas de colaborar →</a>
+    <a href="#pide-un-encuentro" class="btn-primary">{eventRequest.label}</a>
+    <a href="/apoya" class="btn-secondary">Ver formas de colaborar →</a>
   </div>
 </section>
 
@@ -119,30 +119,4 @@ import { participation, eventRequest } from "../data/content";
     flex-wrap: wrap;
   }
 
-  .cta {
-    font-weight: 600;
-    font-size: 15px;
-    padding: 14px 28px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
-  }
-
-  .cta-solid {
-    background: var(--primary);
-    color: var(--white);
-  }
-
-  .cta-solid:hover {
-    background: var(--primary-dark);
-  }
-
-  .cta-outline {
-    background: transparent;
-    color: var(--primary-dark);
-    border: 1.5px solid var(--primary);
-  }
-
-  .cta-outline:hover {
-    background: var(--bg-alt);
-  }
 </style>

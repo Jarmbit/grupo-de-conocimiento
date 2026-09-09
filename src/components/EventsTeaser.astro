@@ -15,8 +15,8 @@ import { events } from "../data/content";
       </p>
     )}
     <div class="cta-row">
-      <a href="/eventos" class="btn">Ver todos los eventos →</a>
-      <a href="#pide-un-encuentro" class="link-secondary">¿Quieres que organicemos uno? Solicítalo →</a>
+      <a href="/eventos" class="btn-primary">Ver todos los eventos →</a>
+      <a href="#pide-un-encuentro" class="link-arrow">¿Quieres que organicemos uno? Solicítalo →</a>
     </div>
   </div>
 </section>
@@ -65,28 +65,7 @@ import { events } from "../data/content";
     margin-top: 8px;
   }
 
-  .btn {
-    background: var(--primary);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 15px;
-    padding: 13px 24px;
-    border-radius: 100px;
-    white-space: nowrap;
-    transition: background 0.15s ease;
-  }
-
-  .btn:hover {
-    background: var(--primary-dark);
-  }
-
-  .link-secondary {
-    font-size: 14px;
-    color: var(--primary);
-    font-weight: 600;
-  }
-
-  .link-secondary:hover {
-    color: var(--primary-dark);
+  :global(.btn-primary) {
+    flex: none;
   }
 </style>

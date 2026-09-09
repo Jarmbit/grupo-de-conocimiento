@@ -6,7 +6,7 @@
     <span class="kicker">Colabora</span>
     <h2>Apoya nuestra misión</h2>
     <p>Tu ayuda hace posible cada testimonio, cada vídeo y cada encuentro.</p>
-    <a href="/apoya" class="btn">Apoya nuestra misión →</a>
+    <a href="/apoya" class="btn-primary-on-dark">Apoya nuestra misión →</a>
   </div>
 </section>
 
@@ -47,19 +47,8 @@
     line-height: var(--text-body-line);
   }
 
-  .btn {
+  :global(.btn-primary-on-dark) {
     align-self: center;
     margin-top: 8px;
-    background: var(--accent);
-    color: var(--primary-dark);
-    font-weight: 600;
-    font-size: 15px;
-    padding: 14px 28px;
-    border-radius: 100px;
-    transition: background 0.15s ease;
-  }
-
-  .btn:hover {
-    background: var(--accent-light);
   }
 </style>
