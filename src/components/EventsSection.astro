@@ -101,6 +101,22 @@ function reserveHref(title: string) {
     border-radius: var(--radius-card);
   }
 
+  @media (max-width: 640px) {
+    .row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .row .date {
+      align-self: flex-start;
+    }
+
+    .row :global(.btn-primary) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
   .date {
     display: flex;
     flex-direction: column;
