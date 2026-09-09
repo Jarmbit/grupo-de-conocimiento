@@ -124,10 +124,20 @@ input:focus-visible {
 
 .link-arrow {
   display: inline-block;
+  padding: 12px 0;
+  margin: -12px 0;
   font-weight: 600;
   font-size: 14px;
   color: var(--primary);
   transition: color 0.15s ease;
+}
+
+/* Enlace independiente (no inline dentro de un párrafo): hit target táctil completo de 44px */
+.link-arrow--block {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
 }
 
 .link-arrow:hover {
