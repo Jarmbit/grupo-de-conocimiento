@@ -11,8 +11,8 @@ import { identity } from "../data/content";
       Jesucristo, a través de encuentros, testimonios y vídeos que unen fe y razón.
     </p>
     <div class="cta-row">
-      <a href="#videos" class="btn btn-solid">Ver vídeos</a>
-      <a href="#eventos" class="btn btn-outline">Próximos eventos</a>
+      <a href="#pide-un-encuentro" class="btn btn-solid">Pide un encuentro</a>
+      <a href="#videos" class="link-secondary">Ver vídeos →</a>
     </div>
   </div>
   <div class="image">
@@ -63,7 +63,8 @@ import { identity } from "../data/content";
 
   .cta-row {
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 24px;
     margin-top: 8px;
     flex-wrap: wrap;
   }
@@ -85,14 +86,14 @@ import { identity } from "../data/content";
     background: var(--primary-dark);
   }
 
-  .btn-outline {
-    background: transparent;
-    color: var(--primary-dark);
-    border: 1.5px solid var(--primary);
+  .link-secondary {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--primary);
   }
 
-  .btn-outline:hover {
-    background: var(--bg-alt);
+  .link-secondary:hover {
+    color: var(--primary-dark);
   }
 
   .image {

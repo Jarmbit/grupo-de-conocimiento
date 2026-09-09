@@ -1,14 +1,8 @@
 ---
-import { participation, homesNetwork, eventRequest } from "../data/content";
+import { participation, eventRequest } from "../data/content";
 ---
 
 <section id="crearlo-juntos" data-screen-label="Crearlo juntos" class="participation">
-  <div class="homes">
-    <span class="kicker">{homesNetwork.kicker}</span>
-    <h2>{homesNetwork.title}</h2>
-    <p>{homesNetwork.text}</p>
-  </div>
-
   <div class="intro">
     <span class="kicker">{participation.kicker}</span>
     <h2>{participation.title}</h2>
@@ -39,34 +33,6 @@ import { participation, homesNetwork, eventRequest } from "../data/content";
     gap: 44px;
     max-width: 1180px;
     margin: 0 auto;
-  }
-
-  .homes {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: clamp(28px, 5vw, 40px);
-    border-radius: 20px;
-    background: var(--primary-dark);
-    background-image: var(--gradient-brand);
-    background-blend-mode: overlay;
-  }
-
-  .homes .kicker {
-    color: var(--white);
-    opacity: 0.85;
-  }
-
-  .homes h2 {
-    color: var(--white);
-    font-size: clamp(24px, 3.5vw, 32px);
-  }
-
-  .homes p {
-    font-size: 16px;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 760px;
   }
 
   .intro {

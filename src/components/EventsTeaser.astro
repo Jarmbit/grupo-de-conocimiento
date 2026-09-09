@@ -1,0 +1,90 @@
+---
+import { events } from "../data/content";
+---
+
+<section id="eventos" data-screen-label="Eventos" class="events-teaser">
+  <div class="intro">
+    <span class="kicker">Agenda</span>
+    <h2>Próximos eventos</h2>
+    {events.length > 0 ? (
+      <p>Reserva tu plaza; el aforo es limitado.</p>
+    ) : (
+      <p>
+        Estamos preparando los próximos encuentros. Si quieres que llevemos uno a tu parroquia u
+        hogar, escríbenos.
+      </p>
+    )}
+    <div class="cta-row">
+      <a href="/eventos" class="btn">Ver todos los eventos →</a>
+      <a href="#pide-un-encuentro" class="link-secondary">¿Quieres que organicemos uno? Solicítalo →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .events-teaser {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .intro p {
+    font-size: 16px;
+    color: var(--ink-muted);
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .btn {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 13px 24px;
+    border-radius: 100px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  .btn:hover {
+    background: var(--primary-dark);
+  }
+
+  .link-secondary {
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .link-secondary:hover {
+    color: var(--primary-dark);
+  }
+</style>

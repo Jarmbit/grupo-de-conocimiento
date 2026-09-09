@@ -10,10 +10,10 @@ export const navLinks: NavLink[] = [
   { href: "#sobre", label: "Sobre nosotros" },
   { href: "#videos", label: "Vídeos" },
   { href: "#pide-un-encuentro", label: "Pide un encuentro" },
-  { href: "#eventos", label: "Eventos" },
-  { href: "#noticias", label: "Noticias" },
+  { href: "/eventos", label: "Eventos" },
+  { href: "/noticias", label: "Noticias" },
   { href: "#unete", label: "Únete" },
-  { href: "#apoya", label: "Apoya" },
+  { href: "/apoya", label: "Apoya" },
 ];
 
 export interface Pillar {
@@ -85,6 +85,8 @@ export interface ParticipationWay {
 }
 
 // Mensaje central: volver a vivir la fe como los primeros cristianos, en los hogares.
+// Sin consumidor activo en la home tras la fusión de secciones (evita repetir el mismo mensaje
+// 3 veces); disponible para reutilizar en /eventos o donde encaje mejor.
 export const homesNetwork = {
   kicker: "Volver a lo esencial",
   title: "Como los cristianos del siglo I: la fe vuelve a vivirse en los hogares",

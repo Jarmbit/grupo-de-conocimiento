@@ -1,8 +1,8 @@
 ---
-import { howWeDoIt } from "../data/content";
+import { howWeDoIt, afterEncounter } from "../data/content";
 ---
 
-<section id="como-es-un-encuentro" data-screen-label="Cómo es un encuentro" class="how">
+<section id="como-es-un-encuentro" data-screen-label="Cómo es un encuentro" class="flow">
   <div class="intro">
     <span class="kicker">{howWeDoIt.kicker}</span>
     <h2>{howWeDoIt.title}</h2>
@@ -20,10 +20,29 @@ import { howWeDoIt } from "../data/content";
     }
   </div>
   <p class="closing">{howWeDoIt.closing}</p>
+
+  <div id="y-despues-que" class="after">
+    <div class="intro">
+      <span class="kicker">{afterEncounter.kicker}</span>
+      <h2>{afterEncounter.title}</h2>
+      <p>{afterEncounter.intro}</p>
+    </div>
+    <div class="grid">
+      {
+        afterEncounter.ways.map((way) => (
+          <div class="card">
+            <span class="icon" aria-hidden="true" />
+            <h3>{way.title}</h3>
+            <p>{way.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
 </section>
 
 <style>
-  .how {
+  .flow {
     padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
     background: var(--bg-alt);
     display: flex;
@@ -112,5 +131,21 @@ import { howWeDoIt } from "../data/content";
     font-size: 17px;
     line-height: 1.6;
     color: var(--primary-dark);
+  }
+
+  .after {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .after .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--secondary);
+    flex: none;
   }
 </style>

@@ -2,12 +2,12 @@
 import { news } from "../data/content";
 ---
 
-{news.length > 0 && (
-  <section id="noticias" data-screen-label="Noticias" class="news">
-    <div class="intro">
-      <span class="kicker">Actualidad</span>
-      <h2>Noticias</h2>
-    </div>
+<section id="noticias" data-screen-label="Noticias" class="news">
+  <div class="intro">
+    <span class="kicker">Actualidad</span>
+    <h2>Noticias</h2>
+  </div>
+  {news.length > 0 ? (
     <div class="grid">
       {news.map((n) => (
         <a href={n.href} class="card">
@@ -17,8 +17,10 @@ import { news } from "../data/content";
         </a>
       ))}
     </div>
-  </section>
-)}
+  ) : (
+    <p class="empty">Aún no hay noticias publicadas. Vuelve pronto.</p>
+  )}
+</section>
 
 <style>
   .news {
@@ -94,5 +96,13 @@ import { news } from "../data/content";
     font-size: 14px;
     color: var(--primary);
     font-weight: 600;
+  }
+
+  .empty {
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+    font-size: 15px;
+    color: var(--ink-muted);
   }
 </style>

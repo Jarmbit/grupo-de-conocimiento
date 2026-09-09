@@ -1,8 +1,6 @@
 ---
 import Logo from "./Logo.astro";
-import { navLinks, socials, contact, news } from "../data/content";
-
-const footerNavLinks = navLinks.filter((link) => link.href !== "#noticias" || news.length > 0);
+import { navLinks, socials, contact } from "../data/content";
 ---
 
 <footer id="contacto" data-screen-label="Contacto">
@@ -17,7 +15,7 @@ const footerNavLinks = navLinks.filter((link) => link.href !== "#noticias" || ne
     </div>
     <div class="links">
       <span class="col-title">Explorar</span>
-      {footerNavLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+      {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
     </div>
     <div class="contact">
       <span class="col-title">Contacto</span>
