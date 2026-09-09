@@ -1,8 +1,10 @@
 ---
+import { Image } from "astro:assets";
+import splashImg from "../assets/splash-hero.jpg";
 ---
 
 <div id="splash" class="splash">
-  <img src="/images/splash-hero.jpg" alt="" class="splash-bg" />
+  <Image src={splashImg} alt="" class="splash-bg" widths={[480, 768, 1536]} sizes="100vw" loading="eager" fetchpriority="high" />
   <div class="splash-overlay"></div>
   <button type="button" id="splash-dismiss" class="splash-dismiss" aria-label="Continuar a la web">
     <span class="chevron"></span>

@@ -1,5 +1,17 @@
 ---
+import { Image } from "astro:assets";
 import { videos } from "../data/content";
+
+const thumbnails = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/encuentro-videos/*.jpg",
+  { eager: true }
+);
+
+function thumbnail(path: string) {
+  const filename = path.split("/").pop();
+  const entry = Object.entries(thumbnails).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default;
+}
 ---
 
 <section id="videos" data-screen-label="Vídeos" class="videos">
@@ -9,23 +21,26 @@ import { videos } from "../data/content";
   </div>
   <div class="grid">
     {
-      videos.map((v, i) => (
-        <button type="button" class="card" data-video-src={v.src} data-video-title={v.title}>
-          <div class="thumbnail">
-            <img src={v.thumbnail} alt="" loading="lazy" />
-            <span class="play">
-              <span class="triangle" />
-            </span>
-            <span class="duration">{v.duration}</span>
-          </div>
-          <span class="title">{v.title}</span>
-        </button>
-      ))
+      videos.map((v, i) => {
+        const thumb = thumbnail(v.thumbnail);
+        return (
+          <button type="button" class="card" data-video-src={v.src} data-video-title={v.title}>
+            <div class="thumbnail">
+              {thumb && <Image src={thumb} alt={v.title} width={440} height={275} loading="lazy" />}
+              <span class="play" aria-hidden="true">
+                <span class="triangle" />
+              </span>
+              <span class="duration">{v.duration}</span>
+            </div>
+            <span class="title">{v.title}</span>
+          </button>
+        );
+      })
     }
   </div>
 </section>
 
-<div id="video-modal" class="video-modal" hidden>
+<div id="video-modal" class="video-modal" role="dialog" aria-modal="true" aria-label="Reproductor de vídeo" hidden>
   <div class="video-modal-backdrop"></div>
   <div class="video-modal-content">
     <button type="button" class="video-modal-close" aria-label="Cerrar vídeo">✕</button>
@@ -201,14 +216,17 @@ import { videos } from "../data/content";
 <script>
   const modal = document.getElementById("video-modal") as HTMLDivElement | null;
   const player = document.getElementById("video-modal-player") as HTMLVideoElement | null;
-  const closeBtn = modal?.querySelector(".video-modal-close");
+  const closeBtn = modal?.querySelector<HTMLButtonElement>(".video-modal-close");
   const backdrop = modal?.querySelector(".video-modal-backdrop");
+  let lastFocused: HTMLElement | null = null;
 
-  function openVideo(src: string) {
+  function openVideo(src: string, trigger: HTMLElement) {
     if (!modal || !player) return;
+    lastFocused = trigger;
     player.src = src;
     modal.hidden = false;
     player.play().catch(() => {});
+    closeBtn?.focus();
   }
 
   function closeVideo() {
@@ -217,18 +235,20 @@ import { videos } from "../data/content";
     player.removeAttribute("src");
     player.load();
     modal.hidden = true;
+    lastFocused?.focus();
+    lastFocused = null;
   }
 
   document.querySelectorAll<HTMLButtonElement>(".videos .card").forEach((card) => {
     card.addEventListener("click", () => {
       const src = card.dataset.videoSrc;
-      if (src) openVideo(src);
+      if (src) openVideo(src, card);
     });
   });
 
   closeBtn?.addEventListener("click", closeVideo);
   backdrop?.addEventListener("click", closeVideo);
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeVideo();
+    if (e.key === "Escape" && modal && !modal.hidden) closeVideo();
   });
 </script>

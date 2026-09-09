@@ -1,15 +1,31 @@
 ---
 import "../styles/global.css";
+import splashImg from "../assets/splash-hero.jpg";
+import { contact } from "../data/content";
 
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
 const {
   title = "Encuentros Siloé — Creando espacios donde las personas puedan encontrarse con Jesucristo",
   description = "Asociación sin ánimo de lucro que crea espacios de encuentro con Jesucristo mediante eventos testimoniales y vídeos sobre la evidencia de la existencia de Dios y la vida de Jesucristo.",
+  ogImage,
 } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const socialImageUrl = new URL(ogImage ?? splashImg.src, Astro.site);
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  name: "Encuentros Siloé",
+  url: Astro.site?.toString(),
+  email: contact.email,
+  description,
+};
 ---
 
 <!doctype html>
@@ -21,6 +37,19 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,6 +57,13 @@ const {
       href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!--
+      Analítica respetuosa con la privacidad (Plausible), preparada pero desactivada.
+      Para activarla: crear cuenta en https://plausible.io, verificar el dominio
+      encuentrossiloe.org, y descomentar la línea siguiente.
+    -->
+    <!-- <script defer data-domain="encuentrossiloe.org" src="https://plausible.io/js/script.js"></script> -->
   </head>
   <body>
     <slot />

@@ -17,11 +17,20 @@ import { pastEvents } from "../data/content";
             <span class="meta">{event.location} · {event.date}</span>
           </div>
           <div class="photos">
-            {event.photos.map((photo, i) => (
-              <button type="button" class="photo" data-lightbox-src={photo} aria-label={`Ver foto ${i + 1} de ${event.title}`}>
-                <img src={photo} alt={`${event.title} — ${event.location}`} loading="lazy" />
-              </button>
-            ))}
+            {event.photos.map((photo, i) => {
+              const photoAlt = `${event.title} — ${event.location} (foto ${i + 1})`;
+              return (
+                <button
+                  type="button"
+                  class="photo"
+                  data-lightbox-src={photo}
+                  data-lightbox-alt={photoAlt}
+                  aria-label={`Ver foto ${i + 1} de ${event.title}`}
+                >
+                  <img src={photo} alt={photoAlt} loading="lazy" />
+                </button>
+              );
+            })}
           </div>
         </div>
       ))
@@ -29,7 +38,7 @@ import { pastEvents } from "../data/content";
   </div>
 </section>
 
-<div id="past-events-lightbox" class="lightbox" hidden>
+<div id="past-events-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
   <div class="lightbox-backdrop"></div>
   <div class="lightbox-content">
     <button type="button" class="lightbox-close" aria-label="Cerrar foto">✕</button>
@@ -179,31 +188,39 @@ import { pastEvents } from "../data/content";
 <script>
   const lightbox = document.getElementById("past-events-lightbox") as HTMLDivElement | null;
   const lightboxImg = document.getElementById("past-events-lightbox-img") as HTMLImageElement | null;
-  const closeBtn = lightbox?.querySelector(".lightbox-close");
+  const closeBtn = lightbox?.querySelector<HTMLButtonElement>(".lightbox-close");
   const backdrop = lightbox?.querySelector(".lightbox-backdrop");
+  let lastFocused: HTMLElement | null = null;
 
-  function openLightbox(src: string) {
+  function openLightbox(src: string, alt: string, trigger: HTMLElement) {
     if (!lightbox || !lightboxImg) return;
+    lastFocused = trigger;
     lightboxImg.src = src;
+    lightboxImg.alt = alt;
     lightbox.hidden = false;
+    closeBtn?.focus();
   }
 
   function closeLightbox() {
     if (!lightbox || !lightboxImg) return;
     lightbox.hidden = true;
     lightboxImg.removeAttribute("src");
+    lightboxImg.alt = "";
+    lastFocused?.focus();
+    lastFocused = null;
   }
 
   document.querySelectorAll<HTMLButtonElement>(".past-events .photo").forEach((btn) => {
     btn.addEventListener("click", () => {
       const src = btn.dataset.lightboxSrc;
-      if (src) openLightbox(src);
+      const alt = btn.dataset.lightboxAlt ?? "";
+      if (src) openLightbox(src, alt, btn);
     });
   });
 
   closeBtn?.addEventListener("click", closeLightbox);
   backdrop?.addEventListener("click", closeLightbox);
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeLightbox();
+    if (e.key === "Escape" && lightbox && !lightbox.hidden) closeLightbox();
   });
 </script>

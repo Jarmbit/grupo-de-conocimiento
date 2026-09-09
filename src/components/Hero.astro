@@ -1,5 +1,7 @@
 ---
+import { Image } from "astro:assets";
 import { identity } from "../data/content";
+import eventoImg from "../assets/evento-4.jpg";
 ---
 
 <section id="top" class="hero">
@@ -16,7 +18,14 @@ import { identity } from "../data/content";
     </div>
   </div>
   <div class="image">
-    <img src="/images/evento-4.jpg" alt="Sala preparada para un encuentro de Encuentros Siloé" />
+    <Image
+      src={eventoImg}
+      alt="Sala preparada para un encuentro de Encuentros Siloé"
+      widths={[480, 768, 1200]}
+      sizes="(max-width: 900px) 100vw, 50vw"
+      loading="eager"
+      fetchpriority="high"
+    />
   </div>
 </section>
 

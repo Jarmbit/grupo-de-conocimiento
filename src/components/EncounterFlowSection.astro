@@ -1,5 +1,17 @@
 ---
+import { Image } from "astro:assets";
 import { howWeDoIt, afterEncounter } from "../data/content";
+
+const encuentroImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/encuentro/*.jpg",
+  { eager: true }
+);
+
+function encuentroImage(path: string) {
+  const filename = path.split("/").pop();
+  const entry = Object.entries(encuentroImages).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default;
+}
 ---
 
 <section id="como-es-un-encuentro" data-screen-label="Cómo es un encuentro" class="flow">
@@ -10,13 +22,16 @@ import { howWeDoIt, afterEncounter } from "../data/content";
   </div>
   <div class="grid">
     {
-      howWeDoIt.traits.map((trait) => (
-        <div class="card">
-          <img src={trait.image} alt="" class="photo" loading="lazy" />
-          <h3>{trait.title}</h3>
-          <p>{trait.text}</p>
-        </div>
-      ))
+      howWeDoIt.traits.map((trait) => {
+        const image = encuentroImage(trait.image);
+        return (
+          <div class="card">
+            {image && <Image src={image} alt={trait.alt} class="photo" width={64} height={64} loading="lazy" />}
+            <h3>{trait.title}</h3>
+            <p>{trait.text}</p>
+          </div>
+        );
+      })
     }
   </div>
   <p class="closing">{howWeDoIt.closing}</p>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://encuentrossiloe.org/sitemap-index.xml
