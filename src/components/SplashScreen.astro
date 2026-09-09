@@ -33,6 +33,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background: var(--primary-dark, #0f2138);
+  }
+
+  @media (max-aspect-ratio: 4/5) {
+    .splash-bg {
+      object-fit: contain;
+    }
   }
 
   .splash-overlay {
