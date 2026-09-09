@@ -1,7 +1,5 @@
 ---
-import { events, showEventSpots, eventRequest, contact } from "../data/content";
-
-const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRequest.subject)}&body=${encodeURIComponent(eventRequest.body)}`;
+import { events, showEventSpots } from "../data/content";
 ---
 
 <section id="eventos" data-screen-label="Eventos" class="events">
@@ -11,7 +9,7 @@ const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRe
     <p>Reserva tu plaza; el aforo es limitado.</p>
     <p class="request">
       ¿Quieres que organicemos un encuentro en tu hogar o comunidad?
-      <a href={mailtoHref}>Solicítalo aquí →</a>
+      <a href="#pide-un-encuentro">Solicítalo aquí →</a>
     </p>
   </div>
   <div class="list">

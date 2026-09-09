@@ -1,7 +1,5 @@
 ---
-import { participation, homesNetwork, eventRequest, contact } from "../data/content";
-
-const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRequest.subject)}&body=${encodeURIComponent(eventRequest.body)}`;
+import { participation, homesNetwork, eventRequest } from "../data/content";
 ---
 
 <section id="crearlo-juntos" data-screen-label="Crearlo juntos" class="participation">
@@ -28,7 +26,7 @@ const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(eventRe
     }
   </div>
   <div class="cta-row">
-    <a href={mailtoHref} class="cta cta-outline">{eventRequest.label}</a>
+    <a href="#pide-un-encuentro" class="cta cta-outline">{eventRequest.label}</a>
     <a href="#apoya" class="cta cta-solid">Ver formas de colaborar →</a>
   </div>
 </section>

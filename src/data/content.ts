@@ -9,6 +9,7 @@ export interface NavLink {
 export const navLinks: NavLink[] = [
   { href: "#sobre", label: "Sobre nosotros" },
   { href: "#videos", label: "Vídeos" },
+  { href: "#pide-un-encuentro", label: "Pide un encuentro" },
   { href: "#eventos", label: "Eventos" },
   { href: "#noticias", label: "Noticias" },
   { href: "#unete", label: "Únete" },
@@ -115,6 +116,41 @@ export const eventRequest = {
   subject: "Quiero solicitar un encuentro",
   body: "Hola, me gustaría organizar un encuentro de Encuentros Siloé. Cuéntame cómo sería el siguiente paso.",
 };
+
+export interface EventType {
+  key: "dios" | "jesucristo";
+  kicker: string;
+  title: string;
+  text: string;
+  youtubeId?: string;
+  placeholder?: boolean;
+  requestSubject: string;
+  requestBody: string;
+}
+
+// Los dos tipos de encuentro que se pueden solicitar.
+export const eventTypes: EventType[] = [
+  {
+    key: "dios",
+    kicker: "Encuentro I",
+    title: "La existencia de Dios",
+    text: "Un recorrido por las razones y evidencias que sostienen que creer en Dios es razonable, a través de testimonios, ciencia y filosofía.",
+    youtubeId: "29GbjDfUVgw",
+    requestSubject: "Quiero solicitar un encuentro: La existencia de Dios",
+    requestBody:
+      "Hola, me gustaría organizar un encuentro de Encuentros Siloé sobre la existencia de Dios. Cuéntame cómo sería el siguiente paso.",
+  },
+  {
+    key: "jesucristo",
+    kicker: "Encuentro II",
+    title: "La existencia de Jesucristo",
+    text: "Un acercamiento a la evidencia histórica y al testimonio vivo de que Jesucristo existió, murió y resucitó, y de que su vida cambia vidas hoy.",
+    placeholder: true,
+    requestSubject: "Quiero solicitar un encuentro: La existencia de Jesucristo",
+    requestBody:
+      "Hola, me gustaría organizar un encuentro de Encuentros Siloé sobre la existencia de Jesucristo. Cuéntame cómo sería el siguiente paso.",
+  },
+];
 
 export interface Video {
   title: string;
