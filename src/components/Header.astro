@@ -1,8 +1,10 @@
 ---
 import Logo from "./Logo.astro";
-import { navLinks } from "../data/content";
+import { navLinks, news } from "../data/content";
 
-const primaryNavLinks = navLinks.filter((link) => link.href !== "#apoya");
+const primaryNavLinks = navLinks.filter(
+  (link) => link.href !== "#apoya" && (link.href !== "#noticias" || news.length > 0)
+);
 ---
 
 <header class="site-header">

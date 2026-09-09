@@ -2,23 +2,23 @@
 import { news } from "../data/content";
 ---
 
-<section id="noticias" data-screen-label="Noticias" class="news">
-  <div class="intro">
-    <span class="kicker">Actualidad</span>
-    <h2>Noticias</h2>
-  </div>
-  <div class="grid">
-    {
-      news.map((n) => (
-        <a href="#" class="card">
+{news.length > 0 && (
+  <section id="noticias" data-screen-label="Noticias" class="news">
+    <div class="intro">
+      <span class="kicker">Actualidad</span>
+      <h2>Noticias</h2>
+    </div>
+    <div class="grid">
+      {news.map((n) => (
+        <a href={n.href} class="card">
           <span class="date">{n.date}</span>
           <h3>{n.title}</h3>
           <span class="read-more">Leer más →</span>
         </a>
-      ))
-    }
-  </div>
-</section>
+      ))}
+    </div>
+  </section>
+)}
 
 <style>
   .news {

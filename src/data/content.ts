@@ -213,29 +213,8 @@ export interface EventItem {
   spots: string;
 }
 
-export const events: EventItem[] = [
-  {
-    month: "SEP",
-    day: "12",
-    title: "Noche de testimonios: Encuentro con Dios",
-    location: "Madrid · Parroquia San Judas",
-    spots: "Quedan 40 plazas",
-  },
-  {
-    month: "OCT",
-    day: "03",
-    title: "Conferencia: Evidencias de la Resurrección",
-    location: "Barcelona · Auditori Diocesà",
-    spots: "Quedan 25 plazas",
-  },
-  {
-    month: "OCT",
-    day: "24",
-    title: "Retiro de un día: Silencio y encuentro",
-    location: "Sevilla · Casa de Espiritualidad",
-    spots: "Quedan 15 plazas",
-  },
-];
+// Sin eventos confirmados todavía. Añadir aquí cada evento real cuando se cierre fecha y lugar.
+export const events: EventItem[] = [];
 
 export const showEventSpots = true;
 
@@ -264,13 +243,11 @@ export const pastEvents: PastEvent[] = [
 export interface NewsItem {
   date: string;
   title: string;
+  href: string;
 }
 
-export const news: NewsItem[] = [
-  { date: "2 jul 2026", title: "Más de 300 personas en nuestro último encuentro en Valencia" },
-  { date: "18 jun 2026", title: "Nueva serie de vídeos sobre los milagros eucarísticos" },
-  { date: "5 jun 2026", title: "Encuentros Siloé estrena boletín mensual" },
-];
+// Sin noticias reales todavía. Añadir aquí cada noticia cuando exista su artículo/destino real.
+export const news: NewsItem[] = [];
 
 export interface Social {
   initial: string;
@@ -278,12 +255,8 @@ export interface Social {
   href: string;
 }
 
-export const socials: Social[] = [
-  { initial: "IG", label: "Instagram", href: "#" },
-  { initial: "YT", label: "YouTube", href: "#" },
-  { initial: "FB", label: "Facebook", href: "#" },
-  { initial: "X", label: "X (Twitter)", href: "#" },
-];
+// Sin enlaces reales todavía: se ocultan (ver Footer.astro / JoinSection.astro) hasta añadirlos aquí.
+export const socials: Social[] = [];
 
 export interface DonationModel {
   key: "socio" | "puntual" | "patrocinio" | "voluntariado";
@@ -329,7 +302,6 @@ export const highlightDonation: DonationModel["key"] = "socio";
 
 export const contact = {
   email: "info@encuentrossiloe.org",
-  phone: "+34 900 000 000",
 };
 
 // El origen bíblico del nombre de la asociación (Juan 9,7).

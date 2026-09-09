@@ -1,5 +1,11 @@
 ---
-import { donationModels, highlightDonation } from "../data/content";
+import { donationModels, highlightDonation, contact } from "../data/content";
+
+function supportHref(title: string) {
+  const subject = `Quiero informarme: ${title}`;
+  const body = `Hola, quiero informarme sobre cómo colaborar como "${title}" con Encuentros Siloé.`;
+  return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 ---
 
 <section id="apoya" data-screen-label="Apoya" class="support">
@@ -15,8 +21,8 @@ import { donationModels, highlightDonation } from "../data/content";
           <h3>{d.title}</h3>
           <span class="detail">{d.detail}</span>
           <p>{d.text}</p>
-          {/* TODO: enlazar al flujo de pago/donación real */}
-          <a href="#" class="btn">{d.cta}</a>
+          {/* TODO: enlazar a una pasarela de pago real (Stripe, PayPal, TPV bancario) cuando esté disponible */}
+          <a href={supportHref(d.title)} class="btn">{d.cta}</a>
         </div>
       ))
     }

@@ -1,6 +1,8 @@
 ---
 import Logo from "./Logo.astro";
-import { navLinks, socials, contact } from "../data/content";
+import { navLinks, socials, contact, news } from "../data/content";
+
+const footerNavLinks = navLinks.filter((link) => link.href !== "#noticias" || news.length > 0);
 ---
 
 <footer id="contacto" data-screen-label="Contacto">
@@ -15,28 +17,28 @@ import { navLinks, socials, contact } from "../data/content";
     </div>
     <div class="links">
       <span class="col-title">Explorar</span>
-      {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+      {footerNavLinks.map((link) => <a href={link.href}>{link.label}</a>)}
     </div>
     <div class="contact">
       <span class="col-title">Contacto</span>
       <span class="contact-line">{contact.email}</span>
-      <span class="contact-line">{contact.phone}</span>
-      <div class="social-row">
-        {
-          socials.map((s) => (
+      {socials.length > 0 && (
+        <div class="social-row">
+          {socials.map((s) => (
             <a href={s.href} class="social-icon" aria-label={s.label}>
               {s.initial}
             </a>
-          ))
-        }
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </div>
   <div class="bottom">
     <span class="copyright">© 2026 Encuentros Siloé. Asociación sin ánimo de lucro.</span>
     <div class="legal">
-      <a href="#">Aviso legal</a>
-      <a href="#">Privacidad</a>
+      <a href="/aviso-legal">Aviso legal</a>
+      <a href="/privacidad">Privacidad</a>
+      <a href="/cookies">Cookies</a>
     </div>
   </div>
 </footer>

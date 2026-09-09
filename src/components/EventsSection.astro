@@ -1,20 +1,33 @@
 ---
-import { events, showEventSpots } from "../data/content";
+import { events, showEventSpots, contact } from "../data/content";
+
+function reserveHref(title: string) {
+  const subject = `Quiero reservar plaza: ${title}`;
+  const body = `Hola, me gustaría reservar plaza para el evento "${title}". ¿Cómo sería el siguiente paso?`;
+  return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 ---
 
 <section id="eventos" data-screen-label="Eventos" class="events">
   <div class="intro">
     <span class="kicker">Agenda</span>
     <h2>Próximos eventos</h2>
-    <p>Reserva tu plaza; el aforo es limitado.</p>
+    {events.length > 0 ? (
+      <p>Reserva tu plaza; el aforo es limitado.</p>
+    ) : (
+      <p>
+        Estamos preparando los próximos encuentros. Si quieres que llevemos uno a tu parroquia u
+        hogar, escríbenos.
+      </p>
+    )}
     <p class="request">
       ¿Quieres que organicemos un encuentro en tu hogar o comunidad?
       <a href="#pide-un-encuentro">Solicítalo aquí →</a>
     </p>
   </div>
-  <div class="list">
-    {
-      events.map((ev) => (
+  {events.length > 0 && (
+    <div class="list">
+      {events.map((ev) => (
         <div class="row">
           <div class="date">
             <span class="month">{ev.month}</span>
@@ -26,12 +39,11 @@ import { events, showEventSpots } from "../data/content";
             {showEventSpots && <span class="spots">{ev.spots}</span>}
             <a href="#apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
           </div>
-          {/* TODO: enlazar a un sistema de reservas real (Calendly, formulario propio, Eventbrite...) */}
-          <a href="#" class="btn">Reservar plaza</a>
+          <a href={reserveHref(ev.title)} class="btn">Reservar plaza</a>
         </div>
-      ))
-    }
-  </div>
+      ))}
+    </div>
+  )}
 </section>
 
 <style>

@@ -7,6 +7,9 @@ import { eventTypes, contact } from "../data/content";
     <span class="kicker">Pide un encuentro</span>
     <h2>Elige el encuentro que quieres traer a tu hogar o comunidad</h2>
     <p>Tenemos dos encuentros disponibles. Elige el que mejor encaje con las personas a las que quieres invitar.</p>
+    <p class="privacy-note">
+      Al escribirnos, tratamos tus datos según nuestra <a href="/privacidad">política de privacidad</a>.
+    </p>
   </div>
   <div class="grid">
     {
@@ -80,6 +83,19 @@ import { eventTypes, contact } from "../data/content";
     font-size: 16px;
     line-height: 1.6;
     color: var(--ink-muted);
+  }
+
+  .privacy-note {
+    font-size: 13px;
+  }
+
+  .privacy-note a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .privacy-note a:hover {
+    color: var(--primary-dark);
   }
 
   .grid {
