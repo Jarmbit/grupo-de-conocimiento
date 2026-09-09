@@ -239,6 +239,28 @@ export const events: EventItem[] = [
 
 export const showEventSpots = true;
 
+export interface PastEvent {
+  title: string;
+  location: string;
+  date: string;
+  photos: string[];
+}
+
+// Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
+export const pastEvents: PastEvent[] = [
+  {
+    title: "Encuentro en parroquias",
+    location: "Parroquia San Lorenzo, Burgos",
+    date: "2 de febrero de 2026",
+    photos: [
+      "/images/eventos-pasados/burgos-san-lorenzo/burgos-01.jpg",
+      "/images/eventos-pasados/burgos-san-lorenzo/burgos-02.jpg",
+      "/images/eventos-pasados/burgos-san-lorenzo/burgos-03.jpg",
+      "/images/eventos-pasados/burgos-san-lorenzo/burgos-04.jpg",
+    ],
+  },
+];
+
 export interface NewsItem {
   date: string;
   title: string;
