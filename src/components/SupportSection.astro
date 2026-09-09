@@ -57,14 +57,16 @@ function supportHref(title: string) {
 
   h2 {
     font-family: "Lora", serif;
-    font-size: 34px;
+    font-size: var(--text-h2-size);
     font-weight: 600;
     color: var(--white);
+    line-height: var(--text-h2-line);
   }
 
   .intro p {
-    font-size: 16px;
+    font-size: var(--text-body-size);
     color: #c9d2dc;
+    line-height: var(--text-body-line);
   }
 
   .grid {
@@ -93,8 +95,9 @@ function supportHref(title: string) {
 
   .card h3 {
     font-family: "Lora", serif;
-    font-size: 19px;
+    font-size: var(--text-h3-serif-size);
     font-weight: 600;
+    line-height: var(--text-h3-serif-line);
     color: var(--primary-dark);
   }
 

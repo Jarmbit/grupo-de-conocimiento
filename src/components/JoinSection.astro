@@ -57,14 +57,16 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
 
   h2 {
     font-family: "Lora", serif;
-    font-size: 34px;
+    font-size: var(--text-h2-size);
     font-weight: 600;
     color: var(--primary-dark);
+    line-height: var(--text-h2-line);
   }
 
   .intro p {
-    font-size: 16px;
+    font-size: var(--text-body-size);
     color: var(--ink-muted);
+    line-height: var(--text-body-line);
   }
 
   .grid {
@@ -93,8 +95,9 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
   }
 
   .card h3 {
-    font-size: 18px;
+    font-size: var(--text-h3-sans-size);
     font-weight: 600;
+    line-height: var(--text-h3-sans-line);
     color: var(--primary-dark);
   }
 

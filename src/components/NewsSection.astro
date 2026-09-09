@@ -50,9 +50,10 @@ import { news } from "../data/content";
 
   h2 {
     font-family: "Lora", serif;
-    font-size: 34px;
+    font-size: var(--text-h2-size);
     font-weight: 600;
     color: var(--primary-dark);
+    line-height: var(--text-h2-line);
   }
 
   .grid {
@@ -86,10 +87,10 @@ import { news } from "../data/content";
   }
 
   .card h3 {
-    font-size: 17px;
+    font-size: var(--text-h3-sans-size);
     font-weight: 600;
     color: var(--primary-dark);
-    line-height: 1.4;
+    line-height: var(--text-h3-sans-line);
   }
 
   .read-more {
