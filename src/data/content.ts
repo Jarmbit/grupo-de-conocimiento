@@ -7,12 +7,12 @@ export interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  { href: "#sobre", label: "Sobre nosotros" },
-  { href: "#videos", label: "Vídeos" },
-  { href: "#pide-un-encuentro", label: "Pide un encuentro" },
+  { href: "/#sobre", label: "Sobre nosotros" },
+  { href: "/#videos", label: "Vídeos" },
+  { href: "/#pide-un-encuentro", label: "Pide un encuentro" },
   { href: "/eventos", label: "Eventos" },
   { href: "/noticias", label: "Noticias" },
-  { href: "#unete", label: "Únete" },
+  { href: "/#unete", label: "Únete" },
   { href: "/apoya", label: "Apoya" },
 ];
 
