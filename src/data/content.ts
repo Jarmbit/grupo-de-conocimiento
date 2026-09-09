@@ -306,7 +306,7 @@ export const donationModels: DonationModel[] = [
 export const highlightDonation: DonationModel["key"] = "socio";
 
 export const contact = {
-  email: "hola@encuentrossiloe.org",
+  email: "info@encuentrossiloe.org",
   phone: "+34 900 000 000",
 };
 
