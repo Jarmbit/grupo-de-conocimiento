@@ -44,7 +44,7 @@ import eventoImg from "../assets/encuentro/amistad.jpg";
     justify-content: center;
     gap: 26px;
     padding: clamp(48px, 10vw, 80px) clamp(20px, 5vw, 64px);
-    max-width: 640px;
+    max-width: 720px;
     flex: 1 1 420px;
   }
 
@@ -90,9 +90,16 @@ import eventoImg from "../assets/encuentro/amistad.jpg";
 
   .image {
     position: relative;
-    flex: 1 1 320px;
+    flex: 1 1 280px;
+    max-width: 38%;
     min-height: 320px;
     overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    .image {
+      max-width: 100%;
+    }
   }
 
   .image img {
