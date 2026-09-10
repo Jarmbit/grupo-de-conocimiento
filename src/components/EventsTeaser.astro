@@ -1,23 +1,66 @@
 ---
+import { Image } from "astro:assets";
 import { events } from "../data/content";
+
+const eventImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/events/*.jpg",
+  { eager: true }
+);
+
+function eventImage(path?: string) {
+  if (!path) return undefined;
+  const filename = path.split("/").pop();
+  const entry = Object.entries(eventImages).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default;
+}
+
+const nextEvent = events[0];
+const nextEventImage = eventImage(nextEvent?.image);
 ---
 
 <section id="eventos" data-screen-label="Eventos" class="events-teaser">
-  <div class="intro">
-    <span class="kicker">Agenda</span>
-    <h2>Próximos eventos</h2>
-    {events.length > 0 ? (
-      <p>Reserva tu plaza; el aforo es limitado.</p>
-    ) : (
-      <p>
-        Estamos preparando los próximos encuentros. Si quieres que llevemos uno a tu parroquia u
-        hogar, escríbenos.
-      </p>
-    )}
-    <div class="cta-row">
-      <a href="/eventos" class="btn-primary">Ver todos los eventos →</a>
-      <a href="#pide-un-encuentro" class="link-arrow link-arrow--block">¿Quieres que organicemos uno? Solicítalo →</a>
+  <div class="layout">
+    <div class="intro">
+      <span class="kicker">Agenda</span>
+      <h2>Próximos eventos</h2>
+      {events.length > 0 ? (
+        <p>Reserva tu plaza; el aforo es limitado.</p>
+      ) : (
+        <p>
+          Estamos preparando los próximos encuentros. Si quieres que llevemos uno a tu parroquia u
+          hogar, escríbenos.
+        </p>
+      )}
+      <div class="cta-row">
+        <a href="/eventos" class="btn-primary">Ver todos los eventos →</a>
+        <a href="#pide-un-encuentro" class="link-arrow link-arrow--block">¿Quieres que organicemos uno? Solicítalo →</a>
+      </div>
     </div>
+    {nextEvent && (
+      <a
+        href={nextEvent.link ?? "/eventos"}
+        target={nextEvent.link ? "_blank" : undefined}
+        rel={nextEvent.link ? "noopener noreferrer" : undefined}
+        class="event-card"
+        aria-label={`Más información sobre ${nextEvent.title}`}
+      >
+        {nextEventImage && (
+          <Image
+            src={nextEventImage}
+            alt={`Cartel del evento ${nextEvent.title}`}
+            class="event-poster"
+            width={240}
+            height={340}
+            loading="lazy"
+          />
+        )}
+        <div class="event-body">
+          <span class="event-date">{nextEvent.month} · {nextEvent.day}</span>
+          <h3>{nextEvent.title}</h3>
+          <span class="event-location">{nextEvent.location}</span>
+        </div>
+      </a>
+    )}
   </div>
 </section>
 
@@ -28,11 +71,19 @@ import { events } from "../data/content";
     margin: 0 auto;
   }
 
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+  }
+
   .intro {
     max-width: 680px;
     display: flex;
     flex-direction: column;
     gap: 14px;
+    flex: 1 1 420px;
   }
 
   .kicker {
@@ -67,5 +118,52 @@ import { events } from "../data/content";
 
   :global(.btn-primary) {
     flex: none;
+  }
+
+  .event-card {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 240px;
+    background: var(--bg-alt);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform 0.15s ease;
+  }
+
+  .event-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .event-card :global(.event-poster) {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .event-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px 20px;
+  }
+
+  .event-date {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .event-body h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .event-location {
+    font-size: 13px;
+    color: var(--ink-muted);
   }
 </style>
