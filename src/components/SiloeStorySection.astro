@@ -1,5 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import { siloeStory } from "../data/content";
+import jesusLoEncuentra from "../assets/siloe-story/jesus-lo-encuentra.jpg";
+import loEnviaASiloe from "../assets/siloe-story/lo-envia-a-siloe.jpg";
+import seLavaYVuelveViendo from "../assets/siloe-story/se-lava-y-vuelve-viendo.jpg";
+
+const stepImages = [jesusLoEncuentra, loEnviaASiloe, seLavaYVuelveViendo];
 ---
 
 <section id="origen-del-nombre" data-screen-label="El origen del nombre" class="siloe-story">
@@ -11,9 +17,16 @@ import { siloeStory } from "../data/content";
 
   <div class="steps">
     {
-      siloeStory.steps.map((step) => (
+      siloeStory.steps.map((step, i) => (
         <div class="step">
-          <span class="step-number">{step.number}</span>
+          <Image
+            src={stepImages[i]}
+            alt={step.title}
+            class="step-photo"
+            width={160}
+            height={160}
+            loading="lazy"
+          />
           <h3>{step.title}</h3>
           <p>{step.text}</p>
         </div>
@@ -104,18 +117,11 @@ import { siloeStory } from "../data/content";
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .step-number {
-    width: 34px;
-    height: 34px;
+  .step :global(.step-photo) {
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    background: var(--secondary);
-    color: var(--primary-dark);
-    font-family: "Lora", serif;
-    font-weight: 700;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: cover;
     box-shadow: 0 3px 10px rgba(91, 155, 213, 0.35);
     border: 2px solid rgba(255, 255, 255, 0.25);
   }
