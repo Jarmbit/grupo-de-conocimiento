@@ -239,10 +239,21 @@ export interface EventItem {
   title: string;
   location: string;
   spots: string;
+  image?: string;
+  link?: string;
 }
 
-// Sin eventos confirmados todavía. Añadir aquí cada evento real cuando se cierre fecha y lugar.
-export const events: EventItem[] = [];
+export const events: EventItem[] = [
+  {
+    month: "Oct",
+    day: "17",
+    title: "Jesús de Nazaret",
+    location: "Teatro Fernández Baldor, Torrelodones · 18:00h",
+    spots: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé",
+    image: "/images/events/jesus-de-nazaret.jpg",
+    link: "https://teatrofernandezbaldor.com/jesus-de-nazaret/",
+  },
+];
 
 export const showEventSpots = true;
 

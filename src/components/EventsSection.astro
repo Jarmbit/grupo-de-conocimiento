@@ -1,5 +1,18 @@
 ---
+import { Image } from "astro:assets";
 import { events, showEventSpots, contact } from "../data/content";
+
+const eventImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/events/*.jpg",
+  { eager: true }
+);
+
+function eventImage(path?: string) {
+  if (!path) return undefined;
+  const filename = path.split("/").pop();
+  const entry = Object.entries(eventImages).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default;
+}
 
 function reserveHref(title: string) {
   const subject = `Quiero reservar plaza: ${title}`;
@@ -27,21 +40,35 @@ function reserveHref(title: string) {
   </div>
   {events.length > 0 && (
     <div class="list">
-      {events.map((ev) => (
-        <div class="row">
-          <div class="date">
-            <span class="month">{ev.month}</span>
-            <span class="day">{ev.day}</span>
+      {events.map((ev) => {
+        const image = eventImage(ev.image);
+        return (
+          <div class="row">
+            {image && (
+              <a
+                href={ev.link ?? reserveHref(ev.title)}
+                target={ev.link ? "_blank" : undefined}
+                rel={ev.link ? "noopener noreferrer" : undefined}
+                class="poster-link"
+                aria-label={`Más información sobre ${ev.title}`}
+              >
+                <Image src={image} alt={`Cartel del evento ${ev.title}`} class="poster" width={200} height={300} loading="lazy" />
+              </a>
+            )}
+            <div class="date">
+              <span class="month">{ev.month}</span>
+              <span class="day">{ev.day}</span>
+            </div>
+            <div class="details">
+              <h3>{ev.title}</h3>
+              <span class="location">{ev.location}</span>
+              {showEventSpots && <span class="spots">{ev.spots}</span>}
+              <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
+            </div>
+            <a href={reserveHref(ev.title)} class="btn-primary">Reservar plaza</a>
           </div>
-          <div class="details">
-            <h3>{ev.title}</h3>
-            <span class="location">{ev.location}</span>
-            {showEventSpots && <span class="spots">{ev.spots}</span>}
-            <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
-          </div>
-          <a href={reserveHref(ev.title)} class="btn-primary">Reservar plaza</a>
-        </div>
-      ))}
+        );
+      })}
     </div>
   )}
 </section>
@@ -111,10 +138,34 @@ function reserveHref(title: string) {
       align-self: flex-start;
     }
 
+    .row .poster-link {
+      align-self: center;
+    }
+
     .row :global(.btn-primary) {
       width: 100%;
       text-align: center;
     }
+  }
+
+  .poster-link {
+    display: block;
+    flex: none;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .poster-link :global(.poster) {
+    display: block;
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.15s ease;
+  }
+
+  .poster-link:hover :global(.poster) {
+    transform: scale(1.03);
   }
 
   .date {
