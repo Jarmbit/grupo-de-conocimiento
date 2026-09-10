@@ -75,16 +75,16 @@ export const howWeDoIt = {
       alt: "Momento musical en un encuentro de Encuentros Siloé",
     },
     {
+      title: "Testimonio",
+      text: "Como apareció Dios en mi vida.",
+      image: "/images/encuentro/reflexion.jpg",
+      alt: "Momento de testimonio en un encuentro de Encuentros Siloé",
+    },
+    {
       title: "Vídeo",
       text: "La verdad que ilumina la vida.",
       image: "/images/encuentro/video.jpg",
       alt: "Proyección de un vídeo durante un encuentro de Encuentros Siloé",
-    },
-    {
-      title: "Reflexión",
-      text: "Ideas que ayudan a comprender y mirar más allá.",
-      image: "/images/encuentro/reflexion.jpg",
-      alt: "Momento de reflexión en un encuentro de Encuentros Siloé",
     },
     {
       title: "Coloquio",
@@ -93,22 +93,10 @@ export const howWeDoIt = {
       alt: "Coloquio entre asistentes a un encuentro de Encuentros Siloé",
     },
     {
-      title: "Oración",
-      text: "Nos encontramos con Dios.",
-      image: "/images/encuentro/oracion.jpg",
-      alt: "Momento de oración en un encuentro de Encuentros Siloé",
-    },
-    {
-      title: "Amistad",
-      text: "Nacen lazos verdaderos.",
+      title: "Cena",
+      text: "Compartimos la cena.",
       image: "/images/encuentro/amistad.jpg",
-      alt: "Asistentes compartiendo un momento de amistad en un encuentro de Encuentros Siloé",
-    },
-    {
-      title: "Continuidad",
-      text: "Seguimos el camino juntos.",
-      image: "/images/encuentro/continuidad.jpg",
-      alt: "Grupo de asistentes tras un encuentro de Encuentros Siloé",
+      alt: "Asistentes compartiendo la cena en un encuentro de Encuentros Siloé",
     },
   ] satisfies EventTrait[],
   closing: "Un encuentro que deja huella.",

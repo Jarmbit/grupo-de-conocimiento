@@ -98,7 +98,7 @@ function encuentroImage(path: string) {
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     max-width: 1180px;
     margin: 0 auto;
@@ -108,6 +108,12 @@ function encuentroImage(path: string) {
   @media (max-width: 640px) {
     .grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 
