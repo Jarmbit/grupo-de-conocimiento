@@ -97,24 +97,13 @@ function encuentroImage(path: string) {
   }
 
   .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
     max-width: 1180px;
     margin: 0 auto;
     width: 100%;
-  }
-
-  @media (max-width: 640px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .grid {
-      grid-template-columns: repeat(5, 1fr);
-    }
   }
 
   .card {
@@ -127,6 +116,22 @@ function encuentroImage(path: string) {
     background: var(--white);
     border-radius: var(--radius-card);
     border: 1px solid var(--border-subtle);
+  }
+
+  .grid > .card {
+    flex: 0 1 calc(33.333% - 13.34px);
+  }
+
+  @media (max-width: 640px) {
+    .grid > .card {
+      flex-basis: 100%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid > .card {
+      flex-basis: calc(20% - 16px);
+    }
   }
 
   .photo {
@@ -170,13 +175,13 @@ function encuentroImage(path: string) {
     border-top: 1px solid var(--border-subtle);
   }
 
-  .after .grid {
-    grid-template-columns: repeat(3, 1fr);
+  .after .grid > .card {
+    flex-basis: calc(33.333% - 13.34px);
   }
 
   @media (max-width: 640px) {
-    .after .grid {
-      grid-template-columns: 1fr;
+    .after .grid > .card {
+      flex-basis: 100%;
     }
   }
 

@@ -135,21 +135,10 @@ import { identity, objective, pillars } from "../data/content";
   }
 
   .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 24px;
-  }
-
-  @media (max-width: 640px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .grid {
-      grid-template-columns: repeat(5, 1fr);
-    }
   }
 
   .card {
@@ -159,6 +148,19 @@ import { identity, objective, pillars } from "../data/content";
     padding: 24px;
     background: var(--bg-alt);
     border-radius: var(--radius-card);
+    flex: 0 1 calc(50% - 12px);
+  }
+
+  @media (max-width: 640px) {
+    .card {
+      flex-basis: 100%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .card {
+      flex-basis: calc(20% - 19.2px);
+    }
   }
 
   .card h3 {
