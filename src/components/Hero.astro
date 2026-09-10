@@ -34,8 +34,7 @@ import eventoImg from "../assets/encuentro/amistad.jpg";
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    align-items: stretch;
-    min-height: 640px;
+    align-items: center;
   }
 
   .content {
@@ -90,15 +89,18 @@ import eventoImg from "../assets/encuentro/amistad.jpg";
 
   .image {
     position: relative;
-    flex: 1 1 280px;
-    max-width: 38%;
-    min-height: 320px;
+    flex: 0 1 380px;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    max-height: 360px;
+    margin: 40px clamp(20px, 5vw, 64px) 40px auto;
+    border-radius: var(--radius-card);
     overflow: hidden;
   }
 
   @media (max-width: 900px) {
     .image {
-      max-width: 100%;
+      margin: 0 clamp(20px, 5vw, 64px) 40px;
     }
   }
 
