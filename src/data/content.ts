@@ -227,18 +227,6 @@ export const videos: Video[] = [
   },
   {
     title: "Un momento de nuestros encuentros",
-    duration: "0:36",
-    thumbnail: "/images/encuentro-videos/encuentro-05.jpg",
-    src: "/videos/encuentro-05.mp4",
-  },
-  {
-    title: "Momento musical en un encuentro",
-    duration: "0:16",
-    thumbnail: "/images/encuentro-videos/encuentro-06.jpg",
-    src: "/videos/encuentro-06.mp4",
-  },
-  {
-    title: "Un momento de nuestros encuentros",
     duration: "0:27",
     thumbnail: "/images/encuentro-videos/encuentro-07.jpg",
     src: "/videos/encuentro-07.mp4",
