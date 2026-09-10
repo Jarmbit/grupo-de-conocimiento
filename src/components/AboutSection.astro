@@ -29,7 +29,6 @@ import { identity, objective, pillars } from "../data/content";
     {
       pillars.map((pillar) => (
         <div class="card">
-          <span class="icon" aria-hidden="true" />
           <h3>{pillar.title}</h3>
           <p>{pillar.text}</p>
         </div>
@@ -160,14 +159,6 @@ import { identity, objective, pillars } from "../data/content";
     padding: 24px;
     background: var(--bg-alt);
     border-radius: var(--radius-card);
-  }
-
-  .icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--primary);
-    flex: none;
   }
 
   .card h3 {
