@@ -65,7 +65,14 @@ function reserveHref(title: string) {
               {showEventSpots && <span class="spots">{ev.spots}</span>}
               <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
             </div>
-            <a href={reserveHref(ev.title)} class="btn-primary">Reservar plaza</a>
+            <a
+              href={ev.link ?? reserveHref(ev.title)}
+              target={ev.link ? "_blank" : undefined}
+              rel={ev.link ? "noopener noreferrer" : undefined}
+              class="btn-primary"
+            >
+              Reservar plaza
+            </a>
           </div>
         );
       })}

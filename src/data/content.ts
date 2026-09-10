@@ -251,7 +251,7 @@ export const events: EventItem[] = [
     location: "Teatro Fernández Baldor, Torrelodones · 18:00h",
     spots: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé",
     image: "/images/events/jesus-de-nazaret.jpg",
-    link: "https://teatrofernandezbaldor.com/jesus-de-nazaret/",
+    link: "https://www.giglon.com/todos?idEvent=jesus-de-nazaret",
   },
 ];
 
