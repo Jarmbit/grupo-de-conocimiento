@@ -149,6 +149,7 @@ export interface EventType {
   title: string;
   text: string;
   youtubeId?: string;
+  videoSrc?: string;
   placeholder?: boolean;
   requestSubject: string;
   requestBody: string;
@@ -177,7 +178,7 @@ export const eventTypes: EventType[] = [
     kicker: "Encuentro I",
     title: "La existencia de Dios",
     text: "Un recorrido por las razones y evidencias que sostienen que creer en Dios es razonable, a través de testimonios, ciencia y filosofía.",
-    youtubeId: "29GbjDfUVgw",
+    videoSrc: "/videos/dios-trailer.mp4",
     requestSubject: "Quiero solicitar un encuentro: La existencia de Dios",
     requestBody: requestBodyTemplate("La existencia de Dios"),
   },
@@ -186,7 +187,7 @@ export const eventTypes: EventType[] = [
     kicker: "Encuentro II",
     title: "La existencia de Jesucristo",
     text: "Un acercamiento a la evidencia histórica y al testimonio vivo de que Jesucristo existió, murió y resucitó, y de que su vida cambia vidas hoy.",
-    placeholder: true,
+    videoSrc: "/videos/jesus-trailer.mp4",
     requestSubject: "Quiero solicitar un encuentro: La existencia de Jesucristo",
     requestBody: requestBodyTemplate("La existencia de Jesucristo"),
   },
