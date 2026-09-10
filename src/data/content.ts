@@ -131,7 +131,6 @@ export const participation = {
     { title: "Organizar encuentros", text: "Ayuda a crear espacios donde todo comienza." },
     { title: "Música", text: "Prepara el corazón y acompaña cada encuentro." },
     { title: "Comunicación", text: "Da a conocer la misión y lleva la luz más lejos." },
-    { title: "Acogida", text: "Haz que cada persona se sienta bienvenida y en casa." },
     { title: "Oración", text: "Sostiene espiritualmente cada paso de la misión." },
     { title: "Recursos económicos", text: "Tu generosidad hace posible que esta misión continúe y llegue más lejos." },
   ] satisfies ParticipationWay[],
