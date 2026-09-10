@@ -46,7 +46,6 @@ function encuentroImage(path: string) {
       {
         afterEncounter.ways.map((way) => (
           <div class="card">
-            <span class="icon" aria-hidden="true" />
             <h3>{way.title}</h3>
             <p>{way.text}</p>
           </div>
@@ -185,11 +184,5 @@ function encuentroImage(path: string) {
     }
   }
 
-  .after .icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1.5px solid var(--secondary);
-    flex: none;
-  }
+
 </style>
