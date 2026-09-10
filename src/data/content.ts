@@ -26,7 +26,7 @@ export const identity = {
   title: "Fe y razón caminan juntas",
   tagline: "Creando espacios donde las personas puedan encontrarse con Jesucristo",
   intro:
-    "Creemos que la evidencia histórica, el testimonio personal y el encuentro comunitario son caminos complementarios hacia Dios. Nuestro trabajo acompaña, con serenidad y respeto a las enseñanzas de la Iglesia, a quienes buscan una fe fundamentada.",
+    "Nos mueve mostrar la razonabilidad de la existencia de Dios y la extraordinaria figura de Jesucristo a quienes no lo conocen, mediante eventos que muestran verdad y belleza, donde de una forma amigable puedan hacerse preguntas y proseguir su búsqueda.",
   mission:
     "Acercar a las personas a Jesucristo mediante experiencias de belleza, verdad, amistad y acompañamiento para que puedan descubrir que Él puede transformar su vida.",
   quote:
