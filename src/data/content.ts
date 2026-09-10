@@ -369,7 +369,7 @@ export const afterEncounter = {
   title: "¿Y después qué?",
   intro: "El encuentro no termina. Es el comienzo de un camino.",
   ways: [
-    { title: "Reuniones por Zoom", text: "Seguimos conectados, compartimos y oramos." },
+    { title: "Reuniones por Zoom", text: "Cada 15 días. Seguimos conectados, compartimos y oramos." },
     { title: "Lecturas y formación", text: "Profundizamos juntos en la verdad que transforma." },
     { title: "Oración e intercesión", text: "Nos sostenemos unos a otros en la oración." },
     { title: "Comunidad", text: "Creamos lazos verdaderos que acompañan la vida." },
