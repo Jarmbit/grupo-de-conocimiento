@@ -1,14 +1,19 @@
 ---
 import { Image } from "astro:assets";
 import splashImg from "../assets/splash-hero.jpg";
+import { maintenanceMode } from "../data/content";
 ---
 
-<div id="splash" class="splash">
+<div id="splash" class="splash" data-maintenance={maintenanceMode ? "true" : "false"}>
   <Image src={splashImg} alt="" class="splash-bg" widths={[480, 768, 1536]} sizes="100vw" loading="eager" fetchpriority="high" />
   <div class="splash-overlay"></div>
-  <button type="button" id="splash-dismiss" class="splash-dismiss" aria-label="Continuar a la web">
-    <span class="chevron"></span>
-  </button>
+  {maintenanceMode ? (
+    <p class="splash-maintenance-note">Muy pronto.</p>
+  ) : (
+    <button type="button" id="splash-dismiss" class="splash-dismiss" aria-label="Continuar a la web">
+      <span class="chevron"></span>
+    </button>
+  )}
 </div>
 
 <style>
@@ -91,29 +96,46 @@ import splashImg from "../assets/splash-hero.jpg";
       animation: none;
     }
   }
+
+  .splash-maintenance-note {
+    position: relative;
+    margin-bottom: clamp(32px, 8vw, 72px);
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--white, #fff);
+    text-align: center;
+  }
 </style>
 
 <script>
   const splash = document.getElementById("splash");
-  const dismissBtn = document.getElementById("splash-dismiss");
+  const isMaintenance = splash?.dataset.maintenance === "true";
 
-  function hideSplash() {
-    splash?.classList.add("is-hidden");
+  if (isMaintenance) {
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+  } else {
+    const dismissBtn = document.getElementById("splash-dismiss");
+
+    function hideSplash() {
+      splash?.classList.add("is-hidden");
+    }
+
+    dismissBtn?.addEventListener("click", () => {
+      document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
+      hideSplash();
+    });
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (window.scrollY > 40) hideSplash();
+      },
+      { passive: true }
+    );
+
+    window.addEventListener("wheel", () => hideSplash(), { passive: true, once: true });
+    window.addEventListener("touchmove", () => hideSplash(), { passive: true, once: true });
   }
-
-  dismissBtn?.addEventListener("click", () => {
-    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
-    hideSplash();
-  });
-
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (window.scrollY > 40) hideSplash();
-    },
-    { passive: true }
-  );
-
-  window.addEventListener("wheel", () => hideSplash(), { passive: true, once: true });
-  window.addEventListener("touchmove", () => hideSplash(), { passive: true, once: true });
 </script>
