@@ -6,7 +6,7 @@ const primaryNavLinks = navLinks.filter((link) => link.href !== "/apoya");
 ---
 
 <header class="site-header">
-  <Logo />
+  <Logo wordmarkAccentColor="var(--primary-dark)" />
   <button
     type="button"
     id="nav-toggle"
@@ -61,9 +61,14 @@ const primaryNavLinks = navLinks.filter((link) => link.href !== "/apoya");
     color: var(--primary);
   }
 
-  :global(.cta) {
+  nav a:global(.cta) {
     font-size: 14px;
     padding: 10px 20px;
+    color: var(--white);
+  }
+
+  nav a:global(.cta):hover {
+    color: var(--white);
   }
 
   .nav-toggle {
