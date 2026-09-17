@@ -4,7 +4,7 @@
 // Modo mantenimiento: si es true, la home solo muestra el splash fijo (sin botón de
 // continuar, sin scroll al resto de la web) — capa extra de refuerzo además de la
 // protección de acceso configurada en Vercel. Cambiar a false para abrir el sitio.
-export const maintenanceMode = true;
+export const maintenanceMode = false;
 
 export interface NavLink {
   href: string;
