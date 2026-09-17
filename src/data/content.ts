@@ -240,6 +240,12 @@ export const videos: Video[] = [
     thumbnail: "/images/encuentro-videos/encuentro-07.jpg",
     src: "/videos/encuentro-07.mp4",
   },
+  {
+    title: "Un momento de nuestros encuentros",
+    duration: "0:13",
+    thumbnail: "/images/encuentro-videos/encuentro-08.jpg",
+    src: "/videos/encuentro-08.mp4",
+  },
 ];
 
 export interface EventItem {
