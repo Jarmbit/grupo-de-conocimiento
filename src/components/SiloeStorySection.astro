@@ -4,6 +4,9 @@ import { siloeStory } from "../data/content";
 import jesusLoEncuentra from "../assets/siloe-story/jesus-lo-encuentra.jpg";
 import loEnviaASiloe from "../assets/siloe-story/lo-envia-a-siloe.jpg";
 import seLavaYVuelveViendo from "../assets/siloe-story/se-lava-y-vuelve-viendo.jpg";
+import bridgeJesusLosTrae from "../assets/siloe-story/bridge-jesus-los-trae.jpg";
+import bridgeEncuentrosSiloe from "../assets/siloe-story/bridge-encuentros-siloe.jpg";
+import bridgeSalenViendo from "../assets/siloe-story/bridge-salen-viendo.jpg";
 
 const stepImages = [jesusLoEncuentra, loEnviaASiloe, seLavaYVuelveViendo];
 ---
@@ -38,18 +41,36 @@ const stepImages = [jesusLoEncuentra, loEnviaASiloe, seLavaYVuelveViendo];
 
   <div class="bridge">
     <div class="bridge-item">
-      <h3>{siloeStory.bridge.before.title}</h3>
-      <p>{siloeStory.bridge.before.text}</p>
+      <Image
+        src={bridgeJesusLosTrae}
+        alt={`${siloeStory.bridge.before.title}: ${siloeStory.bridge.before.text}`}
+        class="bridge-photo"
+        width={340}
+        height={256}
+        loading="lazy"
+      />
     </div>
     <span class="arrow">→</span>
     <div class="bridge-item bridge-highlight">
-      <h3>{siloeStory.bridge.during.title}</h3>
-      <p>{siloeStory.bridge.during.text}</p>
+      <Image
+        src={bridgeEncuentrosSiloe}
+        alt={`${siloeStory.bridge.during.title}: ${siloeStory.bridge.during.text}`}
+        class="bridge-photo"
+        width={340}
+        height={256}
+        loading="lazy"
+      />
     </div>
     <span class="arrow">→</span>
     <div class="bridge-item">
-      <h3>{siloeStory.bridge.after.title}</h3>
-      <p>{siloeStory.bridge.after.text}</p>
+      <Image
+        src={bridgeSalenViendo}
+        alt={`${siloeStory.bridge.after.title}: ${siloeStory.bridge.after.text}`}
+        class="bridge-photo"
+        width={340}
+        height={256}
+        loading="lazy"
+      />
     </div>
   </div>
 
@@ -168,30 +189,19 @@ const stepImages = [jesusLoEncuentra, loEnviaASiloe, seLavaYVuelveViendo];
   .bridge-item {
     flex: 1 1 200px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 20px;
     border-radius: var(--radius-card);
-    text-align: center;
+    overflow: hidden;
   }
 
   .bridge-highlight {
-    background: rgba(91, 155, 213, 0.12);
     border: 1px solid var(--secondary);
   }
 
-  .bridge-item h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .bridge-item p {
-    font-size: 13px;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.75);
+  .bridge-item :global(.bridge-photo) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .arrow {
