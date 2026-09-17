@@ -1,5 +1,16 @@
 ---
 import { eventTypes, contact } from "../data/content";
+
+const posterImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/request-trailers/*.jpg",
+  { eager: true }
+);
+
+function resolvePoster(filename?: string) {
+  if (!filename) return undefined;
+  const entry = Object.entries(posterImages).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default.src;
+}
 ---
 
 <section id="pide-un-encuentro" data-screen-label="Pide un encuentro" class="request-event">
@@ -15,11 +26,12 @@ import { eventTypes, contact } from "../data/content";
     {
       eventTypes.map((type) => {
         const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(type.requestSubject)}&body=${encodeURIComponent(type.requestBody)}`;
+        const posterSrc = resolvePoster(type.poster);
         return (
           <div class="card">
             <div class="media">
               {type.videoSrc ? (
-                <video controls preload="metadata" aria-label={`Trailer: ${type.title}`}>
+                <video controls preload="metadata" poster={posterSrc} aria-label={`Trailer: ${type.title}`}>
                   <source src={type.videoSrc} type="video/mp4" />
                 </video>
               ) : type.youtubeId ? (
