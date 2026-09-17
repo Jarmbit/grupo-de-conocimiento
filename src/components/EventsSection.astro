@@ -16,15 +16,15 @@ function eventImage(path?: string) {
 
 function reserveHref(title: string) {
   const subject = `Quiero reservar plaza: ${title}`;
-  const body = `Hola, me gustaría reservar plaza para el evento "${title}". ¿Cómo sería el siguiente paso?`;
+  const body = `Hola, me gustaría reservar plaza para el encuentro "${title}". ¿Cómo sería el siguiente paso?`;
   return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 ---
 
-<section id="eventos" data-screen-label="Eventos" class="events">
+<section id="encuentros" data-screen-label="Encuentros" class="events">
   <div class="intro">
     <span class="kicker">Agenda</span>
-    <h2>Próximos eventos</h2>
+    <h2>Próximos encuentros</h2>
     {events.length > 0 ? (
       <p>Reserva tu plaza; el aforo es limitado.</p>
     ) : (
@@ -52,7 +52,7 @@ function reserveHref(title: string) {
                 class="poster-link"
                 aria-label={`Más información sobre ${ev.title}`}
               >
-                <Image src={image} alt={`Cartel del evento ${ev.title}`} class="poster" width={200} height={300} loading="lazy" />
+                <Image src={image} alt={`Cartel del encuentro ${ev.title}`} class="poster" width={200} height={300} loading="lazy" />
               </a>
             )}
             <div class="date">
@@ -63,7 +63,7 @@ function reserveHref(title: string) {
               <h3>{ev.title}</h3>
               <span class="location">{ev.location}</span>
               {showEventSpots && ev.spots && <span class="spots">{ev.spots}</span>}
-              <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este evento?</a>
+              <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este encuentro?</a>
             </div>
             <a
               href={ev.link ?? reserveHref(ev.title)}
@@ -95,6 +95,12 @@ function reserveHref(title: string) {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro .request {
+    text-align: center;
   }
 
   .kicker {

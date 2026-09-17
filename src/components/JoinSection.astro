@@ -1,20 +1,20 @@
 ---
 import { socials, contact } from "../data/content";
 
-const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Quiero suscribirme al boletín")}&body=${encodeURIComponent("Hola, me gustaría suscribirme al boletín de Encuentros Siloé para recibir noticias, vídeos y próximos eventos.")}`;
+const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Quiero suscribirme al boletín")}&body=${encodeURIComponent("Hola, me gustaría suscribirme al boletín de Encuentros Siloé para recibir noticias, vídeos y próximos encuentros.")}`;
 ---
 
 <section id="unete" data-screen-label="Únete" class="join">
   <div class="intro">
     <span class="kicker">Comunidad</span>
     <h2>Mantente cerca</h2>
-    <p>Recibe testimonios, avisos de eventos y contenido nuevo donde prefieras.</p>
+    <p>Recibe testimonios, avisos de encuentros y contenido nuevo donde prefieras.</p>
   </div>
   <div class="grid">
     <div class="card">
       <span class="icon email"></span>
       <h3>Boletín por email</h3>
-      <p>Un resumen mensual con noticias, vídeos y próximos eventos.</p>
+      <p>Un resumen mensual con noticias, vídeos y próximos encuentros.</p>
       <a href={newsletterHref} class="btn-primary">Suscribirme</a>
     </div>
   </div>

@@ -1,0 +1,466 @@
+---
+import { Image } from "astro:assets";
+import { pastEvents, videos } from "../data/content";
+
+const thumbnails = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/encuentro-videos/*.jpg",
+  { eager: true }
+);
+
+function thumbnail(path: string) {
+  const filename = path.split("/").pop();
+  const entry = Object.entries(thumbnails).find(([key]) => key.endsWith(`/${filename}`));
+  return entry?.[1].default;
+}
+---
+
+<section id="encuentros-pasados" data-screen-label="Encuentros pasados" class="past-encounters">
+  <div class="intro">
+    <span class="kicker">Así fueron</span>
+    <h2>Encuentros pasados</h2>
+    <p>Fotos y vídeos de algunos de los encuentros que ya hemos vivido junto a parroquias y comunidades.</p>
+  </div>
+
+  <div class="block">
+    <h3 class="block-title">Fotos</h3>
+    <div class="events">
+      {
+        pastEvents.map((event) => (
+          <div class="event">
+            <div class="event-header">
+              <h4>{event.title}</h4>
+              <span class="meta">{event.location} · {event.date}</span>
+            </div>
+            <div class="photos">
+              {event.photos.map((photo, i) => {
+                const photoAlt = `${event.title} — ${event.location} (foto ${i + 1})`;
+                return (
+                  <button
+                    type="button"
+                    class="photo"
+                    data-lightbox-src={photo}
+                    data-lightbox-alt={photoAlt}
+                    aria-label={`Ver foto ${i + 1} de ${event.title}`}
+                  >
+                    <img src={photo} alt={photoAlt} loading="lazy" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="block-title">Vídeos</h3>
+    <div class="grid">
+      {
+        videos.map((v) => {
+          const thumb = thumbnail(v.thumbnail);
+          return (
+            <button type="button" class="card" data-video-src={v.src} data-video-title={v.title}>
+              <div class="thumbnail">
+                {thumb && <Image src={thumb} alt={v.title} width={440} height={275} loading="lazy" />}
+                <span class="play" aria-hidden="true">
+                  <span class="triangle" />
+                </span>
+                <span class="duration">{v.duration}</span>
+              </div>
+              <span class="title">{v.title}</span>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<div id="past-events-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+  <div class="lightbox-backdrop"></div>
+  <div class="lightbox-content">
+    <button type="button" class="lightbox-close" aria-label="Cerrar foto">✕</button>
+    <img id="past-events-lightbox-img" src="" alt="" />
+  </div>
+</div>
+
+<div id="video-modal" class="video-modal" role="dialog" aria-modal="true" aria-label="Reproductor de vídeo" hidden>
+  <div class="video-modal-backdrop"></div>
+  <div class="video-modal-content">
+    <button type="button" class="video-modal-close" aria-label="Cerrar vídeo">✕</button>
+    <video id="video-modal-player" controls playsinline></video>
+  </div>
+</div>
+
+<style>
+  .past-encounters {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent-text);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h2-size);
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: var(--text-h2-line);
+  }
+
+  .intro p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .block-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary);
+    text-align: center;
+  }
+
+  /* Bloque de fotos */
+  .events {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .event-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+
+  .event-header h4 {
+    font-family: "Lora", serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .meta {
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .photo {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--bg-alt);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .photo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15, 33, 56, 0.16);
+  }
+
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 5vw, 48px);
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 14, 26, 0.9);
+  }
+
+  .lightbox-content {
+    position: relative;
+    max-width: 1100px;
+    max-height: 90vh;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: -42px;
+    right: 0;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+  }
+
+  #past-events-lightbox-img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-card);
+    display: block;
+  }
+
+  /* Bloque de vídeos */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  .card:hover .thumbnail {
+    box-shadow: 0 10px 24px rgba(15, 33, 56, 0.2);
+  }
+
+  .thumbnail {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c3352;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .thumbnail img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .play {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .triangle {
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 14px solid var(--white);
+    margin-left: 4px;
+  }
+
+  .duration {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-size: 11px;
+    color: var(--white);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+
+  .card .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: 1.4;
+  }
+
+  .video-modal[hidden] {
+    display: none;
+  }
+
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 5vw, 48px);
+  }
+
+  .video-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 14, 26, 0.9);
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  .video-modal-close {
+    position: absolute;
+    top: -42px;
+    right: 0;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+  }
+
+  #video-modal-player {
+    width: 100%;
+    max-height: 80vh;
+    border-radius: var(--radius-card);
+    display: block;
+    background: black;
+  }
+</style>
+
+<script>
+  // Lightbox de fotos
+  const lightbox = document.getElementById("past-events-lightbox") as HTMLDivElement | null;
+  const lightboxImg = document.getElementById("past-events-lightbox-img") as HTMLImageElement | null;
+  const lightboxCloseBtn = lightbox?.querySelector<HTMLButtonElement>(".lightbox-close");
+  const lightboxBackdrop = lightbox?.querySelector(".lightbox-backdrop");
+  let lastFocusedPhoto: HTMLElement | null = null;
+
+  function openLightbox(src: string, alt: string, trigger: HTMLElement) {
+    if (!lightbox || !lightboxImg) return;
+    lastFocusedPhoto = trigger;
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox.hidden = false;
+    lightboxCloseBtn?.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lightboxImg) return;
+    lightbox.hidden = true;
+    lightboxImg.removeAttribute("src");
+    lightboxImg.alt = "";
+    lastFocusedPhoto?.focus();
+    lastFocusedPhoto = null;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".past-encounters .photo").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const src = btn.dataset.lightboxSrc;
+      const alt = btn.dataset.lightboxAlt ?? "";
+      if (src) openLightbox(src, alt, btn);
+    });
+  });
+
+  lightboxCloseBtn?.addEventListener("click", closeLightbox);
+  lightboxBackdrop?.addEventListener("click", closeLightbox);
+
+  // Modal de vídeo
+  const modal = document.getElementById("video-modal") as HTMLDivElement | null;
+  const player = document.getElementById("video-modal-player") as HTMLVideoElement | null;
+  const modalCloseBtn = modal?.querySelector<HTMLButtonElement>(".video-modal-close");
+  const modalBackdrop = modal?.querySelector(".video-modal-backdrop");
+  let lastFocusedVideo: HTMLElement | null = null;
+
+  function openVideo(src: string, trigger: HTMLElement) {
+    if (!modal || !player) return;
+    lastFocusedVideo = trigger;
+    player.src = src;
+    modal.hidden = false;
+    player.play().catch(() => {});
+    modalCloseBtn?.focus();
+  }
+
+  function closeVideo() {
+    if (!modal || !player) return;
+    player.pause();
+    player.removeAttribute("src");
+    player.load();
+    modal.hidden = true;
+    lastFocusedVideo?.focus();
+    lastFocusedVideo = null;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".past-encounters .card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const src = card.dataset.videoSrc;
+      if (src) openVideo(src, card);
+    });
+  });
+
+  modalCloseBtn?.addEventListener("click", closeVideo);
+  modalBackdrop?.addEventListener("click", closeVideo);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (lightbox && !lightbox.hidden) closeLightbox();
+    if (modal && !modal.hidden) closeVideo();
+  });
+</script>

@@ -15,7 +15,7 @@ export const navLinks: NavLink[] = [
   { href: "/#sobre", label: "Sobre nosotros" },
   { href: "/#videos", label: "Vídeos" },
   { href: "/#pide-un-encuentro", label: "Pide un encuentro" },
-  { href: "/eventos", label: "Eventos" },
+  { href: "/#encuentros", label: "Encuentros" },
   { href: "/noticias", label: "Noticias" },
   { href: "/#unete", label: "Únete" },
   { href: "/habla-con-nosotros", label: "Habla con nosotros" },
@@ -32,7 +32,7 @@ export const identity = {
   title: "Fe y razón caminan juntas",
   tagline: "Creando espacios donde las personas puedan encontrarse con Jesucristo",
   intro:
-    "Nos mueve mostrar la razonabilidad de la existencia de Dios y la extraordinaria figura de Jesucristo a quienes no lo conocen, mediante eventos que muestran verdad y belleza, donde de una forma amigable puedan hacerse preguntas y proseguir su búsqueda.",
+    "Nos mueve mostrar la razonabilidad de la existencia de Dios y la extraordinaria figura de Jesucristo a quienes no lo conocen, mediante encuentros que muestran verdad y belleza, donde de una forma amigable puedan hacerse preguntas y proseguir su búsqueda.",
   mission:
     "Acercar a las personas a Jesucristo mediante experiencias de belleza, verdad, amistad y acompañamiento para que puedan descubrir que Él puede transformar su vida.",
   quote:
@@ -44,7 +44,7 @@ export const objective = {
   audiences: [
     {
       title: "Para quienes no conocen a Jesús",
-      text: "Queremos que, a través de nuestros eventos, las personas puedan hacer preguntas, encontrar respuestas y abrir su corazón a la búsqueda de la verdad, para que puedan encontrarse con Jesús y descubrir que Él puede transformar su vida.",
+      text: "Queremos que, a través de nuestros encuentros, las personas puedan hacer preguntas, encontrar respuestas y abrir su corazón a la búsqueda de la verdad, para que puedan encontrarse con Jesús y descubrir que Él puede transformar su vida.",
     },
     {
       title: "Para quienes ya conocen a Jesús y tienen fe",
@@ -355,7 +355,7 @@ export const donationModels: DonationModel[] = [
   },
   {
     key: "patrocinio",
-    title: "Patrocina un evento",
+    title: "Patrocina un encuentro",
     detail: "Aportación única",
     text: "Haz posible un encuentro completo, de principio a fin.",
     cta: "Quiero patrocinar",
@@ -364,7 +364,7 @@ export const donationModels: DonationModel[] = [
     key: "voluntariado",
     title: "Voluntariado",
     detail: "Tu tiempo y talento",
-    text: "Súmate al equipo que hace realidad cada evento y vídeo.",
+    text: "Súmate al equipo que hace realidad cada encuentro y vídeo.",
     cta: "Quiero ayudar",
   },
 ];
@@ -387,8 +387,8 @@ export interface FeedbackType {
 export const feedbackTypes: FeedbackType[] = [
   {
     key: "evento",
-    label: "Qué te pareció el evento",
-    prompt: "Cuéntanos qué te pareció el evento y qué sentiste.",
+    label: "Qué te pareció el encuentro",
+    prompt: "Cuéntanos qué te pareció el encuentro y qué sentiste.",
   },
   {
     key: "pregunta",
