@@ -246,7 +246,7 @@ export interface EventItem {
   day: string;
   title: string;
   location: string;
-  spots: string;
+  spots?: string;
   image?: string;
   link?: string;
 }
@@ -260,6 +260,30 @@ export const events: EventItem[] = [
     spots: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé",
     image: "/images/events/jesus-de-nazaret.jpg",
     link: "https://www.giglon.com/todos?idEvent=jesus-de-nazaret",
+  },
+  {
+    month: "Nov",
+    day: "14",
+    title: "Encuentro en Málaga",
+    location: "Málaga",
+  },
+  {
+    month: "Nov",
+    day: "20",
+    title: "Encuentro jóvenes",
+    location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+  },
+  {
+    month: "Nov",
+    day: "21",
+    title: "Encuentro adultos",
+    location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+  },
+  {
+    month: "Nov",
+    day: "28",
+    title: "Encuentro en Burgos",
+    location: "Burgos",
   },
 ];
 
