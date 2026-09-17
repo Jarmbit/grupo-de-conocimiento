@@ -1,0 +1,191 @@
+---
+import { feedbackTypes, contact } from "../data/content";
+---
+
+<section id="habla-con-nosotros" data-screen-label="Habla con nosotros" class="talk-to-us">
+  <div class="intro">
+    <span class="kicker">Habla con nosotros</span>
+    <h2>Cuéntanos qué te pareció</h2>
+    <p>
+      Si en el coloquio no te dio tiempo o te dio vergüenza compartirlo, aquí puedes escribirnos:
+      qué te pareció el evento, tus preguntas o sugerencias, o qué ha hecho Dios en tu vida.
+    </p>
+  </div>
+
+  <form id="talk-to-us-form" class="form">
+    <div class="field-group" role="radiogroup" aria-label="Tipo de mensaje">
+      {
+        feedbackTypes.map((type, i) => (
+          <label class="option">
+            <input type="radio" name="feedback-type" value={type.key} checked={i === 0} />
+            <span>{type.label}</span>
+          </label>
+        ))
+      }
+    </div>
+
+    <label class="field">
+      <span class="field-label" id="talk-to-us-prompt">{feedbackTypes[0].prompt}</span>
+      <textarea id="talk-to-us-message" rows="6" placeholder="Escribe aquí..." required></textarea>
+    </label>
+
+    <label class="field">
+      <span class="field-label">Tu nombre (opcional)</span>
+      <input type="text" id="talk-to-us-name" placeholder="Nombre" />
+    </label>
+
+    <button type="submit" class="btn-primary">Enviar</button>
+  </form>
+</section>
+
+<style>
+  .talk-to-us {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent-text);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h2-size);
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: var(--text-h2-line);
+  }
+
+  .intro p {
+    font-size: var(--text-body-size);
+    color: var(--ink-muted);
+    line-height: var(--text-body-line);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 32px;
+    background: var(--bg-alt);
+    border-radius: var(--radius-card);
+  }
+
+  .field-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    min-height: 44px;
+    border-radius: 100px;
+    background: var(--white);
+    border: 1.5px solid var(--border-subtle);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .option:has(input:checked) {
+    border-color: var(--primary);
+    color: var(--primary-dark);
+  }
+
+  .option input {
+    accent-color: var(--primary);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  textarea,
+  input[type="text"] {
+    font: inherit;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-subtle);
+    background: var(--white);
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  textarea:focus,
+  input[type="text"]:focus {
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  :global(.btn-primary) {
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+
+<script define:vars={{ feedbackTypes, email: contact.email }}>
+  const form = document.getElementById("talk-to-us-form");
+  const promptLabel = document.getElementById("talk-to-us-prompt");
+  const messageField = document.getElementById("talk-to-us-message");
+  const nameField = document.getElementById("talk-to-us-name");
+
+  function currentType() {
+    const checked = form?.querySelector('input[name="feedback-type"]:checked');
+    return feedbackTypes.find((t) => t.key === checked?.value) ?? feedbackTypes[0];
+  }
+
+  form?.addEventListener("change", (e) => {
+    if (e.target instanceof HTMLInputElement && e.target.name === "feedback-type") {
+      const type = currentType();
+      if (promptLabel) promptLabel.textContent = type.prompt;
+      if (messageField instanceof HTMLTextAreaElement) messageField.placeholder = "Escribe aquí...";
+    }
+  });
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const type = currentType();
+    const name = nameField instanceof HTMLInputElement ? nameField.value.trim() : "";
+    const message = messageField instanceof HTMLTextAreaElement ? messageField.value.trim() : "";
+
+    const subject = `Encuentros Siloé — ${type.label}`;
+    const bodyLines = [
+      name ? `Nombre: ${name}` : null,
+      "",
+      message,
+    ].filter((line) => line !== null);
+
+    const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+    window.location.href = mailto;
+  });
+</script>

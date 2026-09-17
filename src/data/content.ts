@@ -18,6 +18,7 @@ export const navLinks: NavLink[] = [
   { href: "/eventos", label: "Eventos" },
   { href: "/noticias", label: "Noticias" },
   { href: "/#unete", label: "Únete" },
+  { href: "/habla-con-nosotros", label: "Habla con nosotros" },
   { href: "/apoya", label: "Apoya" },
 ];
 
@@ -374,6 +375,32 @@ export const highlightDonation: DonationModel["key"] = "socio";
 export const contact = {
   email: "info@encuentrossiloe.org",
 };
+
+export interface FeedbackType {
+  key: string;
+  label: string;
+  prompt: string;
+}
+
+// Tipos de mensaje del formulario "Habla con nosotros": la persona elige uno y escribe
+// libremente; el envío se construye como un mailto (el sitio no tiene backend propio).
+export const feedbackTypes: FeedbackType[] = [
+  {
+    key: "evento",
+    label: "Qué te pareció el evento",
+    prompt: "Cuéntanos qué te pareció el evento y qué sentiste.",
+  },
+  {
+    key: "pregunta",
+    label: "Pregunta o sugerencia",
+    prompt: "Escríbenos tu pregunta o sugerencia.",
+  },
+  {
+    key: "testimonio",
+    label: "Qué ha hecho Dios en tu vida",
+    prompt: "Cuéntanos qué ha hecho Dios en tu vida.",
+  },
+];
 
 // El origen bíblico del nombre de la asociación (Juan 9,7).
 export const siloeStory = {
