@@ -300,7 +300,7 @@ export interface PastEvent {
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
 export const pastEvents: PastEvent[] = [
   {
-    title: "Encuentro en parroquias",
+    title: "Encuentro en Burgos",
     location: "Parroquia San Lorenzo, Burgos",
     date: "2 de febrero de 2026",
     photos: [
