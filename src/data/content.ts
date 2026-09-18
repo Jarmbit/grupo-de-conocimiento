@@ -137,7 +137,6 @@ export const participation = {
     { title: "Organizar encuentros", text: "Ayuda a crear espacios donde todo comienza." },
     { title: "Música", text: "Prepara el corazón y acompaña cada encuentro." },
     { title: "Comunicación", text: "Da a conocer la misión y lleva la luz más lejos." },
-    { title: "Oración", text: "Sostiene espiritualmente cada paso de la misión." },
     { title: "Recursos económicos", text: "Tu generosidad hace posible que esta misión continúe y llegue más lejos." },
   ] satisfies ParticipationWay[],
 };
@@ -435,7 +434,6 @@ export const afterEncounter = {
   ways: [
     { title: "Reuniones por Zoom", text: "Cada 15 días. Seguimos conectados, compartimos y oramos." },
     { title: "Lecturas y formación", text: "Profundizamos juntos en la verdad que transforma." },
-    { title: "Oración e intercesión", text: "Nos sostenemos unos a otros en la oración." },
     { title: "Comunidad", text: "Creamos lazos verdaderos que acompañan la vida." },
     { title: "Acompañamiento", text: "Caminamos juntos en los momentos importantes." },
     { title: "Crecimiento", text: "Buscamos vivir lo que descubrimos en el día a día." },
