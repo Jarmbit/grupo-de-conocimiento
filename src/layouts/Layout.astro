@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import splashImg from "../assets/splash-hero.jpg";
 import { contact } from "../data/content";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
@@ -58,12 +59,7 @@ const organizationJsonLd = {
       rel="stylesheet"
     />
 
-    <!--
-      Analítica respetuosa con la privacidad (Plausible), preparada pero desactivada.
-      Para activarla: crear cuenta en https://plausible.io, verificar el dominio
-      encuentrossiloe.org, y descomentar la línea siguiente.
-    -->
-    <!-- <script defer data-domain="encuentrossiloe.org" src="https://plausible.io/js/script.js"></script> -->
+    <Analytics />
   </head>
   <body>
     <slot />
