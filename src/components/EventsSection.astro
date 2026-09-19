@@ -63,7 +63,6 @@ function reserveHref(title: string) {
               <h3>{ev.title}</h3>
               <span class="location">{ev.location}</span>
               {showEventSpots && ev.spots && <span class="spots">{ev.spots}</span>}
-              <a href="/apoya" class="volunteer-link">¿Quieres ser voluntario en este encuentro?</a>
             </div>
             <a
               href={ev.link ?? reserveHref(ev.title)}
@@ -230,21 +229,6 @@ function reserveHref(title: string) {
     font-size: 13px;
     color: var(--accent-text);
     font-weight: 600;
-  }
-
-  .volunteer-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: 13px;
-    color: var(--primary);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .volunteer-link:hover {
-    color: var(--primary-dark);
   }
 
   :global(.btn-primary) {
