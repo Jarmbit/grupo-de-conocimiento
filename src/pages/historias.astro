@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import StoriesSection from "../components/StoriesSection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+{/*
+  TODO(SEO): añadir datos estructurados Schema.org tipo Article para cada historia real
+  (placeholder: false) cuando exista su página propia en /historias/[slug] con datePublished
+  en ISO 8601 — hoy `stories.date` es texto libre ("2 de febrero de 2026", "Próximamente").
+*/}
+<Layout
+  title="Historias — Encuentros Siloé"
+  description="Relatos, reflexiones y momentos de los encuentros de Encuentros Siloé."
+>
+  <Header />
+  <div class="page-spacer">
+    <StoriesSection />
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  .page-spacer {
+    padding-top: 24px;
+  }
+</style>

@@ -1,116 +1,151 @@
 ---
 import { Image } from "astro:assets";
-import { identity } from "../data/content";
 import eventoImg from "../assets/hero-encuentro.jpg";
 ---
 
 <section id="top" class="hero">
-  <div class="content">
-    <span class="kicker">Asociación sin ánimo de lucro</span>
-    <h1>{identity.tagline}</h1>
-    <p>
-      Acompañamos a quienes buscan respuestas sobre la existencia de Dios y la vida de
-      Jesucristo, a través de encuentros, testimonios y vídeos que unen fe y razón.
-    </p>
-    <div class="cta-row">
-      <a href="#pide-un-encuentro" class="btn-primary">Pide un encuentro</a>
-      <a href="#videos" class="link-arrow link-arrow--block">Ver vídeos →</a>
-    </div>
-  </div>
-  <div class="image">
+  <div class="media">
     <Image
       src={eventoImg}
       alt="Encuentro de Encuentros Siloé con música en directo y numerosos asistentes"
-      widths={[480, 768, 1200]}
-      sizes="(max-width: 900px) 100vw, 50vw"
+      widths={[480, 768, 1200, 1920]}
+      sizes="100vw"
       loading="eager"
       fetchpriority="high"
+      class="bg"
     />
+    <div class="overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="content">
+    <span class="kicker">Asociación sin ánimo de lucro</span>
+    <h1>
+      ¿Y si pudieras<br />
+      volver a mirar<br />
+      la vida con<br />
+      otros ojos?
+    </h1>
+    <p class="subtitle">
+      Encuentros para hacerse preguntas sobre Dios, Jesucristo y el sentido de la vida.
+    </p>
+    <div class="cta-row">
+      <a href="#encuentros" class="btn-primary-on-dark">Ver próximos encuentros</a>
+      <a href="#sobre" class="link-arrow link-arrow--block link-arrow--on-dark">Conoce Siloé →</a>
+    </div>
+    <p class="micro">Una invitación. Una pregunta. Un encuentro.</p>
   </div>
 </section>
 
 <style>
   .hero {
     position: relative;
+    min-height: 92vh;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    max-width: 1320px;
-    margin: 0 auto;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .media :global(.bg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(12, 31, 51, 0.92) 0%,
+      rgba(12, 31, 51, 0.6) 38%,
+      rgba(12, 31, 51, 0.18) 68%,
+      rgba(12, 31, 51, 0.28) 100%
+    );
   }
 
   .content {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 26px;
-    padding: clamp(48px, 10vw, 80px) clamp(20px, 5vw, 64px);
-    max-width: 560px;
-    flex: 1 1 420px;
+    gap: 22px;
+    max-width: 760px;
+    padding: clamp(96px, 20vw, 160px) clamp(20px, 6vw, 72px) clamp(56px, 8vw, 88px);
   }
 
   .kicker {
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.14em;
-    color: var(--accent-text);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
+    color: var(--color-secondary);
   }
 
   h1 {
-    font-family: "Lora", serif;
-    font-size: clamp(32px, 6vw, 52px);
-    line-height: 1.12;
+    font-family: var(--font-serif);
     font-weight: 600;
-    color: var(--primary-dark);
-    text-wrap: balance;
+    font-size: clamp(36px, 7vw, 68px);
+    line-height: 1.08;
+    color: var(--white);
+    letter-spacing: -0.01em;
   }
 
-  p {
-    font-size: 18px;
+  .subtitle {
+    max-width: 520px;
+    font-size: clamp(16px, 2.2vw, 19px);
     line-height: 1.6;
-    color: var(--ink-muted);
+    color: rgba(255, 255, 255, 0.88);
   }
 
   .cta-row {
     display: flex;
     align-items: center;
-    gap: 24px;
-    margin-top: 8px;
+    gap: 28px;
+    margin-top: 10px;
     flex-wrap: wrap;
   }
 
-  .cta-row :global(.btn-primary) {
+  .cta-row :global(.btn-primary-on-dark) {
     font-size: 16px;
-    padding: 15px 28px;
+    padding: 15px 30px;
   }
 
-  .cta-row :global(.link-arrow) {
+  .link-arrow--on-dark {
+    color: var(--white);
+  }
+
+  .link-arrow--on-dark:hover {
+    color: var(--color-secondary);
+  }
+
+  .micro {
+    margin-top: 6px;
+    font-family: var(--font-serif);
+    font-style: italic;
     font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
   }
 
-  .image {
-    position: relative;
-    flex: 0 1 560px;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    max-height: 520px;
-    margin: 40px clamp(20px, 5vw, 64px);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-  }
-
-  @media (max-width: 900px) {
-    .image {
-      margin: 0 clamp(20px, 5vw, 64px) 40px;
+  @media (max-width: 640px) {
+    .hero {
+      min-height: 88vh;
+      align-items: flex-end;
     }
-  }
 
-  .image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    .cta-row {
+      gap: 16px;
+    }
+
+    .cta-row :global(.btn-primary-on-dark) {
+      width: 100%;
+      text-align: center;
+    }
   }
 </style>

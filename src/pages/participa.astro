@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import ParticipationSection from "../components/ParticipationSection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Participa — Encuentros Siloé"
+  description="Cada talento, por pequeño que sea, hace posible que más personas se encuentren con Jesucristo. Descubre cómo puedes formar parte de Encuentros Siloé."
+>
+  <Header />
+  <div class="page-spacer">
+    <ParticipationSection />
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  .page-spacer {
+    padding-top: 24px;
+  }
+</style>

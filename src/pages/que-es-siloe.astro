@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import AboutSection from "../components/AboutSection.astro";
+import EncounterFlowSection from "../components/EncounterFlowSection.astro";
+import SiloeStorySection from "../components/SiloeStorySection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Qué es Siloé — Encuentros Siloé"
+  description="Encuentros Siloé es una asociación sin ánimo de lucro que crea espacios donde las personas puedan encontrarse con Jesucristo. Conoce nuestra misión y el origen de nuestro nombre."
+>
+  <Header />
+  <div class="page-spacer">
+    <AboutSection />
+    <EncounterFlowSection />
+    <SiloeStorySection />
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  .page-spacer {
+    padding-top: 24px;
+  }
+</style>

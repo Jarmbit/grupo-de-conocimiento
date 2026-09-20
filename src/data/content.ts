@@ -12,14 +12,18 @@ export interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  { href: "/#sobre", label: "Sobre nosotros" },
-  { href: "/#videos", label: "Vídeos" },
-  { href: "/#pide-un-encuentro", label: "Pide un encuentro" },
+  { href: "/#sobre", label: "Qué es" },
   { href: "/#encuentros", label: "Encuentros" },
-  { href: "/noticias", label: "Noticias" },
-  { href: "/#unete", label: "Únete" },
-  { href: "/habla-con-nosotros", label: "Habla con nosotros" },
+  { href: "/historias", label: "Historias" },
+  { href: "/#crearlo-juntos", label: "Participa" },
   { href: "/apoya", label: "Apoya" },
+];
+
+// Enlaces secundarios del footer (fuera del menú principal, pero útiles ahí).
+export const footerExtraLinks: NavLink[] = [
+  { href: "/#pide-un-encuentro", label: "Pide un encuentro" },
+  { href: "/noticias", label: "Noticias" },
+  { href: "/habla-con-nosotros", label: "Habla con nosotros" },
 ];
 
 export interface Pillar {
@@ -251,7 +255,13 @@ export interface EventItem {
   month: string;
   day: string;
   title: string;
+  /** Texto libre mostrado bajo el título (lugar + hora tal como se venía usando). */
   location: string;
+  /** Ciudad sola, para la etiqueta destacada de la tarjeta. Si no se indica, se usa `location`. */
+  city?: string;
+  /** Descripción breve del encuentro (lo que antes se sobrecargaba en `spots`). */
+  description?: string;
+  /** Plazas disponibles, solo si el dato es real — no se muestra si no existe. */
   spots?: string;
   image?: string;
   link?: string;
@@ -263,7 +273,8 @@ export const events: EventItem[] = [
     day: "17",
     title: "Jesús de Nazaret",
     location: "Teatro Fernández Baldor, Torrelodones · 18:00h",
-    spots: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé",
+    city: "Torrelodones",
+    description: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé.",
     image: "/images/events/jesus-de-nazaret.jpg",
     link: "https://www.giglon.com/todos?idEvent=jesus-de-nazaret",
   },
@@ -272,24 +283,28 @@ export const events: EventItem[] = [
     day: "14",
     title: "Encuentro en Málaga",
     location: "Málaga",
+    city: "Málaga",
   },
   {
     month: "Nov",
     day: "20",
     title: "Encuentro jóvenes",
     location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+    city: "Las Rozas",
   },
   {
     month: "Nov",
     day: "21",
     title: "Encuentro adultos",
     location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+    city: "Las Rozas",
   },
   {
     month: "Nov",
     day: "28",
     title: "Encuentro en Burgos",
     location: "Burgos",
+    city: "Burgos",
   },
 ];
 
@@ -325,6 +340,51 @@ export interface NewsItem {
 
 // Sin noticias reales todavía. Añadir aquí cada noticia cuando exista su artículo/destino real.
 export const news: NewsItem[] = [];
+
+export interface Story {
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  /** Ruta a la foto en src/assets/, o vacío para usar un fondo de marca. */
+  image?: string;
+  href: string;
+  /** true = título/extracto de ejemplo a la espera del artículo real. */
+  placeholder: boolean;
+}
+
+// "Historias Siloé": sustituye a la sección de Noticias (vacía) en la home. La primera
+// historia usa datos reales (encuentro de Burgos, con fotos ya en el repositorio); el resto
+// son placeholders con placeholder: true — sustituir por artículos reales cuando existan,
+// enlazando `href` a su página en /historias/[slug] cuando se cree.
+export const stories: Story[] = [
+  {
+    title: "Así fue nuestro encuentro en Burgos",
+    excerpt:
+      "Música, testimonio y una cena compartida en la Parroquia San Lorenzo: así vivimos nuestro primer encuentro en Burgos.",
+    date: "2 de febrero de 2026",
+    category: "Encuentros",
+    image: "/images/eventos-pasados/burgos-san-lorenzo/burgos-01.jpg",
+    href: "/historias",
+    placeholder: false,
+  },
+  {
+    title: "Una noche para volver a preguntar",
+    excerpt: "Qué ocurre cuando un grupo de amigos se atreve a hacerse las preguntas de siempre, juntos.",
+    date: "Próximamente",
+    category: "Reflexión",
+    href: "/historias",
+    placeholder: true,
+  },
+  {
+    title: "¿Por qué Siloé?",
+    excerpt: "El origen del nombre, la pregunta que lo inspiró y lo que significa para nosotros hoy.",
+    date: "Próximamente",
+    category: "Nuestra historia",
+    href: "/historias",
+    placeholder: true,
+  },
+];
 
 export interface Social {
   initial: string;
@@ -380,6 +440,45 @@ export const highlightDonation: DonationModel["key"] = "socio";
 export const contact = {
   email: "info@encuentrossiloe.org",
 };
+
+export interface Testimonial {
+  quote: string;
+  name: string;
+  city: string;
+  /** Foto real de la persona. Si no existe, se usa un avatar neutro (ver Testimonial.astro). */
+  photo?: string;
+  /** true = contenido de ejemplo, NO publicar tal cual. Sustituir por testimonios reales
+      antes de lanzar la sección a producción. */
+  placeholder: boolean;
+}
+
+// TODO(contenido real pendiente): no existen todavía testimonios reales recogidos.
+// Estos tres son EJEMPLOS de formato — placeholder: true — y deben sustituirse por
+// testimonios reales (cita + nombre + ciudad, con consentimiento de la persona) antes
+// de publicar esta sección. El componente Testimonial.astro marca visualmente cualquier
+// entrada con placeholder: true mientras esté en modo desarrollo.
+export const testimonials: Testimonial[] = [
+  {
+    quote:
+      "Entré con muchas preguntas y salí con todavía más. Pero, por primera vez, quería seguir buscando.",
+    name: "María",
+    city: "Madrid",
+    placeholder: true,
+  },
+  {
+    quote:
+      "No esperaba que una cena y una conversación pudieran remover tanto. Fue la primera vez que hablé de Dios sin sentirme juzgado.",
+    name: "Javier",
+    city: "Burgos",
+    placeholder: true,
+  },
+  {
+    quote: "Vine por curiosidad. Me quedé porque, por fin, alguien me dejaba preguntar de verdad.",
+    name: "Lucía",
+    city: "Torrelodones",
+    placeholder: true,
+  },
+];
 
 export interface FeedbackType {
   key: string;

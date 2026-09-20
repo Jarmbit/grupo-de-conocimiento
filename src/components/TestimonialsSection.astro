@@ -1,0 +1,177 @@
+---
+import { testimonials } from "../data/content";
+
+const hasPlaceholders = testimonials.some((t) => t.placeholder);
+---
+
+<section id="testimonios" data-screen-label="Testimonios" class="testimonials">
+  <div class="intro" data-reveal>
+    <span class="kicker">Testimonios</span>
+    <h2>¿Qué pasa cuando te atreves a preguntar?</h2>
+    {import.meta.env.DEV && hasPlaceholders && (
+      <p class="dev-warning">
+        ⚠️ Contenido de ejemplo (placeholder) — sustituir por testimonios reales antes de
+        publicar. Este aviso solo es visible en desarrollo.
+      </p>
+    )}
+  </div>
+
+  <div class="track" role="list">
+    {testimonials.map((t) => (
+      <figure class="card" role="listitem" data-reveal>
+        {t.placeholder && import.meta.env.DEV && <span class="badge">PLACEHOLDER</span>}
+        <div class="avatar" aria-hidden="true">
+          {t.name.charAt(0)}
+        </div>
+        <blockquote>
+          <p>“{t.quote}”</p>
+        </blockquote>
+        <figcaption>
+          <span class="name">{t.name}</span>
+          <span class="city">· {t.city}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    background: var(--bg-alt);
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .intro {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent-text);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-h2-size);
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: var(--text-h2-line);
+  }
+
+  .dev-warning {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8a4c2c;
+    background: #f6e6d8;
+    border: 1px solid #e3c19f;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .track {
+      grid-template-columns: 1fr;
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 20px;
+      padding-bottom: 8px;
+      margin: 0 calc(-1 * clamp(20px, 5vw, 64px));
+      padding-left: clamp(20px, 5vw, 64px);
+      padding-right: clamp(20px, 5vw, 64px);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .card {
+      flex: 0 0 85%;
+      scroll-snap-align: center;
+    }
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 32px 28px;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #8a4c2c;
+    background: #f6e6d8;
+    border-radius: 100px;
+    padding: 3px 9px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--color-primary);
+  }
+
+  blockquote {
+    margin: 0;
+    flex: 1;
+  }
+
+  blockquote p {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  figcaption {
+    display: flex;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .name {
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .city {
+    color: var(--ink-muted);
+  }
+</style>

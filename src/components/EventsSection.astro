@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { events, showEventSpots, contact } from "../data/content";
+import { events, contact } from "../data/content";
 
 const eventImages = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/events/*.jpg",
@@ -22,9 +22,9 @@ function reserveHref(title: string) {
 ---
 
 <section id="encuentros" data-screen-label="Encuentros" class="events">
-  <div class="intro">
-    <span class="kicker">Agenda</span>
-    <h2>Próximos encuentros</h2>
+  <div class="intro" data-reveal>
+    <span class="kicker">Próximos encuentros</span>
+    <h2>Quizá el próximo sea cerca de ti</h2>
     {events.length > 0 ? (
       <p>Reserva tu plaza; el aforo es limitado.</p>
     ) : (
@@ -39,40 +39,55 @@ function reserveHref(title: string) {
     </p>
   </div>
   {events.length > 0 && (
-    <div class="list">
-      {events.map((ev) => {
+    <div class="grid">
+      {events.map((ev, i) => {
         const image = eventImage(ev.image);
+        const href = ev.link ?? reserveHref(ev.title);
+        const external = Boolean(ev.link);
         return (
-          <div class="row">
-            {image && (
-              <a
-                href={ev.link ?? reserveHref(ev.title)}
-                target={ev.link ? "_blank" : undefined}
-                rel={ev.link ? "noopener noreferrer" : undefined}
-                class="poster-link"
-                aria-label={`Más información sobre ${ev.title}`}
-              >
-                <Image src={image} alt={`Cartel del encuentro ${ev.title}`} class="poster" width={200} height={300} loading="lazy" />
-              </a>
-            )}
-            <div class="date">
-              <span class="month">{ev.month}</span>
-              <span class="day">{ev.day}</span>
-            </div>
-            <div class="details">
-              <h3>{ev.title}</h3>
-              <span class="location">{ev.location}</span>
-              {showEventSpots && ev.spots && <span class="spots">{ev.spots}</span>}
-            </div>
+          <article class="card" data-reveal style={`transition-delay:${Math.min(i, 4) * 70}ms`}>
             <a
-              href={ev.link ?? reserveHref(ev.title)}
-              target={ev.link ? "_blank" : undefined}
-              rel={ev.link ? "noopener noreferrer" : undefined}
-              class="btn-primary"
+              href={href}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              class="card-media"
+              aria-label={`Más información sobre ${ev.title}`}
             >
-              Reservar plaza
+              {image ? (
+                <Image
+                  src={image}
+                  alt={`Cartel del encuentro ${ev.title}`}
+                  width={480}
+                  height={600}
+                  loading="lazy"
+                />
+              ) : (
+                <div class="media-placeholder" aria-hidden="true">
+                  <span class="placeholder-month">{ev.month}</span>
+                  <span class="placeholder-day">{ev.day}</span>
+                </div>
+              )}
+              <span class="date-badge">
+                <span class="month">{ev.month}</span>
+                <span class="day">{ev.day}</span>
+              </span>
             </a>
-          </div>
+            <div class="card-body">
+              {ev.city && <span class="city">{ev.city}</span>}
+              <h3>{ev.title}</h3>
+              <p class="location">{ev.location}</p>
+              {ev.description && <p class="description">{ev.description}</p>}
+              {ev.spots && <span class="spots">{ev.spots}</span>}
+              <a
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+                class="btn-primary"
+              >
+                Reservar mi plaza
+              </a>
+            </div>
+          </article>
         );
       })}
     </div>
@@ -84,8 +99,8 @@ function reserveHref(title: string) {
     padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
     display: flex;
     flex-direction: column;
-    gap: 44px;
-    max-width: 1180px;
+    gap: 48px;
+    max-width: 1320px;
     margin: 0 auto;
   }
 
@@ -111,7 +126,7 @@ function reserveHref(title: string) {
   }
 
   h2 {
-    font-family: "Lora", serif;
+    font-family: var(--font-serif);
     font-size: var(--text-h2-size);
     font-weight: 600;
     color: var(--primary-dark);
@@ -124,104 +139,136 @@ function reserveHref(title: string) {
     line-height: var(--text-body-line);
   }
 
-  .list {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+  }
+
+  .card {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 20px;
-    padding: 26px 28px;
-    background: var(--bg-alt);
+    background: var(--white);
     border-radius: var(--radius-card);
-  }
-
-  @media (max-width: 640px) {
-    .row {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .row .date {
-      align-self: flex-start;
-    }
-
-    .row .poster-link {
-      align-self: center;
-    }
-
-    .row :global(.btn-primary) {
-      width: 100%;
-      text-align: center;
-    }
-  }
-
-  .poster-link {
-    display: block;
-    flex: none;
-    border-radius: 10px;
     overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    transition: transform 0.25s var(--ease-elegant), box-shadow 0.25s var(--ease-elegant);
   }
 
-  .poster-link :global(.poster) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px rgba(12, 31, 51, 0.12);
+  }
+
+  .card-media {
+    position: relative;
     display: block;
-    width: 100px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.15s ease;
+    aspect-ratio: 4 / 5;
+    background: var(--color-primary-dark);
   }
 
-  .poster-link:hover :global(.poster) {
+  .card-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s var(--ease-elegant);
+  }
+
+  .card:hover .card-media :global(img) {
     transform: scale(1.03);
   }
 
-  .date {
+  .media-placeholder {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--white);
-    border-radius: 12px;
-    padding: 12px 0;
-    border: 1px solid var(--border-subtle);
-    width: 100px;
-    flex: none;
+    gap: 4px;
+    background: linear-gradient(160deg, var(--color-primary-dark), var(--color-primary));
+    color: var(--white);
   }
 
-  .month {
-    font-size: 12px;
+  .placeholder-month {
+    font-size: 13px;
     font-weight: 600;
-    color: var(--accent-text);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    opacity: 0.75;
   }
 
-  .day {
-    font-family: "Lora", serif;
-    font-size: 26px;
+  .placeholder-day {
+    font-family: var(--font-serif);
+    font-size: 48px;
     font-weight: 600;
-    color: var(--primary-dark);
   }
 
-  .details {
+  .date-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    flex: 1 1 200px;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: rgba(247, 245, 240, 0.95);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
   }
 
-  .details h3 {
-    font-size: 18px;
+  .date-badge .month {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .date-badge .day {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    line-height: 1;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 22px 26px;
+    flex: 1;
+  }
+
+  .city {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-secondary-text);
+  }
+
+  .card-body h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
     font-weight: 600;
     color: var(--primary-dark);
+    line-height: 1.25;
   }
 
   .location {
     font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.55;
     color: var(--ink-muted);
   }
 
@@ -231,7 +278,10 @@ function reserveHref(title: string) {
     font-weight: 600;
   }
 
-  :global(.btn-primary) {
-    flex: none;
+  .card-body :global(.btn-primary) {
+    margin-top: 10px;
+    align-self: flex-start;
+    width: 100%;
+    text-align: center;
   }
 </style>

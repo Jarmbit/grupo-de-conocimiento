@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import RequestEventSection from "../components/RequestEventSection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Organiza un encuentro — Encuentros Siloé"
+  description="Puedes abrir las puertas de tu casa, tu parroquia o tu comunidad para traer un encuentro de Encuentros Siloé. Te contamos cómo dar el primer paso."
+>
+  <Header />
+  <div class="page-spacer">
+    <RequestEventSection />
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  .page-spacer {
+    padding-top: 24px;
+  }
+</style>

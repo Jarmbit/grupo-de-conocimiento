@@ -7,6 +7,6 @@ export default defineConfig({
   site: 'https://encuentrossiloe.org',
   integrations: [sitemap()],
   redirects: {
-    '/eventos': '/#encuentros',
+    '/eventos': '/encuentros',
   },
 });

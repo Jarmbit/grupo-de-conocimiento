@@ -15,18 +15,19 @@ function encuentroImage(path: string) {
 ---
 
 <section id="como-es-un-encuentro" data-screen-label="Cómo es un encuentro" class="flow">
-  <div class="intro">
+  <div class="intro" data-reveal>
     <span class="kicker">{howWeDoIt.kicker}</span>
     <h2>{howWeDoIt.title}</h2>
     <p>{howWeDoIt.intro}</p>
   </div>
   <div class="grid">
     {
-      howWeDoIt.traits.map((trait) => {
+      howWeDoIt.traits.map((trait, i) => {
         const image = encuentroImage(trait.image);
         return (
-          <div class="card">
-            {image && <Image src={image} alt={trait.alt} class="photo" width={64} height={64} loading="lazy" />}
+          <div class="card" data-reveal style={`transition-delay:${i * 80}ms`}>
+            <span class="number" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            {image && <Image src={image} alt={trait.alt} class="photo" width={72} height={72} loading="lazy" />}
             <h3>{trait.title}</h3>
             <p>{trait.text}</p>
           </div>
@@ -106,15 +107,27 @@ function encuentroImage(path: string) {
   }
 
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 10px;
-    padding: 24px 18px;
+    padding: 32px 18px 24px;
     background: var(--white);
     border-radius: var(--radius-card);
     border: 1px solid var(--border-subtle);
+  }
+
+  .number {
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.06em;
   }
 
   .grid > .card {
