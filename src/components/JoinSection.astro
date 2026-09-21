@@ -12,6 +12,18 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
     <p>Recibe testimonios, avisos de encuentros y contenido nuevo donde prefieras.</p>
   </div>
   <div class="grid">
+    {socials.map((s) => (
+      <div class="card">
+        <span class="icon social" aria-hidden="true">
+          <SocialIcon label={s.label} />
+        </span>
+        <h3>{s.label}</h3>
+        <p>Síguenos y descubre por dentro cada encuentro.</p>
+        <a href={s.href} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Seguir en {s.label}
+        </a>
+      </div>
+    ))}
     <div class="card">
       <span class="icon email"></span>
       <h3>Boletín por email</h3>
@@ -19,16 +31,6 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
       <a href={newsletterHref} class="btn-primary">Suscribirme</a>
     </div>
   </div>
-  {socials.length > 0 && (
-    <div class="socials">
-      <span class="socials-label">Síguenos también en:</span>
-      {socials.map((s) => (
-        <a href={s.href} target="_blank" rel="noopener noreferrer" class="social-icon" aria-label={s.label}>
-          <SocialIcon label={s.label} />
-        </a>
-      ))}
-    </div>
-  )}
 </section>
 
 <style>
@@ -95,6 +97,19 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
     background: var(--accent);
   }
 
+  .icon.social {
+    background: var(--primary-dark);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon.social :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+
   .card h3 {
     font-size: var(--text-h3-sans-size);
     font-weight: 600;
@@ -114,41 +129,5 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
 
   .btn:hover {
     background: var(--primary-dark);
-  }
-
-  .socials {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-subtle);
-    flex-wrap: wrap;
-  }
-
-  .socials-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink-muted);
-  }
-
-  .social-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--primary-dark);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease;
-  }
-
-  .social-icon :global(svg) {
-    width: 19px;
-    height: 19px;
-  }
-
-  .social-icon:hover {
-    background: var(--primary);
   }
 </style>
