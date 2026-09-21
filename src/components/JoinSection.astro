@@ -22,7 +22,7 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
     <div class="socials">
       <span class="socials-label">Síguenos también en:</span>
       {socials.map((s) => (
-        <a href={s.href} class="social-icon" aria-label={s.label}>
+        <a href={s.href} target="_blank" rel="noopener noreferrer" class="social-icon" aria-label={s.label}>
           {s.initial}
         </a>
       ))}
