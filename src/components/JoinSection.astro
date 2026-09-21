@@ -1,4 +1,5 @@
 ---
+import SocialIcon from "./SocialIcon.astro";
 import { socials, contact } from "../data/content";
 
 const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Quiero suscribirme al boletín")}&body=${encodeURIComponent("Hola, me gustaría suscribirme al boletín de Encuentros Siloé para recibir noticias, vídeos y próximos encuentros.")}`;
@@ -23,7 +24,7 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
       <span class="socials-label">Síguenos también en:</span>
       {socials.map((s) => (
         <a href={s.href} target="_blank" rel="noopener noreferrer" class="social-icon" aria-label={s.label}>
-          {s.initial}
+          <SocialIcon label={s.label} />
         </a>
       ))}
     </div>
@@ -139,9 +140,12 @@ const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Qu
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
     transition: background 0.15s ease;
+  }
+
+  .social-icon :global(svg) {
+    width: 19px;
+    height: 19px;
   }
 
   .social-icon:hover {

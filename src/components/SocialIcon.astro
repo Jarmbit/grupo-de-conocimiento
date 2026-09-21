@@ -1,0 +1,21 @@
+---
+// Iconos SVG oficiales (trazo simplificado, licencia libre de uso de marca) para las redes
+// sociales en socials (content.ts). Añadir aquí cualquier red nueva que se incorpore.
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+{
+  label === "Instagram" ? (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5" stroke="currentColor" stroke-width="1.8" />
+      <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.8" />
+      <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" />
+    </svg>
+  ) : (
+    <span aria-hidden="true">{label.charAt(0)}</span>
+  )
+}
