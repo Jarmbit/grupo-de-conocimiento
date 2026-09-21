@@ -23,7 +23,7 @@ import { navLinks, socials, contact } from "../data/content";
       {socials.length > 0 && (
         <div class="social-row">
           {socials.map((s) => (
-            <a href={s.href} class="social-icon" aria-label={s.label}>
+            <a href={s.href} target="_blank" rel="noopener noreferrer" class="social-icon" aria-label={s.label}>
               {s.initial}
             </a>
           ))}

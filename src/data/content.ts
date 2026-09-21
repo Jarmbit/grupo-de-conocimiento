@@ -392,8 +392,9 @@ export interface Social {
   href: string;
 }
 
-// Sin enlaces reales todavía: se ocultan (ver Footer.astro / JoinSection.astro) hasta añadirlos aquí.
-export const socials: Social[] = [];
+export const socials: Social[] = [
+  { initial: "IG", label: "Instagram", href: "https://www.instagram.com/encuentrossiloe" },
+];
 
 export interface DonationModel {
   key: "socio" | "puntual" | "patrocinio" | "voluntariado";
