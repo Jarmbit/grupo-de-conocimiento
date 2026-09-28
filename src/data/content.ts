@@ -271,7 +271,9 @@ export const events: EventItem[] = [
     month: "Nov",
     day: "14",
     title: "Encuentro en Málaga",
-    location: "Málaga",
+    location: "El Cielo, Avenida de Manuel Torres, 3, Málaga · 18:00h",
+    spots: "Vídeo de Jesús de Nazaret y música en directo",
+    image: "/images/events/encuentro-malaga.jpg",
   },
   {
     month: "Nov",
