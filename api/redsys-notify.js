@@ -1,8 +1,9 @@
+import { sendDonationEmail } from "./_lib/notify-email.js";
 import { decodeParameters, getConfig, isAuthorised, sign, signaturesMatch } from "./_lib/redsys.js";
 
 // Notificación servidor a servidor (Ds_Merchant_MerchantURL). Redsys envía un POST
 // application/x-www-form-urlencoded. Aquí solo verificamos la firma y registramos el resultado.
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).end();
@@ -40,6 +41,23 @@ export default function handler(req, res) {
     amountCents: data.Ds_Amount ?? data.DS_AMOUNT,
     authCode: data.Ds_AuthorisationCode ?? data.DS_AUTHORISATIONCODE,
   });
+
+  if (isAuthorised(responseCode)) {
+    try {
+      await sendDonationEmail(
+        {
+          order,
+          amountCents: data.Ds_Amount ?? data.DS_AMOUNT,
+          authCode: data.Ds_AuthorisationCode ?? data.DS_AUTHORISATIONCODE,
+          mode: config.mode,
+        },
+        process.env,
+      );
+    } catch (err) {
+      // El pago ya está hecho: un fallo de email nunca debe romper la respuesta a Redsys.
+      console.error("Email donación: fallo inesperado", err instanceof Error ? err.message : err);
+    }
+  }
 
   return res.status(200).send("OK");
 }

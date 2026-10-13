@@ -73,3 +73,11 @@ Variables de entorno (Vercel → Settings → Environment Variables; **nunca en 
 | `SITE_URL` | URL pública, p. ej. `https://encuentrossiloe.org` (opcional en previews: usa `VERCEL_URL`) |
 
 Pasar a real: pedir a Redsys el pase a entorno real, sustituir código/clave y poner `REDSYS_ENV=live`.
+
+Aviso por email de cada donación aprobada (opcional, vía [Resend](https://resend.com)):
+
+| Variable | Valor |
+| --- | --- |
+| `RESEND_API_KEY` | API key de Resend |
+| `DONATION_NOTIFY_TO` | Email(s) destinatarios, separados por comas |
+| `DONATION_FROM` | Remitente (opcional). Por defecto `onboarding@resend.dev`, que solo envía al email dueño de la cuenta de Resend; para otros destinatarios hay que verificar el dominio |
