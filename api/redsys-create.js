@@ -56,17 +56,23 @@ export default function handler(req, res) {
     DS_MERCHANT_CONSUMERLANGUAGE: "001",
   };
 
-  const merchantParameters = encodeParameters(params);
-
-  return res.status(200).json({
-    url: REDSYS_URLS[config.mode],
-    mode: config.mode,
-    fields: {
-      Ds_SignatureVersion: SIGNATURE_VERSION,
-      Ds_MerchantParameters: merchantParameters,
-      Ds_Signature: sign(merchantParameters, order, config.secretKey),
-    },
-  });
+  try {
+    const merchantParameters = encodeParameters(params);
+    const signature = sign(merchantParameters, order, config.secretKey);
+    return res.status(200).json({
+      url: REDSYS_URLS[config.mode],
+      mode: config.mode,
+      fields: {
+        Ds_SignatureVersion: SIGNATURE_VERSION,
+        Ds_MerchantParameters: merchantParameters,
+        Ds_Signature: signature,
+      },
+    });
+  } catch (err) {
+    // No se registra la clave; solo el motivo (p. ej. longitud de clave inválida).
+    console.error("Redsys: error al firmar:", err instanceof Error ? err.message : err);
+    return res.status(500).json({ error: "El pago no está disponible en este momento." });
+  }
 }
 
 function safeParse(text) {
