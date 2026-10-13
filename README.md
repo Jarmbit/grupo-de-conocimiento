@@ -53,3 +53,23 @@ Todos los comandos se ejecutan desde la raíz del proyecto:
 | `npm run dev`          | Arranca el servidor de desarrollo en `localhost:4321` |
 | `npm run build`        | Genera el sitio de producción en `./dist/`         |
 | `npm run preview`      | Previsualiza el build de producción localmente     |
+
+## Pagos con tarjeta (Redsys / Cyberpac)
+
+Integración por redirección (TPV Virtual). Funciones serverless en `api/`:
+
+- `api/redsys-create.js`: valida el importe y devuelve los campos firmados del formulario de pago.
+- `api/redsys-notify.js`: recibe la notificación de Redsys y verifica la firma.
+- Páginas de retorno: `/pago/ok` y `/pago/ko`.
+
+Variables de entorno (Vercel → Settings → Environment Variables; **nunca en git**):
+
+| Variable | Valor |
+| --- | --- |
+| `REDSYS_MERCHANT_CODE` | Código de comercio (FUC) |
+| `REDSYS_TERMINAL` | Terminal, normalmente `1` |
+| `REDSYS_SECRET_KEY` | Clave secreta SHA-256 (base64) |
+| `REDSYS_ENV` | `test` (por defecto) o `live` |
+| `SITE_URL` | URL pública, p. ej. `https://encuentrossiloe.org` (opcional en previews: usa `VERCEL_URL`) |
+
+Pasar a real: pedir a Redsys el pase a entorno real, sustituir código/clave y poner `REDSYS_ENV=live`.

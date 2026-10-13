@@ -6,6 +6,9 @@ function supportHref(title: string) {
   const body = `Hola, quiero informarme sobre cómo colaborar como "${title}" con Encuentros Siloé.`;
   return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
+
+// Modalidades que se pagan con tarjeta (pago único). Socio mensual (recurrente) y voluntariado siguen por email.
+const payKinds = ["puntual", "patrocinio"];
 ---
 
 <section id="apoya" data-screen-label="Apoya" class="support">
@@ -21,9 +24,9 @@ function supportHref(title: string) {
           <h3>{d.title}</h3>
           <span class="detail">{d.detail}</span>
           <p>{d.text}</p>
-          {/* TODO: enlazar a una pasarela de pago real (Stripe, PayPal, TPV bancario) cuando esté disponible */}
           <a
-            href={supportHref(d.title)}
+            href={payKinds.includes(d.key) ? `#pago-tarjeta` : supportHref(d.title)}
+            data-pay-kind={payKinds.includes(d.key) ? d.key : undefined}
             class={d.key === highlightDonation ? "btn-primary" : "btn-primary-on-dark"}
           >
             {d.cta}
@@ -32,7 +35,93 @@ function supportHref(title: string) {
       ))
     }
   </div>
+
+  <form id="pago-tarjeta" class="pay" novalidate>
+    <h3>Dona con tarjeta</h3>
+    <p class="pay-note">Pago seguro mediante TPV virtual bancario (Redsys). No almacenamos los datos de tu tarjeta.</p>
+    <label class="field">
+      <span>Tipo de aportación</span>
+      <select name="kind">
+        <option value="puntual">Donación puntual</option>
+        <option value="patrocinio">Patrocinio de un encuentro</option>
+      </select>
+    </label>
+    <div class="amounts" role="group" aria-label="Importe">
+      {[10, 25, 50, 100].map((v) => <button type="button" class="amount" data-amount={v}>{v} €</button>)}
+    </div>
+    <label class="field">
+      <span>Otro importe (€)</span>
+      <input type="number" name="amount" min="1" max="5000" step="0.01" inputmode="decimal" placeholder="Ej. 30" required />
+    </label>
+    <button type="submit" class="btn-primary-on-dark pay-submit">Pagar con tarjeta</button>
+    <p class="pay-error" role="alert" hidden></p>
+  </form>
 </section>
+
+<script>
+  const form = document.getElementById("pago-tarjeta") as HTMLFormElement | null;
+  if (form) {
+    const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
+    const kindSelect = form.elements.namedItem("kind") as HTMLSelectElement;
+    const errorEl = form.querySelector(".pay-error") as HTMLElement;
+    const submitBtn = form.querySelector(".pay-submit") as HTMLButtonElement;
+
+    const showError = (msg: string) => {
+      errorEl.textContent = msg;
+      errorEl.hidden = !msg;
+    };
+
+    form.querySelectorAll<HTMLButtonElement>(".amount").forEach((b) =>
+      b.addEventListener("click", () => {
+        amountInput.value = b.dataset.amount ?? "";
+        showError("");
+      }),
+    );
+
+    document.querySelectorAll<HTMLElement>("[data-pay-kind]").forEach((a) =>
+      a.addEventListener("click", () => {
+        kindSelect.value = a.dataset.payKind ?? "puntual";
+      }),
+    );
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      showError("");
+      const amount = Number(amountInput.value.replace(",", "."));
+      if (!Number.isFinite(amount) || amount < 1 || amount > 5000) {
+        showError("Introduce un importe entre 1 y 5000 euros.");
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Conectando con el banco…";
+      try {
+        const res = await fetch("/api/redsys-create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kind: kindSelect.value, amount }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "No se pudo iniciar el pago.");
+        const f = document.createElement("form");
+        f.method = "POST";
+        f.action = data.url;
+        for (const [name, value] of Object.entries<string>(data.fields)) {
+          const i = document.createElement("input");
+          i.type = "hidden";
+          i.name = name;
+          i.value = value;
+          f.appendChild(i);
+        }
+        document.body.appendChild(f);
+        f.submit();
+      } catch (err) {
+        showError(err instanceof Error ? err.message : "No se pudo iniciar el pago.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Pagar con tarjeta";
+      }
+    });
+  }
+</script>
 
 <style>
   .support {
@@ -115,6 +204,86 @@ function supportHref(title: string) {
     font-size: 14px;
     color: var(--ink-muted);
     flex: 1;
+  }
+
+  .pay {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--white);
+  }
+
+  .pay h3 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h3-serif-size);
+    font-weight: 600;
+  }
+
+  .pay-note {
+    font-size: 14px;
+    color: #c9d2dc;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .field select,
+  .field input {
+    font: inherit;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  .amounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .amount {
+    font: inherit;
+    font-weight: 600;
+    padding: 10px 18px;
+    min-height: 44px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: var(--white);
+    cursor: pointer;
+  }
+
+  .amount:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .pay-submit {
+    cursor: pointer;
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .pay-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .pay-error {
+    font-size: 14px;
+    color: #ffd2cc;
   }
 
   :global(.btn-primary),
