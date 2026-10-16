@@ -347,13 +347,7 @@ export interface DonationModel {
 }
 
 export const donationModels: DonationModel[] = [
-  {
-    key: "socio",
-    title: "Socio mensual",
-    detail: "Desde 10€/mes",
-    text: "Un compromiso estable que sostiene nuestro trabajo cada mes.",
-    cta: "Hazte socio",
-  },
+  // Socio mensual (suscripción) pendiente hasta tener el CRM de Bewe: se reactivará entonces.
   {
     key: "puntual",
     title: "Donación puntual",
@@ -378,7 +372,14 @@ export const donationModels: DonationModel[] = [
 ];
 
 // Modelo de aportación resaltado como recomendado.
-export const highlightDonation: DonationModel["key"] = "socio";
+export const highlightDonation: DonationModel["key"] = "puntual";
+
+// Cuenta para aportaciones por transferencia.
+export const bankAccount = {
+  holder: "Asociación Encuentros Siloé",
+  iban: "ES46 2100 3893 1502 0085 0638",
+  concept: "Donación Encuentros Siloé",
+};
 
 export const contact = {
   email: "info@encuentrossiloe.org",

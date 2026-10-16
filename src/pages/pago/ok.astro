@@ -1,0 +1,53 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { contact } from "../../data/content";
+---
+
+<Layout title="Pago realizado — Encuentros Siloé" description="Resultado de tu pago con tarjeta.">
+  <Header />
+  <main class="result">
+    <h1>¡Gracias por tu aportación!</h1>
+    <p>Hemos recibido tu pago. Tu ayuda hace posible cada testimonio, cada vídeo y cada encuentro. Que Dios te bendiga.</p>
+    <p class="small">¿Dudas? Escríbenos a <a href={`mailto:${contact.email}`}>{contact.email}</a>.</p>
+    <div class="actions">
+      <a href="/apoya" class="btn-primary">Volver a Apoya</a>
+      <a href="/" class="btn-secondary">Ir al inicio</a>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .result {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(80px, 14vw, 140px) 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: center;
+    align-items: center;
+  }
+  h1 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h2-size);
+    color: var(--primary-dark);
+    line-height: var(--text-h2-line);
+  }
+  p {
+    line-height: var(--text-body-line);
+    color: var(--ink-muted);
+  }
+  .small a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>
