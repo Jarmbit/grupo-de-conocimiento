@@ -376,6 +376,7 @@ export const highlightDonation: DonationModel["key"] = "puntual";
 
 // Cuenta para aportaciones por transferencia.
 export const bankAccount = {
+  holder: "Asociación Encuentros Siloé",
   iban: "ES46 2100 3893 1502 0085 0638",
   concept: "Donación Encuentros Siloé",
 };

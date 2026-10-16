@@ -60,6 +60,7 @@ const payKinds = ["puntual", "patrocinio"];
   <div class="pay" id="transferencia">
     <h3>Dona por transferencia</h3>
     <p class="pay-note">Haz una transferencia a nuestra cuenta desde tu banco.</p>
+    <p class="pay-note">Titular: <strong>{bankAccount.holder}</strong></p>
     <div class="iban-row">
       <code class="iban" id="iban-value">{bankAccount.iban}</code>
       <button type="button" class="amount" id="copy-iban">Copiar IBAN</button>
