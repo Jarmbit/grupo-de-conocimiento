@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import LeadFormSection from "../components/LeadFormSection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Voluntariado — Encuentros Siloé"
+  description="Súmate como voluntario al equipo que hace realidad cada encuentro y vídeo de Encuentros Siloé."
+>
+  <Header />
+  <LeadFormSection
+    id="voluntariado"
+    kicker="Voluntariado"
+    title="Quiero ayudar"
+    intro="Cuéntanos tus datos y en qué te gustaría ayudar: tu tiempo y tu talento hacen posible cada encuentro y vídeo."
+    prefill="Quiero ser voluntario. Puedo ayudar en: "
+  />
+  <Footer />
+</Layout>

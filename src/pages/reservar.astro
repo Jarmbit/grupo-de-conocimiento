@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
-import ReserveSection from "../components/ReserveSection.astro";
+import LeadFormSection from "../components/LeadFormSection.astro";
 import Footer from "../components/Footer.astro";
 ---
 
@@ -10,6 +10,13 @@ import Footer from "../components/Footer.astro";
   description="Reserva tu plaza en un encuentro de Encuentros Siloé. Déjanos tus datos y te confirmaremos."
 >
   <Header />
-  <ReserveSection />
+  <LeadFormSection
+    id="reservar"
+    kicker="Reservar plaza"
+    title="Reserva tu plaza"
+    intro="Déjanos tus datos y te confirmaremos la plaza. Indica en el comentario a qué encuentro quieres venir y cuántas plazas necesitas."
+    prefill="Reserva de plaza para: "
+  useEventParam
+  />
   <Footer />
 </Layout>

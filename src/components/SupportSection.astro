@@ -1,7 +1,9 @@
 ---
 import { donationModels, highlightDonation, contact, bankAccount } from "../data/content";
 
-function supportHref(title: string) {
+// Voluntariado va al formulario de contacto de Bewe; el resto de modalidades no pagadas, por email.
+function supportHref(key: string, title: string) {
+  if (key === "voluntariado") return "/voluntariado";
   const subject = `Quiero informarme: ${title}`;
   const body = `Hola, quiero informarme sobre cómo colaborar como "${title}" con Encuentros Siloé.`;
   return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -25,7 +27,7 @@ const payKinds = ["puntual", "patrocinio"];
           <span class="detail">{d.detail}</span>
           <p>{d.text}</p>
           <a
-            href={payKinds.includes(d.key) ? `#pago-tarjeta` : supportHref(d.title)}
+            href={payKinds.includes(d.key) ? `#pago-tarjeta` : supportHref(d.key, d.title)}
             data-pay-kind={payKinds.includes(d.key) ? d.key : undefined}
             class={d.key === highlightDonation ? "btn-primary" : "btn-primary-on-dark"}
           >

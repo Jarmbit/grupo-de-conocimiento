@@ -1,0 +1,145 @@
+---
+import { contact } from "../data/content";
+
+interface Props {
+  id: string;
+  kicker: string;
+  title: string;
+  intro: string;
+  /** Texto fijo con el que se rellena el campo Comentario del formulario. */
+  prefill?: string;
+  /** Si la URL trae ?encuentro=…, se muestra y se usa como relleno (reserva de plaza). */
+  useEventParam?: boolean;
+}
+
+const { id, kicker, title, intro, prefill = "", useEventParam = false } = Astro.props;
+---
+
+<section id={id} data-screen-label={kicker} class="lead" data-prefill={prefill} data-event-param={useEventParam ? "1" : undefined}>
+  <div class="intro">
+    <span class="kicker">{kicker}</span>
+    <h2>{title}</h2>
+    <p class="event-line" id="lead-event" hidden>
+      Encuentro: <strong id="lead-event-name"></strong>
+    </p>
+    <p>{intro}</p>
+  </div>
+
+  <div class="form">
+    <div data-lead-form data-pk="pk_0qWzBZIIahKTIPIDtjTNQ5tmsrZIczFbxYKA2yQKqjg" data-country="ES"></div>
+    <p class="fallback">
+      ¿Prefieres escribirnos directamente? <a href={`mailto:${contact.email}`}>{contact.email}</a>
+    </p>
+  </div>
+  <script is:inline src="https://storage.googleapis.com/sdk-os/prod/widgets/lead-form/latest/lead-form.js" defer></script>
+</section>
+
+<style>
+  .lead {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent-text);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h2-size);
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: var(--text-h2-line);
+  }
+
+  .intro p {
+    font-size: var(--text-body-size);
+    color: var(--ink-muted);
+    line-height: var(--text-body-line);
+  }
+
+  .event-line {
+    color: var(--primary-dark);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 32px;
+    background: var(--bg-alt);
+    border-radius: var(--radius-card);
+  }
+
+  /* Estilo del formulario de Bewe (variables que lee el widget). */
+  [data-lead-form] {
+    --lead-form-primary: #1f3a5f;
+    --lead-form-background: #edf0f3;
+    --lead-form-text: #1c2530;
+    --lead-form-border: #c9d2dc;
+    --lead-form-font: "Source Sans 3", sans-serif;
+  }
+
+  .fallback {
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .fallback a {
+    text-decoration: underline;
+    color: var(--primary);
+  }
+</style>
+
+<script>
+  // Rellena el campo Comentario del widget de Bewe. Es un extra: si Bewe cambia su widget y falla,
+  // el texto de la página sigue pidiendo el dato.
+  const section = document.querySelector<HTMLElement>("section.lead");
+  if (section) {
+    let text = section.dataset.prefill ?? "";
+    if (section.dataset.eventParam) {
+      const encuentro = new URLSearchParams(location.search).get("encuentro")?.trim().slice(0, 120);
+      if (encuentro) {
+        const line = document.getElementById("lead-event");
+        const name = document.getElementById("lead-event-name");
+        if (line && name) {
+          name.textContent = encuentro;
+          line.hidden = false;
+        }
+        text = `Reserva de plaza para: ${encuentro}. Número de plazas: `;
+      }
+    }
+
+    if (text) {
+      const fill = () => {
+        const area = document.querySelector("[data-lead-form]")?.shadowRoot?.querySelector("textarea");
+        if (!area) return false;
+        if (!area.value) {
+          const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")?.set;
+          setter?.call(area, text);
+          area.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        return true;
+      };
+      let tries = 0;
+      const timer = setInterval(() => {
+        if (fill() || ++tries > 40) clearInterval(timer);
+      }, 250);
+    }
+  }
+</script>
