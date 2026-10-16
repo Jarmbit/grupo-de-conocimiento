@@ -1,8 +1,8 @@
 ---
 import SocialIcon from "./SocialIcon.astro";
-import { socials, contact } from "../data/content";
+import { socials } from "../data/content";
 
-const newsletterHref = `mailto:${contact.email}?subject=${encodeURIComponent("Quiero suscribirme al boletín")}&body=${encodeURIComponent("Hola, me gustaría suscribirme al boletín de Encuentros Siloé para recibir noticias, vídeos y próximos encuentros.")}`;
+const newsletterHref = "/boletin";
 ---
 
 <section id="unete" data-screen-label="Únete" class="join">
