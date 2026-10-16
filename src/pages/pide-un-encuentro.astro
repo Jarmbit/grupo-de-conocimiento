@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import LeadFormSection from "../components/LeadFormSection.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Pide un encuentro — Encuentros Siloé"
+  description="Solicita un encuentro de Encuentros Siloé para tu hogar, comunidad o parroquia. Déjanos tus datos y te contactaremos."
+>
+  <Header />
+  <LeadFormSection
+    id="pide-un-encuentro-formulario"
+    kicker="Pide un encuentro"
+    title="Solicita tu encuentro"
+    intro="Déjanos tus datos y te contactaremos. En el comentario cuéntanos la ciudad, el tipo de espacio (hogar, parroquia u otro), el número aproximado de personas y las fechas que os vendrían bien."
+    prefill="Quiero solicitar un encuentro. Ciudad: . Tipo de espacio (hogar, parroquia, otro): . Número aproximado de personas: . Fechas que os vendrían bien: "
+    useEventParam
+    eventTemplate="Quiero solicitar el encuentro: {encuentro}. Ciudad: . Tipo de espacio (hogar, parroquia, otro): . Número aproximado de personas: . Fechas que os vendrían bien: "
+  />
+  <Footer />
+</Layout>
