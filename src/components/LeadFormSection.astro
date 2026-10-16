@@ -10,12 +10,14 @@ interface Props {
   prefill?: string;
   /** Si la URL trae ?encuentro=…, se muestra y se usa como relleno (reserva de plaza). */
   useEventParam?: boolean;
+  /** Plantilla del relleno cuando hay ?encuentro=…; "{encuentro}" se sustituye por su nombre. */
+  eventTemplate?: string;
 }
 
-const { id, kicker, title, intro, prefill = "", useEventParam = false } = Astro.props;
+const { id, kicker, title, intro, prefill = "", useEventParam = false, eventTemplate = "Reserva de plaza para: {encuentro}. Número de plazas: " } = Astro.props;
 ---
 
-<section id={id} data-screen-label={kicker} class="lead" data-prefill={prefill} data-event-param={useEventParam ? "1" : undefined}>
+<section id={id} data-screen-label={kicker} class="lead" data-prefill={prefill} data-event-param={useEventParam ? "1" : undefined} data-event-template={eventTemplate}>
   <div class="intro">
     <span class="kicker">{kicker}</span>
     <h2>{title}</h2>
@@ -121,7 +123,7 @@ const { id, kicker, title, intro, prefill = "", useEventParam = false } = Astro.
           name.textContent = encuentro;
           line.hidden = false;
         }
-        text = `Reserva de plaza para: ${encuentro}. Número de plazas: `;
+        text = (section.dataset.eventTemplate ?? "").replace("{encuentro}", encuentro);
       }
     }
 
