@@ -1,5 +1,5 @@
 ---
-import { donationModels, highlightDonation, contact } from "../data/content";
+import { donationModels, highlightDonation, contact, bankAccount } from "../data/content";
 
 function supportHref(title: string) {
   const subject = `Quiero informarme: ${title}`;
@@ -56,9 +56,35 @@ const payKinds = ["puntual", "patrocinio"];
     <button type="submit" class="btn-primary-on-dark pay-submit">Pagar con tarjeta</button>
     <p class="pay-error" role="alert" hidden></p>
   </form>
+
+  <div class="pay" id="transferencia">
+    <h3>Dona por transferencia</h3>
+    <p class="pay-note">Haz una transferencia a nuestra cuenta desde tu banco.</p>
+    <div class="iban-row">
+      <code class="iban" id="iban-value">{bankAccount.iban}</code>
+      <button type="button" class="amount" id="copy-iban">Copiar IBAN</button>
+    </div>
+    <p class="pay-note">Concepto sugerido: <strong>{bankAccount.concept}</strong></p>
+    <p class="pay-note">
+      Si quieres un certificado de donación, escríbenos a
+      <a href={`mailto:${contact.email}`} class="inline-link">{contact.email}</a> con tus datos.
+    </p>
+  </div>
 </section>
 
 <script>
+  const copyBtn = document.getElementById("copy-iban") as HTMLButtonElement | null;
+  copyBtn?.addEventListener("click", async () => {
+    const iban = (document.getElementById("iban-value")?.textContent ?? "").replace(/\s/g, "");
+    try {
+      await navigator.clipboard.writeText(iban);
+      copyBtn.textContent = "¡Copiado!";
+    } catch {
+      copyBtn.textContent = "Selecciona y copia";
+    }
+    setTimeout(() => (copyBtn.textContent = "Copiar IBAN"), 2500);
+  });
+
   const form = document.getElementById("pago-tarjeta") as HTMLFormElement | null;
   if (form) {
     const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
@@ -224,6 +250,27 @@ const payKinds = ["puntual", "patrocinio"];
     font-family: "Lora", serif;
     font-size: var(--text-h3-serif-size);
     font-weight: 600;
+  }
+
+  .iban-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .iban {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow-wrap: anywhere;
+  }
+
+  .inline-link {
+    text-decoration: underline;
   }
 
   .pay-note {

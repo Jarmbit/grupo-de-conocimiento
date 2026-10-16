@@ -81,3 +81,12 @@ Aviso por email de cada donación aprobada (opcional, vía [Resend](https://rese
 | `RESEND_API_KEY` | API key de Resend |
 | `DONATION_NOTIFY_TO` | Email(s) destinatarios, separados por comas |
 | `DONATION_FROM` | Remitente (opcional). Por defecto `onboarding@resend.dev`, que solo envía al email dueño de la cuenta de Resend; para otros destinatarios hay que verificar el dominio |
+
+### Paso a entorno real (Redsys)
+
+Comercio `372969444`, terminal `1`, moneda `978` (los mismos datos que en pruebas). Cambia solo la clave y el entorno.
+La clave SHA-256 **real** no llega por email: se obtiene en https://canales.redsys.es/lacaixa (Administración → Comercio → Buscar → Detalles → Ver clave; se muestra 10 s).
+
+1. Vercel → Environment Variables, para el entorno que vayas a usar: `REDSYS_ENV=live`, `REDSYS_SECRET_KEY=<clave real>`, `SITE_URL=https://encuentrossiloe.org`.
+2. Redeploy.
+3. Pruebas recomendadas por Redsys: un pago con la tarjeta de denegadas (`4548 8120 4940 0004`, 12/20, CVV 123) y otro autorizado con una tarjeta real (no hay tarjeta de prueba autorizada en real; basta 1 €).
