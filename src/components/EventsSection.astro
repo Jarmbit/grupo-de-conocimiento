@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { events, showEventSpots, contact } from "../data/content";
+import { events, showEventSpots } from "../data/content";
 
 const eventImages = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/events/*.jpg",
@@ -15,9 +15,7 @@ function eventImage(path?: string) {
 }
 
 function reserveHref(title: string) {
-  const subject = `Quiero reservar plaza: ${title}`;
-  const body = `Hola, me gustaría reservar plaza para el encuentro "${title}". ¿Cómo sería el siguiente paso?`;
-  return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `/reservar?encuentro=${encodeURIComponent(title)}`;
 }
 ---
 
