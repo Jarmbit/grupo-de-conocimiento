@@ -259,15 +259,6 @@ export interface EventItem {
 
 export const events: EventItem[] = [
   {
-    month: "Oct",
-    day: "17",
-    title: "Jesús de Nazaret",
-    location: "Teatro Fernández Baldor, Torrelodones · 18:00h",
-    spots: "Estreno del vídeo, música en directo y presentación de Encuentros Siloé",
-    image: "/images/events/jesus-de-nazaret.jpg",
-    link: "https://www.giglon.com/todos?idEvent=jesus-de-nazaret",
-  },
-  {
     month: "Nov",
     day: "14",
     title: "Encuentro en Málaga",
@@ -306,6 +297,14 @@ export interface PastEvent {
 
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
 export const pastEvents: PastEvent[] = [
+  {
+    title: "Jesús de Nazaret",
+    location: "Teatro Fernández Baldor, Torrelodones",
+    date: "17 de octubre de 2026",
+    // TODO: pendiente de fotos del evento. Al subirlas a
+    // public/images/eventos-pasados/jesus-de-nazaret/ añadir aquí sus rutas.
+    photos: [],
+  },
   {
     title: "Encuentro en Burgos",
     location: "Parroquia San Lorenzo, Burgos",
