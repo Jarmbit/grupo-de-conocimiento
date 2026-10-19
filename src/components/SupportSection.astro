@@ -19,6 +19,13 @@ const payKinds = ["puntual", "patrocinio"];
     <h2>Apoya nuestra misión</h2>
     <p>Tu ayuda hace posible cada testimonio, cada vídeo y cada encuentro.</p>
   </div>
+  <p class="tax-note">
+    La Asociación Encuentros Siloé es una entidad de reciente constitución. Actualmente no está
+    declarada de utilidad pública, por lo que las cuotas y donativos que recibe no dan derecho a
+    deducción fiscal en el IRPF ni en el Impuesto sobre Sociedades. Solicitaremos la declaración de
+    utilidad pública en cuanto cumplamos los requisitos legales para ello, momento en el que
+    actualizaremos esta información.
+  </p>
   <div class="grid">
     {
       donationModels.map((d) => (
@@ -68,10 +75,6 @@ const payKinds = ["puntual", "patrocinio"];
       <button type="button" class="amount" id="copy-iban">Copiar IBAN</button>
     </div>
     <p class="pay-note">Concepto sugerido: <strong>{bankAccount.concept}</strong></p>
-    <p class="pay-note">
-      Si quieres un certificado de donación, escríbenos a
-      <a href={`mailto:${contact.email}`} class="inline-link">{contact.email}</a> con tus datos.
-    </p>
   </div>
 </section>
 
@@ -190,6 +193,17 @@ const payKinds = ["puntual", "patrocinio"];
     font-size: var(--text-body-size);
     color: #c9d2dc;
     line-height: var(--text-body-line);
+  }
+
+  .tax-note {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 14px 18px;
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.08);
+    color: #c9d2dc;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .grid {
