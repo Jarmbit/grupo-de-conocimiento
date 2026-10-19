@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
   if (isAuthorised(responseCode)) {
     try {
-      await sendDonationEmail(
+      const result = await sendDonationEmail(
         {
           order,
           amountCents: data.Ds_Amount ?? data.DS_AMOUNT,
@@ -53,6 +53,7 @@ export default async function handler(req, res) {
         },
         process.env,
       );
+      console.log("Email donación:", result.sent ? "enviado" : `no enviado (${result.reason})`);
     } catch (err) {
       // El pago ya está hecho: un fallo de email nunca debe romper la respuesta a Redsys.
       console.error("Email donación: fallo inesperado", err instanceof Error ? err.message : err);
