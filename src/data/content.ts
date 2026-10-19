@@ -330,6 +330,12 @@ export interface NewsItem {
 export const news: NewsItem[] = [
   {
     date: "19 de octubre de 2026",
+    title: "Nace en España Encuentros Siloé, un nuevo apostolado dirigido a ateos y agnósticos",
+    href: "https://www.ewtnnews.com/es/mundo/espana/espana-encuentros-siloe-apostolado-ateos-agnosticos",
+    source: "EWTN News",
+  },
+  {
+    date: "19 de octubre de 2026",
     title: "Cuando el salón de casa se convierte en el motor de una nueva fe: nace «Encuentros Siloé»",
     href: "https://exaudi.org/es/cuando-el-salon-de-casa-se-convierte-en-el-motor-de-una-nueva-fe-nace-encuentros-siloe/",
     source: "Exaudi",
