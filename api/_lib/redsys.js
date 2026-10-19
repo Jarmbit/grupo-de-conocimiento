@@ -12,7 +12,9 @@ export function getConfig(env = process.env) {
   const terminal = env.REDSYS_TERMINAL || "1";
   const secretKey = env.REDSYS_SECRET_KEY;
   const mode = env.REDSYS_ENV === "live" ? "live" : "test";
-  const siteUrl = env.SITE_URL || (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : "");
+  // En producción, sin SITE_URL, se usa el dominio real (no la URL interna del despliegue).
+  const fallbackUrl = env.VERCEL_ENV === "production" ? "https://encuentrossiloe.org" : env.VERCEL_URL ? `https://${env.VERCEL_URL}` : "";
+  const siteUrl = env.SITE_URL || fallbackUrl;
 
   if (!merchantCode || !secretKey || !siteUrl) return null;
   return { merchantCode, terminal, secretKey, mode, siteUrl: siteUrl.replace(/\/$/, "") };
