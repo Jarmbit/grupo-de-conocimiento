@@ -10,8 +10,13 @@ import { news } from "../data/content";
   {news.length > 0 ? (
     <div class="grid">
       {news.map((n) => (
-        <a href={n.href} class="card">
-          <span class="date">{n.date}</span>
+        <a
+          href={n.href}
+          class="card"
+          target={n.href.startsWith("http") ? "_blank" : undefined}
+          rel={n.href.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+          <span class="date">{n.source ? `${n.source} · ${n.date}` : n.date}</span>
           <h3>{n.title}</h3>
           <span class="read-more">Leer más →</span>
         </a>

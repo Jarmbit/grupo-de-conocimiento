@@ -322,10 +322,19 @@ export interface NewsItem {
   date: string;
   title: string;
   href: string;
+  /** Medio que publica la noticia, si es un enlace externo. */
+  source?: string;
 }
 
-// Sin noticias reales todavía. Añadir aquí cada noticia cuando exista su artículo/destino real.
-export const news: NewsItem[] = [];
+// Añadir aquí cada noticia cuando exista su artículo/destino real (más reciente primero).
+export const news: NewsItem[] = [
+  {
+    date: "19 de octubre de 2026",
+    title: "Cuando el salón de casa se convierte en el motor de una nueva fe: nace «Encuentros Siloé»",
+    href: "https://exaudi.org/es/cuando-el-salon-de-casa-se-convierte-en-el-motor-de-una-nueva-fe-nace-encuentros-siloe/",
+    source: "Exaudi",
+  },
+];
 
 export interface Social {
   initial: string;
