@@ -329,6 +329,18 @@ export interface NewsItem {
 // Añadir aquí cada noticia cuando exista su artículo/destino real (más reciente primero).
 export const news: NewsItem[] = [
   {
+    date: "20 de octubre de 2026",
+    title: "Nace Encuentros Siloé, una iniciativa para acercar la fe cristiana a los alejados de la Iglesia desde hogares familiares",
+    href: "https://www.elconfidencialdigital.com/articulo/catolicos/nace-encuentros-siloe-iniciativa-acercar-fe-cristiana-alejados-iglesia-hogares-familiares/202610200500001495173.html",
+    source: "El Confidencial Digital",
+  },
+  {
+    date: "20 de octubre de 2026",
+    title: "New apostolate to atheists and agnostics takes off in Spain",
+    href: "https://www.ewtnnews.com/world/europe/new-apostolate-to-atheists-and-agnostics-taking-off-in-spain",
+    source: "EWTN News (inglés)",
+  },
+  {
     date: "19 de octubre de 2026",
     title: "Nace en España Encuentros Siloé, un nuevo apostolado dirigido a ateos y agnósticos",
     href: "https://www.ewtnnews.com/es/mundo/espana/espana-encuentros-siloe-apostolado-ateos-agnosticos",
