@@ -330,6 +330,24 @@ export interface NewsItem {
 export const news: NewsItem[] = [
   {
     date: "20 de octubre de 2026",
+    title: "¿Qué es Encuentros Siloé?",
+    href: "https://alfayomega.es/que-es-encuentros-siloe/",
+    source: "Alfa y Omega",
+  },
+  {
+    date: "20 de octubre de 2026",
+    title: "New apostolate to atheists and agnostics takes off in Spain",
+    href: "https://www.catholicworldreport.com/2026/10/20/new-apostolate-to-atheists-and-agnostics-takes-off-in-spain/",
+    source: "Catholic World Report (inglés)",
+  },
+  {
+    date: "20 de octubre de 2026",
+    title: "Új, ateistákat és agnosztikusokat megszólító apostoli kezdeményezés indult Spanyolországban",
+    href: "https://www.ewtn.hu/hirek/uj-ateistakat-es-agnosztikusokat-megszolito-apostoli-kezdemenyezes-indult-spanyolorszagban--69881a60-7501-53f7-a0fb-ade4bf9c4ae1",
+    source: "EWTN Hungría (húngaro)",
+  },
+  {
+    date: "20 de octubre de 2026",
     title: "Nace Encuentros Siloé, una iniciativa para acercar la fe cristiana a los alejados de la Iglesia desde hogares familiares",
     href: "https://www.elconfidencialdigital.com/articulo/catolicos/nace-encuentros-siloe-iniciativa-acercar-fe-cristiana-alejados-iglesia-hogares-familiares/202610200500001495173.html",
     source: "El Confidencial Digital",
@@ -339,6 +357,12 @@ export const news: NewsItem[] = [
     title: "New apostolate to atheists and agnostics takes off in Spain",
     href: "https://www.ewtnnews.com/world/europe/new-apostolate-to-atheists-and-agnostics-taking-off-in-spain",
     source: "EWTN News (inglés)",
+  },
+  {
+    date: "19 de octubre de 2026",
+    title: "Un nuevo movimiento en España busca acercar la fe a ateos y agnósticos desde los hogares",
+    href: "https://desdelasredes.com/un-nuevo-movimiento-en-espana-busca-acercar-la-fe-a-ateos-y-agnosticos-desde-los-hogares/",
+    source: "Desde las redes",
   },
   {
     date: "19 de octubre de 2026",
