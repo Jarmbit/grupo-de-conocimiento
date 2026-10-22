@@ -282,7 +282,9 @@ export const events: EventItem[] = [
     month: "Nov",
     day: "28",
     title: "Encuentro en Burgos",
-    location: "Burgos",
+    location: "Auditorio Círculo Católico, C/ Concepción s/n, Burgos · 18:00h",
+    spots: "Película Jesús de Nazaret y música en directo",
+    image: "/images/events/encuentro-burgos.jpg",
   },
 ];
 
