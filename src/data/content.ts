@@ -331,6 +331,12 @@ export interface NewsItem {
 // Añadir aquí cada noticia cuando exista su artículo/destino real (más reciente primero).
 export const news: NewsItem[] = [
   {
+    date: "22 de octubre de 2026",
+    title: "Como los primeros cristianos: testimonios, música y fe compartida en los Encuentros de Siloé",
+    href: "https://www.religionenlibertad.com/espana/261022/primeros-cristianos-testimonios-musica-fe-compartida-encuentros-siloe_120550.html",
+    source: "Religión en Libertad",
+  },
+  {
     date: "20 de octubre de 2026",
     title: "¿Qué es Encuentros Siloé?",
     href: "https://alfayomega.es/que-es-encuentros-siloe/",
