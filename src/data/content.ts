@@ -277,6 +277,14 @@ export const events: EventItem[] = [
   },
   {
     month: "Nov",
+    day: "20",
+    title: "Dios: una creencia razonable",
+    location: "Avenida de los Rubios 18, Las Rozas · 20:00h",
+    spots: "Vídeo y música en directo",
+    image: "/images/events/encuentro-dios-razonable.jpg",
+  },
+  {
+    month: "Nov",
     day: "21",
     title: "Encuentro adultos",
     location: "Las Rozas · 20:00h · Dirección por invitación",
