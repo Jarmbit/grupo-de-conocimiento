@@ -206,10 +206,19 @@ export interface Video {
   duration: string;
   thumbnail: string;
   src: string;
+  /** Vídeo destacado: se muestra grande, a todo el ancho, antes que el resto. */
+  featured?: boolean;
 }
 
 // Clips reales grabados en encuentros anteriores.
 export const videos: Video[] = [
+  {
+    title: "Encuentro del 17 de octubre · Teatro Fernández Baldor, Torrelodones",
+    duration: "2:15",
+    thumbnail: "/images/encuentro-videos/encuentro-17-octubre.jpg",
+    src: "/videos/encuentro-17-octubre.mp4",
+    featured: true,
+  },
   {
     title: "Un momento de nuestros encuentros",
     duration: "0:15",
@@ -290,6 +299,14 @@ export const events: EventItem[] = [
     location: "Las Rozas · 20:00h · Dirección por invitación",
     spots: "Música, película, testimonio y diálogo",
     image: "/images/events/encuentro-adultos.jpg",
+  },
+  {
+    month: "Nov",
+    day: "25",
+    title: "Encuentro en Barajas",
+    location: "Parroquia del Padre Nuestro, Av. de Cantabria 4, Barajas · 19:30h",
+    spots: "Vídeo Jesús de Nazaret, testimonio y diálogo · Entrada libre",
+    image: "/images/events/encuentro-barajas.jpg",
   },
   {
     month: "Nov",

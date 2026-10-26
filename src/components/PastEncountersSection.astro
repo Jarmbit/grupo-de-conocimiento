@@ -60,7 +60,7 @@ function thumbnail(path: string) {
         videos.map((v) => {
           const thumb = thumbnail(v.thumbnail);
           return (
-            <button type="button" class="card" data-video-src={v.src} data-video-title={v.title}>
+            <button type="button" class={v.featured ? "card featured" : "card"} data-video-src={v.src} data-video-title={v.title}>
               <div class="thumbnail">
                 {thumb && <Image src={thumb} alt={v.title} width={440} height={275} loading="lazy" />}
                 <span class="play" aria-hidden="true">
@@ -272,6 +272,29 @@ function thumbnail(path: string) {
 
   .card:hover {
     transform: translateY(-3px);
+  }
+
+  /* Vídeo destacado: ocupa toda la fila, centrado y más grande. */
+  .card.featured {
+    grid-column: 1 / -1;
+    align-items: center;
+    text-align: center;
+  }
+
+  .card.featured .thumbnail {
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .card.featured .play {
+    width: 72px;
+    height: 72px;
+  }
+
+  .card.featured .title {
+    font-size: 18px;
+    font-weight: 600;
   }
 
   .card:hover .thumbnail {
