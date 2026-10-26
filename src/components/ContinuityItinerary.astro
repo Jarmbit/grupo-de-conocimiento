@@ -1,0 +1,191 @@
+---
+import { continuity } from "../data/content";
+
+// Los números de sesión continúan entre bloques (1-16), como en el guion original.
+let counter = 0;
+const blocks = continuity.blocks.map((block) => ({
+  ...block,
+  sessions: block.sessions.map((s) => ({ ...s, n: ++counter })),
+}));
+---
+
+<div class="itinerary">
+  {
+    continuity.intro.map((p, i) => (
+      <p class={i === 0 ? "lead-q" : undefined}>{p}</p>
+    ))
+  }
+
+  {
+    blocks.map((block) => (
+      <section class="block">
+        <h3>{block.title}</h3>
+        <p class="goal">{block.goal}</p>
+        <ol class="sessions" start={block.sessions[0].n}>
+          {block.sessions.map((s) => (
+            <li>
+              <span class="num" aria-hidden="true">{s.n}</span>
+              <span class="body">
+                <strong>{s.title}</strong>
+                <span class="desc">{s.text}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+
+  <aside class="open">
+    <h3>{continuity.open.title}</h3>
+    {continuity.open.paragraphs.map((p) => <p>{p}</p>)}
+    <p class="closing">
+      {continuity.open.closing.map((line) => <span>{line}</span>)}
+    </p>
+  </aside>
+
+  <p class="pdf">
+    <a href={continuity.pdf} target="_blank" rel="noopener" class="link-arrow link-arrow--block">
+      Descargar el itinerario (PDF) →
+    </a>
+  </p>
+
+  <div class="signup">
+    <h3>Apúntate al itinerario</h3>
+    <p>
+      Déjanos tus datos y cuéntanos en qué punto del camino te gustaría incorporarte. Nos pondremos
+      en contacto contigo.
+    </p>
+  </div>
+</div>
+
+<style>
+  .itinerary {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: left;
+  }
+
+  .itinerary > p {
+    font-size: var(--text-body-lg-size);
+    line-height: var(--text-body-lg-line);
+    color: var(--ink-muted);
+  }
+
+  .lead-q {
+    font-family: "Lora", serif;
+    font-size: 21px !important;
+    font-weight: 600;
+    color: var(--primary-dark) !important;
+    text-align: center;
+  }
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    background: var(--white);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+  }
+
+  .block h3,
+  .open h3,
+  .signup h3 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h3-serif-size);
+    font-weight: 600;
+    line-height: var(--text-h3-serif-line);
+    color: var(--primary-dark);
+  }
+
+  .goal {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-muted);
+  }
+
+  .sessions {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sessions li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .num {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .desc {
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .open {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px 24px;
+    background: var(--bg-alt);
+    border-left: 4px solid var(--secondary);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  }
+
+  .open p {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    color: var(--ink);
+  }
+
+  .closing {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+  }
+
+  .pdf {
+    text-align: center;
+  }
+
+  .signup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  .signup p {
+    font-size: var(--text-body-size);
+    color: var(--ink-muted);
+    line-height: var(--text-body-line);
+  }
+</style>
