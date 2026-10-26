@@ -18,6 +18,7 @@ export const navLinks: NavLink[] = [
   { href: "/#encuentros", label: "Encuentros" },
   { href: "/noticias", label: "Noticias" },
   { href: "/#unete", label: "Únete" },
+  { href: "/continuidad", label: "Continuidad" },
   { href: "/habla-con-nosotros", label: "Habla con nosotros" },
   { href: "/apoya", label: "Apoya" },
 ];
@@ -270,13 +271,17 @@ export const events: EventItem[] = [
     month: "Nov",
     day: "20",
     title: "Encuentro jóvenes",
-    location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+    location: "Las Rozas · 20:00h · Dirección por privado",
+    spots: "Película Jesús de Nazaret, música en directo, testimonio y diálogo",
+    image: "/images/events/encuentro-jovenes.jpg",
   },
   {
     month: "Nov",
     day: "21",
     title: "Encuentro adultos",
-    location: "Calle Eucalipto 22, Las Rozas · 20:00h",
+    location: "Las Rozas · 20:00h · Dirección por invitación",
+    spots: "Música, película, testimonio y diálogo",
+    image: "/images/events/encuentro-adultos.jpg",
   },
   {
     month: "Nov",
@@ -499,5 +504,75 @@ export const afterEncounter = {
     { title: "Comunidad", text: "Creamos lazos verdaderos que acompañan la vida." },
     { title: "Acompañamiento", text: "Caminamos juntos en los momentos importantes." },
     { title: "Crecimiento", text: "Buscamos vivir lo que descubrimos en el día a día." },
+    { title: "Acción de gracias", text: "Damos gracias a Dios por lo vivido y por cada persona que ha llegado." },
   ],
+};
+
+export interface ContinuitySession {
+  title: string;
+  text: string;
+}
+
+export interface ContinuityBlock {
+  title: string;
+  goal: string;
+  sessions: ContinuitySession[];
+}
+
+// Itinerario de continuidad "Hijos en el Hijo" (guion facilitado por la asociación).
+export const continuity = {
+  kicker: "Continuidad",
+  title: "Hijos en el Hijo",
+  subtitle: "Un camino para descubrir la vida nueva en Jesús",
+  intro: [
+    "¿Y si Dios te está buscando? ¿Y si tu vida puede comenzar de nuevo?",
+    "Encuentros Siloé te invita a recorrer un camino de encuentro con Jesucristo, para descubrir el amor del Padre, crecer en la fe y aprender a vivir como hijo amado de Dios.",
+    "Un itinerario pensado para quienes han tenido un encuentro con Jesús y desean profundizar en su fe, conocer mejor la Iglesia y descubrir cómo vivir una vida nueva en el Espíritu Santo.",
+  ],
+  blocks: [
+    {
+      title: "Bloque 1. Identidad y fundamentos",
+      goal: "Descubrir quién eres para Dios y aprender a vivir como hijo amado.",
+      sessions: [
+        { title: "Dios te está buscando", text: "El primer anuncio de la fe: el kerigma." },
+        { title: "He vuelto a casa", text: "Descubrir nuestra identidad como hijos de Dios." },
+        { title: "Vivir como hijos y no como esclavos", text: "La libertad de vivir en el amor del Padre." },
+        { title: "Hablar con el Padre", text: "Aprender a orar y cultivar una relación personal con Dios." },
+        { title: "La brújula del cristiano", text: "Descubrir la Palabra de Dios y aprender a vivirla." },
+        { title: "El combate espiritual", text: "Afrontar las dificultades, las dudas y las tentaciones en la vida cristiana." },
+      ],
+    },
+    {
+      title: "Bloque 2. Jesucristo, vida sacramental y sanación",
+      goal: "Profundizar en el encuentro con Jesús y descubrir la gracia que transforma nuestra vida.",
+      sessions: [
+        { title: "Jesucristo: Dios ha venido a buscarme", text: "Conocer más profundamente a Jesús y acoger su salvación." },
+        { title: "Bautismo: nacer a una vida nueva", text: "Descubrir la gracia bautismal y nuestra nueva vida en Cristo." },
+        { title: "El abrazo del Padre que perdona", text: "Comprender el pecado y descubrir la misericordia de Dios en la Confesión." },
+        { title: "Taller práctico: cómo hacer una buena confesión", text: "Aprender a preparar y vivir este sacramento con confianza." },
+        { title: "El banquete de los hijos de Dios", text: "Comprender y vivir la celebración de la Santa Misa." },
+        { title: "El alimento del alma", text: "Descubrir la presencia real de Jesús en la Eucaristía." },
+      ],
+    },
+    {
+      title: "Bloque 3. Comunidad y misión",
+      goal: "Crecer en la familia de la Iglesia y descubrir la alegría de compartir la fe.",
+      sessions: [
+        { title: "La familia de Jesús", text: "Descubrir qué es la Iglesia y nuestro lugar en ella." },
+        { title: "María, nuestra Madre en la fe", text: "Conocer a María y aprender de su sí a Dios." },
+        { title: "Los dones del Espíritu Santo", text: "Descubrir los dones recibidos y ponerlos al servicio de los demás." },
+        { title: "Enviados al mundo", text: "Dar testimonio de Jesús y continuar el camino en la comunidad parroquial." },
+      ],
+    },
+  ] satisfies ContinuityBlock[],
+  open: {
+    title: "Un camino que siempre está abierto",
+    paragraphs: [
+      "El recorrido es circular y puedes incorporarte en cualquier momento.",
+      "No importa en qué punto del camino te encuentres: siempre hay una oportunidad para comenzar, volver a descubrir el amor de Dios y seguir creciendo en la fe.",
+      "En Encuentros Siloé queremos acompañarte en este camino de encuentro, conversión y vida en el Espíritu, para que descubras cada día más quién eres en Cristo y aprendas a vivir como hijo en el Hijo.",
+    ],
+    closing: ["¿Te animas a seguir caminando con nosotros?", "Bienvenido a Encuentros Siloé."],
+  },
+  pdf: "/docs/hijos-en-el-hijo.pdf",
 };

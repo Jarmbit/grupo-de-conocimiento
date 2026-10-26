@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import LeadFormSection from "../components/LeadFormSection.astro";
+import ContinuityItinerary from "../components/ContinuityItinerary.astro";
+import Footer from "../components/Footer.astro";
+import { continuity } from "../data/content";
+---
+
+<Layout
+  title="Continuidad: Hijos en el Hijo — Encuentros Siloé"
+  description="Hijos en el Hijo: un itinerario de 16 encuentros para seguir creciendo en la fe después del primer encuentro con Jesús. Apúntate y te acompañamos."
+>
+  <Header />
+  <LeadFormSection
+    id="continuidad"
+    kicker={continuity.kicker}
+    title={continuity.title}
+    intro={continuity.subtitle}
+    prefill="Quiero apuntarme al itinerario «Hijos en el Hijo». Me gustaría incorporarme a partir de la sesión: "
+  >
+    <ContinuityItinerary />
+  </LeadFormSection>
+  <Footer />
+</Layout>
