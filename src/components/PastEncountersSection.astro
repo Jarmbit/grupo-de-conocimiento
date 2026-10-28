@@ -32,6 +32,24 @@ function thumbnail(path: string) {
               <span class="meta">{event.location} · {event.date}</span>
             </div>
             <div class="photos">
+              {event.video && (() => {
+                const vthumb = thumbnail(event.video.thumbnail);
+                return (
+                  <button
+                    type="button"
+                    class="photo event-video"
+                    data-video-src={event.video.src}
+                    data-video-title={event.video.title}
+                    aria-label={`Reproducir: ${event.video.title}`}
+                  >
+                    {vthumb && <Image src={vthumb} alt={event.video.title} width={440} height={275} loading="lazy" />}
+                    <span class="play" aria-hidden="true">
+                      <span class="triangle" />
+                    </span>
+                    <span class="duration">{event.video.duration}</span>
+                  </button>
+                );
+              })()}
               {event.photos.map((photo, i) => {
                 const photoAlt = `${event.title} — ${event.location} (foto ${i + 1})`;
                 return (
@@ -195,6 +213,18 @@ function thumbnail(path: string) {
   .photo:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 24px rgba(15, 33, 56, 0.16);
+  }
+
+  .event-video {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .event-video img {
+    position: absolute;
+    inset: 0;
   }
 
   .photo img {
@@ -434,7 +464,7 @@ function thumbnail(path: string) {
     lastFocusedPhoto = null;
   }
 
-  document.querySelectorAll<HTMLButtonElement>(".past-encounters .photo").forEach((btn) => {
+  document.querySelectorAll<HTMLButtonElement>(".past-encounters .photo:not(.event-video)").forEach((btn) => {
     btn.addEventListener("click", () => {
       const src = btn.dataset.lightboxSrc;
       const alt = btn.dataset.lightboxAlt ?? "";
@@ -471,7 +501,7 @@ function thumbnail(path: string) {
     lastFocusedVideo = null;
   }
 
-  document.querySelectorAll<HTMLButtonElement>(".past-encounters .card").forEach((card) => {
+  document.querySelectorAll<HTMLButtonElement>(".past-encounters [data-video-src]").forEach((card) => {
     card.addEventListener("click", () => {
       const src = card.dataset.videoSrc;
       if (src) openVideo(src, card);

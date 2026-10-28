@@ -325,6 +325,8 @@ export interface PastEvent {
   location: string;
   date: string;
   photos: string[];
+  /** Vídeo del evento: se muestra como primer elemento de su galería. */
+  video?: { src: string; thumbnail: string; duration: string; title: string };
 }
 
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
@@ -333,9 +335,20 @@ export const pastEvents: PastEvent[] = [
     title: "Jesús de Nazaret",
     location: "Teatro Fernández Baldor, Torrelodones",
     date: "17 de octubre de 2026",
-    // TODO: pendiente de fotos del evento. Al subirlas a
-    // public/images/eventos-pasados/jesus-de-nazaret/ añadir aquí sus rutas.
-    photos: [],
+    photos: [
+      "/images/eventos-pasados/torrelodones/torrelodones-01.jpg",
+      "/images/eventos-pasados/torrelodones/torrelodones-02.jpg",
+      "/images/eventos-pasados/torrelodones/torrelodones-03.jpg",
+      "/images/eventos-pasados/torrelodones/torrelodones-04.jpg",
+      "/images/eventos-pasados/torrelodones/torrelodones-05.jpg",
+      "/images/eventos-pasados/torrelodones/torrelodones-06.jpg",
+    ],
+    video: {
+      src: "/videos/encuentro-17-octubre.mp4",
+      thumbnail: "/images/encuentro-videos/encuentro-17-octubre.jpg",
+      duration: "2:15",
+      title: "Vídeo del encuentro del 17 de octubre",
+    },
   },
   {
     title: "Encuentro en Burgos",
