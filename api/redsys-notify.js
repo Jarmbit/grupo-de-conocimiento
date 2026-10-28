@@ -40,7 +40,9 @@ export default async function handler(req, res) {
     const raw = data.Ds_MerchantData ?? data.DS_MERCHANTDATA;
     if (raw) {
       let text = String(raw);
-      try { text = decodeURIComponent(text); } catch { /* ya venía sin codificar */ }
+      // Redsys devuelve el valor con codificación de formulario: los espacios llegan como "+".
+      // Un "+" real viaja como %2B, así que primero se convierten los "+" y luego se decodifica.
+      try { text = decodeURIComponent(text.replace(/\+/g, " ")); } catch { /* ya venía sin codificar */ }
       donor = JSON.parse(text);
     }
   } catch {
