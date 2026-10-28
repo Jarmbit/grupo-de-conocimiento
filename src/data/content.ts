@@ -374,6 +374,24 @@ export interface NewsItem {
 // Añadir aquí cada noticia cuando exista su artículo/destino real (más reciente primero).
 export const news: NewsItem[] = [
   {
+    date: "24 de octubre de 2026",
+    title: "Nyt apostolat for ateister og agnostikere vinder frem i Spanien",
+    href: "https://ewtn.dk/2026/10/24/encuentros-siloe-ateister-agnostikere-spanien/",
+    source: "EWTN Dinamarca (danés)",
+  },
+  {
+    date: "23 de octubre de 2026",
+    title: "Así funcionan los Encuentros Siloé",
+    href: "https://revistaecclesia.es/asi-funcionan-los-encuentros-siloe/",
+    source: "Revista Ecclesia",
+  },
+  {
+    date: "22 de octubre de 2026",
+    title: "Nace Encuentros Siloé, una nueva actividad evangelizadora en España",
+    href: "https://www.eldebate.com/religion/20261022/nace-encuentros-siloe-nueva-actividad-evangelizadora-espana_472715.html",
+    source: "El Debate",
+  },
+  {
     date: "22 de octubre de 2026",
     title: "Como los primeros cristianos: testimonios, música y fe compartida en los Encuentros de Siloé",
     href: "https://www.religionenlibertad.com/espana/261022/primeros-cristianos-testimonios-musica-fe-compartida-encuentros-siloe_120550.html",
