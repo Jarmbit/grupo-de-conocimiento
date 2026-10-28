@@ -7,6 +7,9 @@ import {
   sign,
 } from "./_lib/redsys.js";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
+
 const MIN_EUR = 1;
 const MAX_EUR = 5000;
 
@@ -38,6 +41,18 @@ export default function handler(req, res) {
     return res.status(400).json({ error: `El importe debe estar entre ${MIN_EUR} y ${MAX_EUR} euros.` });
   }
 
+  // Datos del donante, para poder darle las gracias. Viajan firmados dentro de Ds_Merchant_MerchantData
+  // y Redsys los devuelve en la notificación del pago.
+  const donor = {
+    n: clean(body.name, 80),
+    e: clean(body.email, 120),
+    t: clean(body.phone, 30),
+    k: kind,
+  };
+  if (donor.n.length < 2) return res.status(400).json({ error: "Escribe tu nombre." });
+  if (!EMAIL_RE.test(donor.e)) return res.status(400).json({ error: "Escribe un correo electrónico válido." });
+  if (body.consent !== true) return res.status(400).json({ error: "Debes aceptar la política de privacidad." });
+
   const cents = Math.round(euros * 100);
   const order = generateOrder();
 
@@ -54,6 +69,7 @@ export default function handler(req, res) {
     DS_MERCHANT_PRODUCTDESCRIPTION: CONCEPTS[kind],
     DS_MERCHANT_MERCHANTNAME: "Encuentros Siloe",
     DS_MERCHANT_CONSUMERLANGUAGE: "001",
+    DS_MERCHANT_MERCHANTDATA: encodeURIComponent(JSON.stringify(donor)),
   };
 
   try {

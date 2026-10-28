@@ -14,8 +14,16 @@ function eventImage(path?: string) {
   return entry?.[1].default;
 }
 
-function reserveHref(title: string) {
-  return `/reservar?encuentro=${encodeURIComponent(title)}`;
+const MONTHS: Record<string, string> = {
+  Ene: "enero", Feb: "febrero", Mar: "marzo", Abr: "abril", May: "mayo", Jun: "junio",
+  Jul: "julio", Ago: "agosto", Sep: "septiembre", Oct: "octubre", Nov: "noviembre", Dic: "diciembre",
+};
+
+// El encuentro viaja con su fecha ("Encuentro adultos · 21 de noviembre") para que cada reserva
+// quede identificada sin ambigüedad cuando hay varios encuentros del mismo tipo.
+function reserveHref(ev: { title: string; day: string; month: string }) {
+  const label = `${ev.title} · ${ev.day} de ${MONTHS[ev.month] ?? ev.month}`;
+  return `/reservar?encuentro=${encodeURIComponent(label)}`;
 }
 ---
 
@@ -44,7 +52,7 @@ function reserveHref(title: string) {
           <div class="row">
             {image && (
               <a
-                href={ev.link ?? reserveHref(ev.title)}
+                href={ev.link ?? reserveHref(ev)}
                 target={ev.link ? "_blank" : undefined}
                 rel={ev.link ? "noopener noreferrer" : undefined}
                 class="poster-link"
@@ -63,7 +71,7 @@ function reserveHref(title: string) {
               {showEventSpots && ev.spots && <span class="spots">{ev.spots}</span>}
             </div>
             <a
-              href={ev.link ?? reserveHref(ev.title)}
+              href={ev.link ?? reserveHref(ev)}
               target={ev.link ? "_blank" : undefined}
               rel={ev.link ? "noopener noreferrer" : undefined}
               class="btn-primary"
