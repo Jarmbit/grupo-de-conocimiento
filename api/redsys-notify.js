@@ -34,12 +34,26 @@ export default async function handler(req, res) {
   }
 
   const responseCode = data.Ds_Response ?? data.DS_RESPONSE;
+  // Datos del donante que enviamos al crear el pago (Ds_MerchantData).
+  let donor;
+  try {
+    const raw = data.Ds_MerchantData ?? data.DS_MERCHANTDATA;
+    if (raw) {
+      let text = String(raw);
+      try { text = decodeURIComponent(text); } catch { /* ya venía sin codificar */ }
+      donor = JSON.parse(text);
+    }
+  } catch {
+    donor = undefined;
+  }
+
   console.log("Redsys notify:", {
     order,
     authorised: isAuthorised(responseCode),
     responseCode,
     amountCents: data.Ds_Amount ?? data.DS_AMOUNT,
     authCode: data.Ds_AuthorisationCode ?? data.DS_AUTHORISATIONCODE,
+    donor: donor?.n ?? null,
   });
 
   if (isAuthorised(responseCode)) {
@@ -50,6 +64,7 @@ export default async function handler(req, res) {
           amountCents: data.Ds_Amount ?? data.DS_AMOUNT,
           authCode: data.Ds_AuthorisationCode ?? data.DS_AUTHORISATIONCODE,
           mode: config.mode,
+          donor,
         },
         process.env,
       );

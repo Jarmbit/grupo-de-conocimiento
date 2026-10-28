@@ -49,6 +49,18 @@ const payKinds = ["puntual", "patrocinio"];
     <h3>Dona con tarjeta</h3>
     <p class="pay-note">Pago seguro mediante TPV virtual bancario (Redsys). No almacenamos los datos de tu tarjeta.</p>
     <label class="field">
+      <span>Tu nombre *</span>
+      <input type="text" name="name" autocomplete="name" maxlength="80" placeholder="Nombre y apellidos" required />
+    </label>
+    <label class="field">
+      <span>Tu correo electrónico *</span>
+      <input type="email" name="email" autocomplete="email" maxlength="120" placeholder="tu@correo.com" required />
+    </label>
+    <label class="field">
+      <span>Teléfono (opcional)</span>
+      <input type="tel" name="phone" autocomplete="tel" maxlength="30" placeholder="Para poder darte las gracias" />
+    </label>
+    <label class="field">
       <span>Tipo de aportación</span>
       <select name="kind">
         <option value="puntual">Donación puntual</option>
@@ -61,6 +73,13 @@ const payKinds = ["puntual", "patrocinio"];
     <label class="field">
       <span>Otro importe (€)</span>
       <input type="number" name="amount" min="1" max="5000" step="0.01" inputmode="decimal" placeholder="Ej. 30" required />
+    </label>
+    <label class="consent">
+      <input type="checkbox" name="consent" required />
+      <span>
+        He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.
+        Usaremos tus datos solo para agradecerte tu aportación.
+      </span>
     </label>
     <button type="submit" class="btn-primary-on-dark pay-submit">Pagar con tarjeta</button>
     <p class="pay-error" role="alert" hidden></p>
@@ -95,6 +114,10 @@ const payKinds = ["puntual", "patrocinio"];
   if (form) {
     const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
     const kindSelect = form.elements.namedItem("kind") as HTMLSelectElement;
+    const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+    const emailInput = form.elements.namedItem("email") as HTMLInputElement;
+    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
+    const consentInput = form.elements.namedItem("consent") as HTMLInputElement;
     const errorEl = form.querySelector(".pay-error") as HTMLElement;
     const submitBtn = form.querySelector(".pay-submit") as HTMLButtonElement;
 
@@ -124,13 +147,35 @@ const payKinds = ["puntual", "patrocinio"];
         showError("Introduce un importe entre 1 y 5000 euros.");
         return;
       }
+      if (nameInput.value.trim().length < 2) {
+        showError("Escribe tu nombre para que podamos darte las gracias.");
+        nameInput.focus();
+        return;
+      }
+      if (!emailInput.validity.valid || !emailInput.value.trim()) {
+        showError("Escribe un correo electrónico válido.");
+        emailInput.focus();
+        return;
+      }
+      if (!consentInput.checked) {
+        showError("Debes aceptar la política de privacidad para continuar.");
+        consentInput.focus();
+        return;
+      }
       submitBtn.disabled = true;
       submitBtn.textContent = "Conectando con el banco…";
       try {
         const res = await fetch("/api/redsys-create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ kind: kindSelect.value, amount }),
+          body: JSON.stringify({
+            kind: kindSelect.value,
+            amount,
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            consent: true,
+          }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "No se pudo iniciar el pago.");
@@ -310,6 +355,28 @@ const payKinds = ["puntual", "patrocinio"];
     border: 1px solid rgba(255, 255, 255, 0.3);
     background: var(--white);
     color: var(--ink);
+  }
+
+  .consent {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #c9d2dc;
+  }
+
+  .consent input {
+    flex: none;
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+  }
+
+  .consent a {
+    text-decoration: underline;
+    color: var(--white);
   }
 
   .amounts {
