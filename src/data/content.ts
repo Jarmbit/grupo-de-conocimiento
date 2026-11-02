@@ -294,6 +294,14 @@ export const events: EventItem[] = [
   },
   {
     month: "Nov",
+    day: "20",
+    title: "Encuentro en Horche",
+    location: "Prolongación San Roque, 1, Horche (Guadalajara) · 20:00h",
+    spots: "Vídeo Jesús de Nazaret, música en directo y picoteo al final",
+    image: "/images/events/encuentro-horche.jpg",
+  },
+  {
+    month: "Nov",
     day: "21",
     title: "Encuentro adultos",
     location: "Las Rozas · 20:00h · Dirección por invitación",
