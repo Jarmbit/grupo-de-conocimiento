@@ -324,6 +324,14 @@ export const events: EventItem[] = [
     spots: "Película Jesús de Nazaret y música en directo",
     image: "/images/events/encuentro-burgos.jpg",
   },
+  {
+    month: "Dic",
+    day: "11",
+    title: "Encuentro en Espinosa de los Monteros",
+    location: "Parroquia, Sancho García 9, Espinosa de los Monteros (Burgos) · 19:30h",
+    spots: "Vídeo Jesús de Nazaret, música en directo y picoteo al final",
+    image: "/images/events/encuentro-espinosa.jpg",
+  },
 ];
 
 export const showEventSpots = true;
