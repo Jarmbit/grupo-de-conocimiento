@@ -138,7 +138,15 @@ const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
       if (applied && rest.startsWith(applied)) {
         rest = rest.slice(applied.length);
       } else {
-        rest = rest.replace(/^Reserva de plaza para:[\s\S]*?Número de plazas:\s*[^.]*\.?\s*/, "");
+        // La cabecera ha sido editada o borrada a medias: se quita lo que quede de ella.
+        const full = rest.replace(/^Reserva de plaza para:[\s\S]*?Número de plazas:\s*[^.]*\.?\s*/, "");
+        if (full !== rest) {
+          rest = full;
+        } else {
+          let n = 0;
+          while (n < rest.length && n < applied.length && rest[n] === applied[n]) n++;
+          if (n >= 10) rest = rest.slice(n);
+        }
       }
       const next = h + rest;
       if (area.value !== next) setValue(area, next);
