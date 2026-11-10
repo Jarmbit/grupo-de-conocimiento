@@ -2,21 +2,22 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import LeadFormSection from "../components/LeadFormSection.astro";
+import ReservePicker from "../components/ReservePicker.astro";
 import Footer from "../components/Footer.astro";
 ---
 
 <Layout
   title="Reservar plaza — Encuentros Siloé"
-  description="Reserva tu plaza en un encuentro de Encuentros Siloé. Déjanos tus datos y te confirmaremos."
+  description="Reserva tu plaza en un encuentro de Encuentros Siloé. Elige el encuentro y las plazas, déjanos tus datos y te confirmaremos."
 >
   <Header />
   <LeadFormSection
     id="reservar"
     kicker="Reservar plaza"
     title="Reserva tu plaza"
-    intro="Déjanos tus datos y te confirmaremos la plaza. Indica en el comentario a qué encuentro quieres venir y cuántas plazas necesitas."
-    prefill="Reserva de plaza para: "
-  useEventParam
-  />
+    intro="Elige el encuentro y cuántas plazas necesitas, déjanos tus datos y te confirmaremos la plaza."
+  >
+    <ReservePicker />
+  </LeadFormSection>
   <Footer />
 </Layout>
