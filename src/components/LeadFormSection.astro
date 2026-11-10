@@ -38,6 +38,13 @@ const { id, kicker, title, intro, prefill = "", useEventParam = false, eventTemp
   <script is:inline src="https://storage.googleapis.com/sdk-os/prod/widgets/lead-form/latest/lead-form.js" defer></script>
 </section>
 
+<style is:global>
+  /* El formulario de Bewe queda bloqueado hasta que se completen los datos obligatorios de la página. */
+  [data-lead-form].lead-locked {
+    opacity: 0.45;
+  }
+</style>
+
 <style>
   .lead {
     padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
