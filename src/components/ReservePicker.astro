@@ -1,0 +1,203 @@
+---
+import { events } from "../data/content";
+import { eventLabel } from "../data/eventLabel";
+
+// Solo los encuentros que se reservan en esta web (los que tienen enlace propio no pasan por aquí).
+const options = events.filter((e) => !e.link).map((e) => eventLabel(e));
+const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
+---
+
+<div class="picker" id="reserve-picker">
+  <div class="step">
+    <label for="reserve-event">1. ¿A qué encuentro quieres venir?</label>
+    <select id="reserve-event">
+      <option value="">Elige el encuentro…</option>
+      {options.map((o) => <option value={o}>{o}</option>)}
+    </select>
+  </div>
+  <div class="step">
+    <label for="reserve-places">2. ¿Cuántas plazas necesitas?</label>
+    <select id="reserve-places">
+      <option value="">Elige el número de plazas…</option>
+      {PLACES.map((n) => <option value={String(n)}>{n} {n === 1 ? "plaza" : "plazas"}</option>)}
+    </select>
+    <span class="hint">Si sois más de 10, escríbenos a info@encuentrossiloe.org.</span>
+  </div>
+  <p class="status" id="reserve-status" role="status" aria-live="polite">
+    Elige el encuentro y las plazas para poder enviar tus datos.
+  </p>
+</div>
+
+<style>
+  .picker {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 28px;
+    background: var(--white);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  select {
+    font: inherit;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-subtle);
+    background: var(--white);
+    color: var(--ink);
+    min-height: 46px;
+  }
+
+  select:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+
+  .status {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-muted);
+  }
+
+  .status.ok {
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  .status.warn {
+    color: #8a3b12;
+  }
+</style>
+
+<style is:global>
+  /* El formulario de Bewe queda bloqueado hasta que se elijan encuentro y plazas. */
+  [data-lead-form].reserve-locked {
+    opacity: 0.45;
+  }
+</style>
+
+<script>
+  const PREFIX = "Reserva de plaza para: ";
+  const picker = document.getElementById("reserve-picker");
+
+  if (picker) {
+    const eventSel = document.getElementById("reserve-event") as HTMLSelectElement;
+    const placesSel = document.getElementById("reserve-places") as HTMLSelectElement;
+    const status = document.getElementById("reserve-status") as HTMLElement;
+    const host = document.querySelector<HTMLElement>("[data-lead-form]");
+
+    // 1) Preselección desde ?encuentro=… (botón "Reservar plaza" de cada encuentro). También acepta
+    //    enlaces antiguos sin fecha, siempre que identifiquen un único encuentro.
+    const param = new URLSearchParams(location.search).get("encuentro")?.trim().toLowerCase();
+    if (param) {
+      const opts = Array.from(eventSel.options).filter((o) => o.value);
+      const exact = opts.find((o) => o.value.toLowerCase() === param);
+      const partial = opts.filter((o) => o.value.toLowerCase().startsWith(param));
+      const match = exact ?? (partial.length === 1 ? partial[0] : undefined);
+      if (match) eventSel.value = match.value;
+    }
+
+    const ready = () => Boolean(eventSel.value && placesSel.value);
+    const header = () => `${PREFIX}${eventSel.value}. Número de plazas: ${placesSel.value}. `;
+    const getArea = () =>
+      host?.shadowRoot?.querySelector<HTMLTextAreaElement>("textarea") ?? null;
+
+    // Escribe el valor de forma que el formulario de Bewe lo registre como si lo hubiera tecleado.
+    const setValue = (area: HTMLTextAreaElement, value: string) => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")?.set;
+      setter?.call(area, value);
+      area.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+
+    // El comentario = cabecera (encuentro + plazas) + lo que la persona escriba después.
+    // Si la persona la borra o la estropea, se repone; lo que haya escrito se conserva.
+    let applied = "";
+    const compose = (): boolean => {
+      const area = getArea();
+      if (!area || !ready()) return false;
+      const h = header();
+      let rest = area.value;
+      if (applied && rest.startsWith(applied)) {
+        rest = rest.slice(applied.length);
+      } else {
+        // La cabecera ha sido editada o borrada a medias: se quita lo que quede de ella.
+        const full = rest.replace(/^Reserva de plaza para:[\s\S]*?Número de plazas:\s*[^.]*\.?\s*/, "");
+        if (full !== rest) {
+          rest = full;
+        } else {
+          let n = 0;
+          while (n < rest.length && n < applied.length && rest[n] === applied[n]) n++;
+          if (n >= 10) rest = rest.slice(n);
+        }
+      }
+      const next = h + rest;
+      if (area.value !== next) setValue(area, next);
+      applied = h;
+      return true;
+    };
+
+    let failOpen = false;
+    const refresh = () => {
+      const ok = ready();
+      const open = ok || failOpen;
+      host?.classList.toggle("reserve-locked", !open);
+      if (host) (host as HTMLElement & { inert: boolean }).inert = !open;
+      status.classList.toggle("ok", ok);
+      status.classList.toggle("warn", failOpen && !ok);
+      if (ok) {
+        status.textContent = `Vas a reservar ${placesSel.value} ${placesSel.value === "1" ? "plaza" : "plazas"} para: ${eventSel.value}.`;
+      } else if (failOpen) {
+        status.textContent =
+          "Indica en el comentario del formulario a qué encuentro quieres venir y cuántas plazas necesitas.";
+      } else {
+        status.textContent = "Elige el encuentro y las plazas para poder enviar tus datos.";
+      }
+      if (ok) compose();
+    };
+
+    eventSel.addEventListener("change", refresh);
+    placesSel.addEventListener("change", refresh);
+    refresh();
+
+    // 2) Esperar al formulario de Bewe. Si no aparece o cambia su estructura, no se bloquea a nadie.
+    let tries = 0;
+    const waiter = setInterval(() => {
+      if (getArea()) {
+        clearInterval(waiter);
+        compose();
+        const root = host?.shadowRoot;
+        // Antes de enviar (clic en "Enviar" o envío del formulario) se vuelve a asegurar la cabecera.
+        root?.addEventListener("click", () => compose(), true);
+        root?.addEventListener("submit", () => compose(), true);
+        root?.addEventListener("focusout", () => compose(), true);
+        // Si el formulario se vuelve a pintar y pierde el texto, se repone sin molestar mientras se escribe.
+        setInterval(() => {
+          const area = getArea();
+          if (area && ready() && root?.activeElement !== area && !area.value.startsWith(applied)) compose();
+        }, 1000);
+      } else if (++tries > 80) {
+        clearInterval(waiter);
+        failOpen = true;
+        refresh();
+      }
+    }, 250);
+  }
+</script>
