@@ -1,0 +1,157 @@
+---
+import { eventTypes } from "../data/content";
+
+const types = eventTypes.map((t) => t.title);
+const SPACES = ["Hogar", "Parroquia", "Otro"];
+---
+
+<div class="picker" id="request-picker">
+  <div class="step">
+    <label for="request-type">1. ¿Qué encuentro quieres?</label>
+    <select id="request-type">
+      <option value="">Elige el encuentro…</option>
+      {types.map((t) => <option value={t}>{t}</option>)}
+    </select>
+  </div>
+  <div class="step">
+    <label for="request-city">2. ¿En qué ciudad o localidad?</label>
+    <input id="request-city" type="text" maxlength="80" autocomplete="address-level2" placeholder="Ej. Manzanares el Real" />
+  </div>
+  <div class="step">
+    <label for="request-space">3. ¿Dónde se haría?</label>
+    <select id="request-space">
+      <option value="">Elige el tipo de espacio…</option>
+      {SPACES.map((s) => <option value={s}>{s}</option>)}
+    </select>
+  </div>
+  <div class="step">
+    <label for="request-people">4. ¿Cuántas personas aproximadamente?</label>
+    <input id="request-people" type="number" min="1" max="1000" inputmode="numeric" placeholder="Ej. 25" />
+  </div>
+  <div class="step">
+    <label for="request-dates">5. ¿Qué fechas os vendrían bien? <span class="opt">(opcional)</span></label>
+    <input id="request-dates" type="text" maxlength="120" placeholder="Ej. 30 de octubre o 13 de noviembre, a las 19:30" />
+  </div>
+  <p class="status" id="request-status" role="status" aria-live="polite">
+    Completa los datos del encuentro para poder enviar tu solicitud.
+  </p>
+</div>
+
+<style>
+  .picker {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 28px;
+    background: var(--white);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .opt {
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+
+  select,
+  input {
+    font: inherit;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-subtle);
+    background: var(--white);
+    color: var(--ink);
+    min-height: 46px;
+  }
+
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  .status {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-muted);
+  }
+
+  .status.ok {
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  .status.warn {
+    color: #8a3b12;
+  }
+</style>
+
+<script>
+  import { setupLeadCompose } from "../scripts/leadCompose";
+
+  const picker = document.getElementById("request-picker");
+
+  if (picker) {
+    const typeSel = document.getElementById("request-type") as HTMLSelectElement;
+    const city = document.getElementById("request-city") as HTMLInputElement;
+    const space = document.getElementById("request-space") as HTMLSelectElement;
+    const people = document.getElementById("request-people") as HTMLInputElement;
+    const dates = document.getElementById("request-dates") as HTMLInputElement;
+    const status = document.getElementById("request-status") as HTMLElement;
+    const host = document.querySelector<HTMLElement>("[data-lead-form]");
+
+    // Preselección desde ?encuentro=… (botón "Solicitar este encuentro" de la home).
+    const param = new URLSearchParams(location.search).get("encuentro")?.trim().toLowerCase();
+    if (param) {
+      const match = Array.from(typeSel.options).find((o) => o.value && o.value.toLowerCase() === param);
+      if (match) typeSel.value = match.value;
+    }
+
+    // El "|" cierra la cabecera; se quita de lo que escriba la persona para no confundirla.
+    const clean = (v: string) => v.replace(/[|\n\r]+/g, " ").replace(/\s+/g, " ").trim();
+    const peopleCount = () => {
+      const n = Number.parseInt(people.value, 10);
+      return Number.isFinite(n) && n >= 1 ? n : 0;
+    };
+    const ready = () => Boolean(typeSel.value && clean(city.value) && space.value && peopleCount());
+
+    const lead = setupLeadCompose({
+      host,
+      ready,
+      header: () =>
+        `Quiero solicitar el encuentro: ${typeSel.value}. Ciudad: ${clean(city.value)}. ` +
+        `Tipo de espacio: ${space.value}. Número aproximado de personas: ${peopleCount()}. ` +
+        `Fechas que os vendrían bien: ${clean(dates.value) || "a concretar"}. | `,
+      stripFull: /^Quiero solicitar el encuentro:[\s\S]*? \| /,
+      onState: ({ ready: ok, failOpen }) => {
+        status.classList.toggle("ok", ok);
+        status.classList.toggle("warn", failOpen && !ok);
+        if (ok) {
+          status.textContent = `Vas a solicitar «${typeSel.value}» en ${clean(city.value)} (${space.value.toLowerCase()}, unas ${peopleCount()} personas).`;
+        } else if (failOpen) {
+          status.textContent =
+            "Indica en el comentario del formulario qué encuentro quieres, la ciudad, el tipo de espacio y el número de personas.";
+        } else {
+          status.textContent = "Completa los datos del encuentro para poder enviar tu solicitud.";
+        }
+      },
+    });
+
+    for (const el of [typeSel, city, space, people, dates]) {
+      el.addEventListener("input", lead.refresh);
+      el.addEventListener("change", lead.refresh);
+    }
+  }
+</script>
