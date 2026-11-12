@@ -1,9 +1,10 @@
 ---
-import { donationModels, highlightDonation, contact, bankAccount } from "../data/content";
+import { donationModels, highlightDonation, contact, bankAccount, membershipTiers, supportFaq } from "../data/content";
 
 // Voluntariado va al formulario de contacto de Bewe; el resto de modalidades no pagadas, por email.
 function supportHref(key: string, title: string) {
   if (key === "voluntariado") return "/voluntariado";
+  if (key === "socio") return "#alta-socio";
   const subject = `Quiero informarme: ${title}`;
   const body = `Hola, quiero informarme sobre cómo colaborar como "${title}" con Encuentros Siloé.`;
   return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -33,6 +34,13 @@ const payKinds = ["puntual", "patrocinio"];
           <h3>{d.title}</h3>
           <span class="detail">{d.detail}</span>
           <p>{d.text}</p>
+          {d.key === "socio" && (
+            <ul class="tier-list">
+              {membershipTiers.map((t) => (
+                <li><span>{t.title}</span><b>{t.amount} €/mes</b></li>
+              ))}
+            </ul>
+          )}
           <a
             href={payKinds.includes(d.key) ? `#pago-tarjeta` : supportHref(d.key, d.title)}
             data-pay-kind={payKinds.includes(d.key) ? d.key : undefined}
@@ -45,8 +53,71 @@ const payKinds = ["puntual", "patrocinio"];
     }
   </div>
 
+  <div class="methods" id="como-pagar">
+    <h3>Cómo pagar</h3>
+    <div class="methods-grid">
+      <div class="method">
+        <h4>Tarjeta — cuota mensual</h4>
+        <p>Suscripción mensual segura para la cuota de socio, gestionada con Stripe.</p>
+      </div>
+      <div class="method">
+        <h4>Tarjeta o Bizum — donativo puntual</h4>
+        <p>Pago único con tarjeta en nuestro TPV virtual bancario (Redsys). Bizum estará disponible en cuanto lo confirme el banco.</p>
+      </div>
+      <div class="method">
+        <h4>Transferencia</h4>
+        <p>Disponible desde ahora, a nombre de la Asociación Encuentros Siloé.</p>
+      </div>
+    </div>
+    <p class="pay-note">
+      La cuota de socio necesita Stripe porque el TPV bancario no admite pagos recurrentes; el donativo
+      puntual no requiere suscripción.
+    </p>
+  </div>
+
+  <form id="alta-socio" class="pay member" novalidate>
+    <h3>Hazte socio</h3>
+    <p class="pay-note">Cuota mensual con tarjeta, por suscripción. Puedes darte de baja cuando quieras.</p>
+    <fieldset class="tiers">
+      <legend>Elige tu cuota</legend>
+      {
+        membershipTiers.map((t, i) => (
+          <label class="tier">
+            <input type="radio" name="tier" value={t.key} checked={i === 1} data-url={t.stripeUrl} data-label={`${t.title} (${t.amount} €/mes)`} />
+            <span class="tier-body">
+              <span class="tier-amt">{t.amount} €/mes</span>
+              <span class="tier-name">{t.title}</span>
+              <span class="tier-note">{t.note}</span>
+            </span>
+          </label>
+        ))
+      }
+    </fieldset>
+    <button type="submit" class="btn-primary-on-dark pay-submit">Suscribirme con tarjeta</button>
+    <p class="pay-note" id="member-msg" role="status" hidden></p>
+    <p class="pay-note">La Junta Directiva resolverá tu solicitud de alta como socio en su próxima reunión.</p>
+  </form>
+
+  <div class="benefits">
+    <h3>Qué cambia según cómo colabores</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Beneficio</th><th>Socio</th><th>Socio de honor</th><th>Colaborador / donante</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Voz y voto en la Asamblea</td><td>✓</td><td>voz</td><td>—</td></tr>
+          <tr><td>Elegible a la Junta Directiva</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td>Boletín e información interna</td><td>✓</td><td>✓</td><td>general</td></tr>
+          <tr><td>Plaza preferente en encuentros</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Cuota mensual</td><td>10 € / 20 € / 50 €</td><td>exenta</td><td>libre</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <form id="pago-tarjeta" class="pay" novalidate>
-    <h3>Dona con tarjeta</h3>
+    <h3>Dona con tarjeta (donativo puntual)</h3>
     <p class="pay-note">Pago seguro mediante TPV virtual bancario (Redsys). No almacenamos los datos de tu tarjeta.</p>
     <label class="field">
       <span>Tu nombre *</span>
@@ -95,6 +166,18 @@ const payKinds = ["puntual", "patrocinio"];
     </div>
     <p class="pay-note">Concepto sugerido: <strong>{bankAccount.concept}</strong></p>
   </div>
+
+  <div class="faq" id="preguntas">
+    <h3>Preguntas frecuentes</h3>
+    {
+      supportFaq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </div>
 </section>
 
 <script>
@@ -108,6 +191,32 @@ const payKinds = ["puntual", "patrocinio"];
       copyBtn.textContent = "Selecciona y copia";
     }
     setTimeout(() => (copyBtn.textContent = "Copiar IBAN"), 2500);
+  });
+
+  // Alta de socio: lleva al Payment Link de Stripe del nivel elegido; sin enlace aún, pide la suscripción por email.
+  const member = document.getElementById("alta-socio") as HTMLFormElement | null;
+  member?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const sel = member.querySelector<HTMLInputElement>('input[name="tier"]:checked');
+    const msg = document.getElementById("member-msg") as HTMLElement;
+    if (!sel) return;
+    const url = sel.dataset.url ?? "";
+    if (url.startsWith("https://")) {
+      window.location.href = url;
+      return;
+    }
+    const subject = encodeURIComponent("Quiero hacerme socio");
+    const body = encodeURIComponent(`Hola, quiero hacerme socio de Encuentros Siloé con la ${sel.dataset.label}. Mi nombre y teléfono:`);
+    msg.hidden = false;
+    msg.innerHTML = "";
+    msg.append(
+      "El pago por suscripción estará disponible en breve. Escríbenos y te avisamos en cuanto se active: ",
+    );
+    const a = document.createElement("a");
+    a.href = `mailto:info@encuentrossiloe.org?subject=${subject}&body=${body}`;
+    a.className = "inline-link";
+    a.textContent = "info@encuentrossiloe.org";
+    msg.append(a, ".");
   });
 
   const form = document.getElementById("pago-tarjeta") as HTMLFormElement | null;
@@ -415,6 +524,189 @@ const payKinds = ["puntual", "patrocinio"];
   .pay-error {
     font-size: 14px;
     color: #ffd2cc;
+  }
+
+  .tier-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tier-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .tier-list b {
+    color: var(--primary-dark);
+  }
+
+  .methods,
+  .benefits,
+  .faq {
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--white);
+  }
+
+  .methods h3,
+  .benefits h3,
+  .faq h3,
+  .member h3 {
+    font-family: "Lora", serif;
+    font-size: var(--text-h3-serif-size);
+    font-weight: 600;
+  }
+
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .method {
+    padding: 18px 20px;
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .method h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .method p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #c9d2dc;
+  }
+
+  .tiers {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tiers legend {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .tier {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+  }
+
+  .tier:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .tier input {
+    flex: none;
+    margin-top: 4px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+  }
+
+  .tier-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tier-amt {
+    font-family: "Lora", serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .tier-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .tier-note {
+    font-size: 13px;
+    color: #c9d2dc;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .benefits table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    background: var(--white);
+    color: var(--ink);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .benefits th,
+  .benefits td {
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .benefits th {
+    background: var(--primary-dark);
+    color: var(--white);
+    font-size: 13px;
+  }
+
+  .benefits td:first-child {
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .benefits tr:last-child td {
+    border-bottom: none;
+  }
+
+  .faq details {
+    padding: 16px 20px;
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .faq summary {
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .faq details p {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c9d2dc;
   }
 
   :global(.btn-primary),

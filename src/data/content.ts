@@ -482,7 +482,13 @@ export interface DonationModel {
 }
 
 export const donationModels: DonationModel[] = [
-  // Socio mensual (suscripción) pendiente hasta tener el CRM de Bewe: se reactivará entonces.
+  {
+    key: "socio",
+    title: "Hazte socio",
+    detail: "Cuota mensual, con suscripción",
+    text: "Voz y voto en la Asamblea, información interna y plaza preferente en los encuentros.",
+    cta: "Hazte socio",
+  },
   {
     key: "puntual",
     title: "Donación puntual",
@@ -507,7 +513,42 @@ export const donationModels: DonationModel[] = [
 ];
 
 // Modelo de aportación resaltado como recomendado.
-export const highlightDonation: DonationModel["key"] = "puntual";
+export const highlightDonation: DonationModel["key"] = "socio";
+
+// Cuotas mensuales de socio (suscripción recurrente con tarjeta vía Stripe; el TPV de Redsys no admite recurrentes).
+// stripeUrl: Payment Link de Stripe de cada nivel. Mientras esté vacío, el botón de alta pide la suscripción por email.
+export interface MembershipTier {
+  key: "reducida" | "ordinaria" | "colaborador";
+  title: string;
+  amount: number;
+  note: string;
+  stripeUrl: string;
+}
+
+export const membershipTiers: MembershipTier[] = [
+  { key: "reducida", title: "Cuota reducida", amount: 10, note: "Estudiantes, desempleo u otra situación justificada", stripeUrl: "" },
+  { key: "ordinaria", title: "Cuota ordinaria", amount: 20, note: "Régimen general", stripeUrl: "" },
+  { key: "colaborador", title: "Colaborador / patrocinador", amount: 50, note: "Aportación voluntaria reforzada, mismos derechos que la ordinaria", stripeUrl: "" },
+];
+
+export const supportFaq: { q: string; a: string }[] = [
+  {
+    q: "¿Mi cuota o donativo desgrava en la renta?",
+    a: "Todavía no. Encuentros Siloé se constituyó el 13 de septiembre de 2026 y, conforme a la Ley Orgánica 1/2002, no puede solicitar la declaración de utilidad pública hasta cumplir dos años inscrita. Ese trámite lo tramitaremos en septiembre de 2028; a partir de entonces, tu colaboración sí podrá desgravar.",
+  },
+  {
+    q: "¿A qué se destina mi aportación?",
+    a: "Íntegramente a los fines de la Asociación: encuentros, testimonios, vídeos y acompañamiento. Conforme a nuestros Estatutos, en ningún caso se reparten beneficios entre las personas asociadas.",
+  },
+  {
+    q: "¿Cómo se cobra la cuota de socio y cómo se paga un donativo?",
+    a: "La cuota de socio se cobra mediante una suscripción mensual con tarjeta (a través de Stripe). El donativo puntual se paga una sola vez con tarjeta en nuestro TPV virtual bancario, y con Bizum cuando el banco lo active, sin suscripción. También puedes aportar por transferencia.",
+  },
+  {
+    q: "¿Puedo dejar de ser socio cuando quiera?",
+    a: "Sí, basta una renuncia por escrito a la Junta Directiva y cancelaremos tu suscripción mensual. También puedes empezar únicamente como voluntario o donante, sin vínculo asociativo.",
+  },
+];
 
 // Cuenta para aportaciones por transferencia.
 export const bankAccount = {
