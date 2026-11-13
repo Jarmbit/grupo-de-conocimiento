@@ -43,7 +43,10 @@ function reserveHref(ev: { title: string; day: string; month: string }) {
         const image = eventImage(ev.image);
         return (
           <div class="row">
-            {image && (
+            {image && ev.full && (
+              <Image src={image} alt={`Cartel del encuentro ${ev.title}`} class="poster poster-static" width={200} height={300} loading="lazy" />
+            )}
+            {image && !ev.full && (
               <a
                 href={ev.link ?? reserveHref(ev)}
                 target={ev.link ? "_blank" : undefined}
@@ -63,14 +66,18 @@ function reserveHref(ev: { title: string; day: string; month: string }) {
               <span class="location">{ev.location}</span>
               {showEventSpots && ev.spots && <span class="spots">{ev.spots}</span>}
             </div>
-            <a
-              href={ev.link ?? reserveHref(ev)}
-              target={ev.link ? "_blank" : undefined}
-              rel={ev.link ? "noopener noreferrer" : undefined}
-              class="btn-primary"
-            >
-              Reservar plaza
-            </a>
+            {ev.full ? (
+              <span class="btn-full" aria-disabled="true">Aforo completo</span>
+            ) : (
+              <a
+                href={ev.link ?? reserveHref(ev)}
+                target={ev.link ? "_blank" : undefined}
+                rel={ev.link ? "noopener noreferrer" : undefined}
+                class="btn-primary"
+              >
+                Reservar plaza
+              </a>
+            )}
           </div>
         );
       })}
@@ -79,6 +86,21 @@ function reserveHref(ev: { title: string; day: string; month: string }) {
 </section>
 
 <style>
+  .btn-full {
+    align-self: center;
+    padding: 12px 22px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border-subtle);
+    color: var(--ink-muted);
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: not-allowed;
+  }
+
+  .poster-static {
+    border-radius: var(--radius-card);
+  }
+
   .events {
     padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
     display: flex;
