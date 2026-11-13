@@ -3,7 +3,7 @@ import { events } from "../data/content";
 import { eventLabel } from "../data/eventLabel";
 
 // Solo los encuentros que se reservan en esta web (los que tienen enlace propio no pasan por aquí).
-const options = events.filter((e) => !e.link).map((e) => eventLabel(e));
+const options = events.filter((e) => !e.link && !e.full).map((e) => eventLabel(e));
 const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
 ---
 
