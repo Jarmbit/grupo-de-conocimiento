@@ -272,15 +272,6 @@ export interface EventItem {
 export const events: EventItem[] = [
   {
     month: "Nov",
-    day: "14",
-    title: "Encuentro en Málaga",
-    location: "El Cielo, Avenida de Manuel Torres, 3, Málaga · 18:00h",
-    spots: "Vídeo de Jesús de Nazaret y música en directo",
-    image: "/images/events/encuentro-malaga.jpg",
-    full: true,
-  },
-  {
-    month: "Nov",
     day: "20",
     title: "Encuentro jóvenes",
     location: "Las Rozas · 20:00h · Dirección por privado",
@@ -350,6 +341,12 @@ export interface PastEvent {
 
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
 export const pastEvents: PastEvent[] = [
+  {
+    title: "Encuentro en Málaga",
+    location: "El Cielo, Málaga",
+    date: "14 de noviembre de 2026",
+    photos: ["/images/eventos-pasados/malaga/malaga-cartel.jpg"],
+  },
   {
     title: "Jesús de Nazaret",
     location: "Teatro Fernández Baldor, Torrelodones",
