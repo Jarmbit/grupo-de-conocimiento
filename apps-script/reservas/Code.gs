@@ -322,11 +322,13 @@ function fondo_(color) {
   return `bgcolor="${color}" style="background-color:${color};`;
 }
 
-function botonHtml_(url, texto) {
+function botonHtml_(url, texto, fondo, color) {
+  fondo = fondo || '#1f3a5f';
+  color = color || '#ffffff';
   return (
     `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>` +
-    `<td bgcolor="#1f3a5f" style="background-color:#1f3a5f;border-radius:999px;">` +
-    `<a href="${esc_(url)}" style="display:inline-block;color:#ffffff;font-size:16px;font-weight:700;padding:14px 30px;border-radius:999px;text-decoration:none;font-family:${F_SANS};">${esc_(texto)}</a>` +
+    `<td bgcolor="${fondo}" style="background-color:${fondo};border-radius:999px;">` +
+    `<a href="${esc_(url)}" style="display:inline-block;color:${color};font-size:16px;font-weight:700;padding:14px 30px;border-radius:999px;text-decoration:none;font-family:${F_SANS};">${esc_(texto)}</a>` +
     `</td></tr></table>`
   );
 }
@@ -409,13 +411,21 @@ function graciasMalagaCorreo_() {
   const intro =
     'Gracias de corazón por haber reservado plaza en el Encuentro de Málaga del pasado sábado 14 de noviembre. A los que pudisteis venir, gracias por vuestra presencia y por compartir esa tarde con nosotros; a los que no pudisteis, os tuvimos muy presentes y esperamos veros en el próximo.';
   const bloques =
+    // 1) Opinión
     `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:22px 24px;">` +
     `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">NOS AYUDARÍA MUCHO</div>` +
     `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Conocer vuestras impresiones: qué os pareció el encuentro, qué sentisteis y qué mejoraríais. Podéis escribírnoslas en el apartado «Habla con nosotros» de la web.</div>` +
-    botonHtml_(habla, 'Contarnos mi experiencia') +
+    botonHtml_(habla, 'Cuéntanos tu experiencia') +
     `</td></tr></table></td></tr>` +
-    `<tr><td style="padding:24px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Síguenos en Instagram</strong> para estar al día de los próximos encuentros: <a href="${ig}" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.</td></tr>` +
-    `<tr><td style="padding:16px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Y si queréis apoyarnos</strong>, podéis hacer un donativo de la cantidad que queráis: <a href="${apoya}" style="color:#1f3a5f;font-weight:700;">encuentrossiloe.org/apoya</a>.<div style="margin-top:6px;font-size:13px;line-height:1.5;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</div></td></tr>`;
+    // 2) Apoyo (destacado)
+    `<tr><td style="padding:12px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#fbefd6')}"><tr><td ${fondo_('#fbefd6')}padding:22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#8e6020;">APOYA ESTA MISIÓN</div>` +
+    `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Si queréis apoyarnos, podéis hacer un donativo de la cantidad que queráis. Cada aportación nos ayuda a llevar los encuentros a más lugares.</div>` +
+    botonHtml_(apoya, 'Hacer un donativo', '#d9a356', '#0f2138') +
+    `<div style="margin-top:12px;font-size:13px;line-height:1.5;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</div>` +
+    `</td></tr></table></td></tr>` +
+    // 3) Instagram
+    `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Síguenos en Instagram</strong> para estar al día de los próximos encuentros: <a href="${ig}" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.</td></tr>`;
   const html = marco_({
     preheader: intro.slice(0, 110),
     banner: GRACIAS_MALAGA.banner,
@@ -429,8 +439,8 @@ function graciasMalagaCorreo_() {
   });
   const texto =
     `Hola:\n\n${intro}\n\nNos ayudaría mucho conocer vuestras impresiones: qué os pareció el encuentro, qué sentisteis y qué mejoraríais. Podéis escribírnoslas en nuestra web, en el apartado "Habla con nosotros":\n${habla}\n\n` +
-    `También podéis seguirnos en Instagram para estar al día de los próximos encuentros:\n${ig}\n\n` +
     `Y si queréis apoyarnos, podéis hacer un donativo, de la cantidad que queráis, aquí:\n${apoya}\n(Aviso: por ahora los donativos no desgravan fiscalmente.)\n\n` +
+    `También podéis seguirnos en Instagram para estar al día de los próximos encuentros:\n${ig}\n\n` +
     `Un abrazo y que Dios os bendiga,\n\nEquipo de Encuentros Siloé\n${EQUIPO}\n${SITE}`;
   return { html, texto };
 }
