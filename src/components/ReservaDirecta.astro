@@ -1,0 +1,174 @@
+---
+// Reserva directa (sin Bewe): el formulario envía los datos a /api/reserva, que los guarda en la hoja
+// de la asociación, manda la confirmación por correo y controla el aforo.
+interface Props {
+  evento: string; // clave del encuentro en el Apps Script ("horche")
+  titulo: string;
+  cuando: string;
+  lugar: string;
+}
+const { evento, titulo, cuando, lugar } = Astro.props;
+const PLAZAS = [1, 2, 3, 4, 5, 6];
+---
+
+<section class="reserva" data-evento={evento} id="reservar">
+  <div class="intro">
+    <span class="kicker">Reservar plaza</span>
+    <h1>{titulo}</h1>
+    <p class="datos">{cuando}<br />{lugar}</p>
+    <p class="aforo" id="reserva-aforo" role="status" aria-live="polite"></p>
+  </div>
+
+  <form id="reserva-form" class="form" novalidate>
+    <label>Nombre y apellidos
+      <input name="nombre" required autocomplete="name" maxlength="80" />
+    </label>
+    <label>Correo electrónico
+      <input name="email" type="email" required autocomplete="email" maxlength="120" />
+    </label>
+    <label>Teléfono <span class="opt">(opcional)</span>
+      <input name="telefono" type="tel" autocomplete="tel" maxlength="30" />
+    </label>
+    <label>¿Cuántas plazas necesitas?
+      <select name="plazas" required>
+        {PLAZAS.map((n) => <option value={String(n)}>{n} {n === 1 ? "plaza" : "plazas"}</option>)}
+      </select>
+      <span class="hint">Si sois más de 6, escríbenos a info@encuentrossiloe.org.</span>
+    </label>
+    <label>Comentario <span class="opt">(opcional)</span>
+      <textarea name="comentario" rows="2" maxlength="400"></textarea>
+    </label>
+    <!-- Cebo anti-bots: oculto para las personas. -->
+    <div class="cebo" aria-hidden="true">
+      <label>Web <input name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <label class="check">
+      <input type="checkbox" name="consentimiento" required />
+      <span>
+        He leído la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a> y consiento
+        que Encuentros Siloé trate mis datos para gestionar esta reserva y contactarme sobre el encuentro.
+      </span>
+    </label>
+    <button type="submit" class="btn" id="reserva-enviar">Reservar plaza</button>
+    <p class="msg" id="reserva-msg" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="fallback">
+    ¿Prefieres escribirnos? <a href="mailto:info@encuentrossiloe.org">info@encuentrossiloe.org</a>
+  </p>
+</section>
+
+<style>
+  .reserva {
+    padding: clamp(56px, 10vw, 100px) clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .intro { display: flex; flex-direction: column; gap: 12px; text-align: center; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; color: var(--accent-text); text-transform: uppercase; }
+  h1 { font-family: "Lora", serif; font-size: var(--text-h2-size); font-weight: 600; color: var(--primary-dark); line-height: var(--text-h2-line); }
+  .datos { color: var(--ink-muted); line-height: var(--text-body-line); }
+  .aforo { font-weight: 600; color: var(--primary-dark); min-height: 1.4em; }
+  .aforo.completo { color: #8a3b12; }
+  .form { display: flex; flex-direction: column; gap: 18px; padding: 28px; background: var(--bg-alt); border-radius: var(--radius-card); }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 600; color: var(--primary-dark); }
+  .opt, .hint { font-weight: 400; font-size: 13px; color: var(--ink-muted); }
+  input, select, textarea { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--border-subtle); background: var(--white); color: var(--ink); min-height: 46px; font-weight: 400; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--secondary); outline-offset: 1px; }
+  .check { flex-direction: row; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+  .check input { min-height: 0; width: 20px; height: 20px; margin-top: 2px; flex: none; }
+  .check a { color: var(--primary); text-decoration: underline; }
+  .cebo { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .btn { font: inherit; font-weight: 600; padding: 14px 22px; border: 0; border-radius: 999px; background: var(--primary); color: var(--white); cursor: pointer; min-height: 48px; }
+  .btn:disabled { opacity: 0.55; cursor: progress; }
+  .msg { font-size: 15px; line-height: 1.45; color: var(--ink-muted); }
+  .msg.ok { color: var(--primary-dark); font-weight: 600; }
+  .msg.err { color: #8a3b12; }
+  .fallback { text-align: center; font-size: 14px; color: var(--ink-muted); }
+  .fallback a { color: var(--primary); text-decoration: underline; }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>("section.reserva");
+  const form = document.getElementById("reserva-form") as HTMLFormElement | null;
+  if (section && form) {
+    const evento = section.dataset.evento ?? "";
+    const aforo = document.getElementById("reserva-aforo") as HTMLElement;
+    const msg = document.getElementById("reserva-msg") as HTMLElement;
+    const btn = document.getElementById("reserva-enviar") as HTMLButtonElement;
+
+    const ERRORES: Record<string, string> = {
+      duplicada: "Ya hay una reserva con este correo. Si quieres cambiarla, responde al correo de confirmación.",
+      email_invalido: "Revisa el correo electrónico.",
+      nombre_invalido: "Indica tu nombre y apellidos.",
+      plazas_invalidas: "Elige entre 1 y 6 plazas.",
+      falta_consentimiento: "Necesitamos que aceptes la política de privacidad.",
+    };
+
+    // Aforo en directo: informativo; si falla, el formulario sigue funcionando.
+    fetch(`/api/reserva?libres=${encodeURIComponent(evento)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d?.ok) return;
+        if (d.libres > 0) {
+          aforo.textContent = `Quedan ${d.libres} ${d.libres === 1 ? "plaza" : "plazas"}.`;
+        } else {
+          aforo.textContent = "Aforo completo: puedes apuntarte a la lista de espera y te avisaremos si se libera una plaza.";
+          aforo.classList.add("completo");
+          btn.textContent = "Apuntarme a la lista de espera";
+        }
+      })
+      .catch(() => {});
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.className = "msg";
+      const f = new FormData(form);
+      const consentimiento = f.get("consentimiento") === "on";
+      if (!form.reportValidity() || !consentimiento) {
+        msg.classList.add("err");
+        msg.textContent = consentimiento ? "Revisa los campos marcados." : ERRORES.falta_consentimiento;
+        return;
+      }
+      btn.disabled = true;
+      msg.textContent = "Enviando…";
+      try {
+        const res = await fetch("/api/reserva", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            evento,
+            nombre: f.get("nombre"),
+            email: f.get("email"),
+            telefono: f.get("telefono"),
+            plazas: Number(f.get("plazas")),
+            comentario: f.get("comentario"),
+            website: f.get("website"),
+            consentimiento,
+          }),
+        });
+        const d = await res.json().catch(() => ({}));
+        if (d?.ok) {
+          msg.classList.add("ok");
+          msg.textContent =
+            d.estado === "Lista de espera"
+              ? "El aforo está completo: te hemos apuntado en la lista de espera. Te hemos enviado un correo y te escribiremos si se libera plaza."
+              : "¡Reserva hecha! Te hemos enviado un correo de confirmación. Si no lo ves, mira en spam.";
+          form.reset();
+        } else {
+          msg.classList.add("err");
+          msg.textContent =
+            ERRORES[d?.error] ?? "No hemos podido registrar la reserva. Inténtalo de nuevo o escríbenos a info@encuentrossiloe.org.";
+        }
+      } catch {
+        msg.classList.add("err");
+        msg.textContent = "No hemos podido conectar. Inténtalo de nuevo o escríbenos a info@encuentrossiloe.org.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+</script>

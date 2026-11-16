@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Encuentro en Horche · Encuentros Siloé"
+  description="Reserva tu plaza en el Encuentro en Horche (viernes 20 de noviembre, 20:00 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="horche"
+    titulo="Encuentro en Horche"
+    cuando="Viernes 20 de noviembre · 20:00 h"
+    lugar="Prolongación San Roque, 1, Horche (Guadalajara)"
+  />
+  <Footer />
+</Layout>

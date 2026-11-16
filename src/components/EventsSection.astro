@@ -48,7 +48,7 @@ function reserveHref(ev: { title: string; day: string; month: string }) {
             )}
             {image && !ev.full && (
               <a
-                href={ev.link ?? reserveHref(ev)}
+                href={ev.link ?? ev.reserveUrl ?? reserveHref(ev)}
                 target={ev.link ? "_blank" : undefined}
                 rel={ev.link ? "noopener noreferrer" : undefined}
                 class="poster-link"
@@ -70,7 +70,7 @@ function reserveHref(ev: { title: string; day: string; month: string }) {
               <span class="btn-full" aria-disabled="true">Aforo completo</span>
             ) : (
               <a
-                href={ev.link ?? reserveHref(ev)}
+                href={ev.link ?? ev.reserveUrl ?? reserveHref(ev)}
                 target={ev.link ? "_blank" : undefined}
                 rel={ev.link ? "noopener noreferrer" : undefined}
                 class="btn-primary"

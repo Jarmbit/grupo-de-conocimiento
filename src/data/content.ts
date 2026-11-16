@@ -267,6 +267,8 @@ export interface EventItem {
   link?: string;
   /** Aforo completo: no se admiten más reservas. */
   full?: boolean;
+  /** Página propia de reserva (formulario directo, sin el widget de Bewe). */
+  reserveUrl?: string;
 }
 
 export const events: EventItem[] = [
@@ -293,6 +295,7 @@ export const events: EventItem[] = [
     location: "Prolongación San Roque, 1, Horche (Guadalajara) · 20:00h",
     spots: "Vídeo Jesús de Nazaret, música en directo y picoteo al final",
     image: "/images/events/encuentro-horche.jpg",
+    reserveUrl: "/reservar/horche",
   },
   {
     month: "Nov",
