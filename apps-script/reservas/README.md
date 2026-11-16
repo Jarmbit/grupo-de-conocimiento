@@ -10,8 +10,8 @@ Cancelación con enlace del correo, lista de espera con promoción automática y
    "Reservas Siloé".
 2. Pega el contenido de `Code.gs` (sustituye todo). En *Configuración del proyecto* marca
    "Mostrar el archivo de manifiesto appsscript.json" y pega también el de esta carpeta.
-3. **Ajusta el aforo real** en `EVENTOS.horche.capacidad` (o, sin tocar código, crea la propiedad de
-   script `CAPACIDAD_HORCHE`).
+3. El aforo de Horche está fijado en 60 (`EVENTOS.horche.capacidad`). Para cambiarlo sin tocar código,
+   crea la propiedad de script `CAPACIDAD_HORCHE`.
 4. Selecciona la función `setup` → *Ejecutar* → autoriza los permisos. Crea la hoja, genera el
    secreto y programa el recordatorio diario (10:00). En *Registro de ejecución* verás:
    - `RESERVAS_SECRET …` → cópialo.

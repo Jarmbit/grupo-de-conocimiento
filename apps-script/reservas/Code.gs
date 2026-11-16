@@ -18,7 +18,7 @@ const EVENTOS = {
     fecha: '2026-11-20', // AAAA-MM-DD (para el recordatorio del día anterior)
     cuando: 'viernes 20 de noviembre, 20:00 h',
     lugar: 'Prolongación San Roque, 1, Horche (Guadalajara)',
-    capacidad: 30, // ¡AJUSTAR al aforo real del espacio!
+    capacidad: 60, // aforo de Horche (60 personas)
   },
 };
 
