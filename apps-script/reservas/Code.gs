@@ -233,7 +233,7 @@ function json_(obj) {
 }
 
 function enviar_(para, asunto, texto) {
-  const html = '<div>' + esc_(texto).replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>') + '</div>';
+  const html = '<div>' + esc_(texto).replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1">$1</a>') + '</div>';
   GmailApp.sendEmail(para, asunto, texto, { htmlBody: html, name: REMITENTE, replyTo: EQUIPO });
 }
 
