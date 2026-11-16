@@ -302,7 +302,7 @@ function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
     c.enlaceTxt = '¿No puedes venir? Avísanos para dar tu plaza a otra persona:';
     c.enlaceLabel = 'liberar mi plaza';
     c.cierre = 'Un abrazo,';
-    c.texto = `Hola, ${nombre}:\n\n${c.intro}\n${datosTxt}\n¡Te esperamos!\n\nSi no puedes venir, avísanos para liberar tu plaza para otra persona:\n${baja}${FIRMA}`;
+    c.texto = `Hola, ${nombre}:\n\n${c.intro}\n${datosTxt}\nSi no puedes venir, avísanos para liberar tu plaza para otra persona:\n${baja}${FIRMA}`;
   }
   return c;
 }
