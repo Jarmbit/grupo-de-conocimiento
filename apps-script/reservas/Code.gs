@@ -312,53 +312,157 @@ function enviarReserva_(tipo, ev, email, nombre, plazas, id, token) {
   enviar_(email, c.asunto, c.texto, htmlCorreo_(ev, c));
 }
 
-// Maquetación del correo: tablas con estilos en línea (lo que admiten Gmail, Outlook y el móvil).
-function htmlCorreo_(ev, c) {
-  const F_SANS = "'Source Sans 3',Arial,Helvetica,sans-serif";
-  const F_SERIF = "Lora,Georgia,'Times New Roman',serif";
-  const fila = (etiqueta, valor, ultima) =>
-    `<tr><td style="padding:14px 0;${ultima ? '' : 'border-bottom:1px solid #d5dbe2;'}">` +
-    `<div style="font-size:11px;font-weight:700;letter-spacing:0.14em;color:#5b6570;">${etiqueta}</div>` +
-    `<div style="margin-top:3px;font-size:17px;font-weight:700;color:#0f2138;">${esc_(valor)}</div></td></tr>`;
-  const boton = c.boton
-    ? `<tr><td style="padding:20px 40px 0 40px;"><a href="${esc_(c.mapa)}" style="display:inline-block;background:#1f3a5f;color:#ffffff;font-size:16px;font-weight:700;padding:14px 30px;border-radius:999px;text-decoration:none;font-family:${F_SANS};">Cómo llegar</a></td></tr>`
-    : '';
-  const enlaceBaja = `<a href="${esc_(c.baja)}" style="color:#1f3a5f;font-weight:700;">${esc_(c.enlaceLabel)}</a>`;
-  const cierreHtml = esc_(c.cierre) + '<br>Equipo de Encuentros Siloé';
+// ── Maquetación de correos ─────────────────────────────────────────────────────────────────
+// Tablas con estilos en línea. Los fondos llevan `bgcolor` Y `background-color` (Outlook ignora
+// `background`), y el botón es una celda con fondo (no depende de border-radius ni de padding del enlace).
+const F_SANS = "'Source Sans 3',Arial,Helvetica,sans-serif";
+const F_SERIF = "Lora,Georgia,'Times New Roman',serif";
 
+function fondo_(color) {
+  return `bgcolor="${color}" style="background-color:${color};`;
+}
+
+function botonHtml_(url, texto, fondo, color) {
+  fondo = fondo || '#1f3a5f';
+  color = color || '#ffffff';
+  return (
+    `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>` +
+    `<td bgcolor="${fondo}" style="background-color:${fondo};border-radius:999px;">` +
+    `<a href="${esc_(url)}" style="display:inline-block;color:${color};font-size:16px;font-weight:700;padding:14px 30px;border-radius:999px;text-decoration:none;font-family:${F_SANS};">${esc_(texto)}</a>` +
+    `</td></tr></table>`
+  );
+}
+
+function filaDato_(etiqueta, valor, ultima) {
+  return (
+    `<tr><td style="padding:14px 0;${ultima ? '' : 'border-bottom:1px solid #d5dbe2;'}">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">${etiqueta}</div>` +
+    `<div style="margin-top:3px;font-size:17px;font-weight:700;color:#0f2138;">${esc_(valor)}</div></td></tr>`
+  );
+}
+
+// Marco común. o = { preheader, banner, bannerAlt, kicker, titulo, intro, bloques (filas <tr> ya
+// maquetadas), cierre, nota }
+function marco_(o) {
   return (
     `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>` +
-    `<body style="margin:0;padding:0;background:#e9edf1;">` +
-    `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc_(c.intro)}</div>` +
-    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9edf1;"><tr><td align="center" style="padding:24px 12px;">` +
-    `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;font-family:${F_SANS};color:#1c2530;">` +
+    `<body bgcolor="#e9edf1" style="margin:0;padding:0;background-color:#e9edf1;">` +
+    `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc_(o.preheader)}</div>` +
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#e9edf1')}"><tr><td align="center" ${fondo_('#e9edf1')}padding:24px 12px;">` +
+    `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" ${fondo_('#ffffff')}width:100%;max-width:600px;font-family:${F_SANS};color:#1c2530;">` +
     // cabecera
-    `<tr><td style="background:#0f2138;padding:20px 32px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>` +
-    `<td style="padding-right:14px;"><img src="${SITE}/logo-mark-white.png" width="46" height="46" alt="Encuentros Siloé" style="display:block;border:0;"></td>` +
-    `<td style="color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.24em;font-family:${F_SANS};">ENCUENTROS SILOÉ</td></tr></table></td></tr>` +
-    `<tr><td style="height:3px;line-height:3px;font-size:3px;background:#d9a356;">&nbsp;</td></tr>` +
+    `<tr><td ${fondo_('#0f2138')}padding:20px 32px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>` +
+    `<td style="padding-right:14px;"><img src="${SITE}/logo-mark-white.png" width="46" height="46" alt="" style="display:block;border:0;"></td>` +
+    `<td style="color:#ffffff;font-size:13px;font-weight:700;letter-spacing:3px;font-family:${F_SANS};">ENCUENTROS SILOÉ</td></tr></table></td></tr>` +
+    `<tr><td height="3" ${fondo_('#d9a356')}height:3px;line-height:3px;font-size:3px;">&nbsp;</td></tr>` +
     // banner
-    `<tr><td><img src="${esc_(ev.banner)}" width="600" alt="Cartel del ${esc_(ev.titulo)}" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>` +
+    `<tr><td ${fondo_('#0f2138')}"><img src="${esc_(o.banner)}" width="600" alt="${esc_(o.bannerAlt)}" style="display:block;width:100%;max-width:600px;height:auto;border:0;color:#ffffff;font-size:16px;"></td></tr>` +
     // titular
     `<tr><td style="padding:36px 40px 8px 40px;">` +
-    `<div style="font-size:12px;font-weight:700;letter-spacing:0.16em;color:#8e6020;">${esc_(c.kicker)}</div>` +
-    `<h1 style="margin:10px 0 0 0;font-family:${F_SERIF};font-size:29px;line-height:1.2;font-weight:600;color:#0f2138;">${esc_(c.titulo)}</h1>` +
-    `<p style="margin:16px 0 0 0;font-size:16px;line-height:1.6;color:#1c2530;">${esc_(c.intro)}</p></td></tr>` +
-    // datos
-    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#edf0f3;border-radius:12px;"><tr><td style="padding:6px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">` +
-    fila('FECHA Y HORA', mayus_(ev.cuando).replace(', ', ' · '), false) +
-    fila('LUGAR', ev.lugar, false) +
-    fila(c.etiquetaPlazas, c.plazas, true) +
-    `</table></td></tr></table></td></tr>` +
-    boton +
-    `<tr><td style="padding:28px 40px 4px 40px;font-size:15px;line-height:1.6;color:#1c2530;">${esc_(c.enlaceTxt)} ${enlaceBaja}.</td></tr>` +
-    `<tr><td style="padding:20px 40px 36px 40px;font-family:${F_SERIF};font-size:16px;line-height:1.5;color:#0f2138;font-style:italic;">${cierreHtml}</td></tr>` +
+    `<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#8e6020;">${esc_(o.kicker)}</div>` +
+    `<h1 style="margin:10px 0 0 0;font-family:${F_SERIF};font-size:29px;line-height:1.2;font-weight:600;color:#0f2138;">${esc_(o.titulo)}</h1>` +
+    `<p style="margin:16px 0 0 0;font-size:16px;line-height:1.6;color:#1c2530;">${esc_(o.intro)}</p></td></tr>` +
+    o.bloques +
+    `<tr><td style="padding:24px 40px 36px 40px;font-family:${F_SERIF};font-size:16px;line-height:1.5;color:#0f2138;font-style:italic;">${o.cierre}</td></tr>` +
     // pie
-    `<tr><td style="background:#0f2138;padding:24px 40px;font-size:13px;line-height:1.7;color:#c9d6e6;">` +
+    `<tr><td ${fondo_('#0f2138')}padding:24px 40px;font-size:13px;line-height:1.7;color:#c9d6e6;">` +
     `<a href="mailto:${EQUIPO}" style="color:#ffffff;text-decoration:underline;">${EQUIPO}</a> · ` +
     `<a href="${SITE}" style="color:#ffffff;text-decoration:underline;">encuentrossiloe.org</a> · ` +
     `<a href="https://www.instagram.com/encuentrossiloe" style="color:#ffffff;text-decoration:underline;">@encuentrossiloe</a>` +
-    `<div style="margin-top:10px;font-size:12px;line-height:1.5;color:#a9bbd1;">Recibes este correo porque has reservado plaza en encuentrossiloe.org. Tratamos tus datos según nuestra <a href="${SITE}/privacidad" style="color:#ffffff;">política de privacidad</a>.</div>` +
+    `<div style="margin-top:10px;font-size:12px;line-height:1.5;color:#a9bbd1;">${o.nota} Tratamos tus datos según nuestra <a href="${SITE}/privacidad" style="color:#ffffff;">política de privacidad</a>.</div>` +
     `</td></tr></table></td></tr></table></body></html>`
   );
+}
+
+function htmlCorreo_(ev, c) {
+  const panel =
+    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:6px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">` +
+    filaDato_('FECHA Y HORA', mayus_(ev.cuando).replace(', ', ' · '), false) +
+    filaDato_('LUGAR', ev.lugar, false) +
+    filaDato_(c.etiquetaPlazas, c.plazas, true) +
+    `</table></td></tr></table></td></tr>`;
+  const boton = c.boton ? `<tr><td style="padding:20px 40px 0 40px;">${botonHtml_(c.mapa, 'Cómo llegar')}</td></tr>` : '';
+  const enlace = `<tr><td style="padding:28px 40px 4px 40px;font-size:15px;line-height:1.6;color:#1c2530;">${esc_(c.enlaceTxt)} <a href="${esc_(c.baja)}" style="color:#1f3a5f;font-weight:700;">${esc_(c.enlaceLabel)}</a>.</td></tr>`;
+  return marco_({
+    preheader: c.intro,
+    banner: ev.banner,
+    bannerAlt: `Cartel del ${ev.titulo}`,
+    kicker: c.kicker,
+    titulo: c.titulo,
+    intro: c.intro,
+    bloques: panel + boton + enlace,
+    cierre: esc_(c.cierre) + '<br>Equipo de Encuentros Siloé',
+    nota: 'Recibes este correo porque has reservado plaza en encuentrossiloe.org.',
+  });
+}
+
+// ── Correo de agradecimiento del Encuentro de Málaga (envío único) ────────────────────────
+// Los destinatarios (copia oculta) se leen del borrador "Gracias por acompañarnos en el Encuentro
+// de Málaga" de info@, para no guardar direcciones en el código.
+const GRACIAS_MALAGA = {
+  asunto: 'Gracias por acompañarnos en el Encuentro de Málaga',
+  banner: SITE + '/images/email/malaga-banner.jpg',
+};
+
+function graciasMalagaCorreo_() {
+  const habla = SITE + '/habla-con-nosotros';
+  const apoya = SITE + '/apoya';
+  const ig = 'https://www.instagram.com/encuentrossiloe';
+  const intro =
+    'Gracias de corazón por haber reservado plaza en el Encuentro de Málaga del pasado sábado 14 de noviembre. A los que pudisteis venir, gracias por vuestra presencia y por compartir esa tarde con nosotros; a los que no pudisteis, os tuvimos muy presentes y esperamos veros en el próximo.';
+  const bloques =
+    // 1) Opinión
+    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">NOS AYUDARÍA MUCHO</div>` +
+    `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Conocer vuestras impresiones: qué os pareció el encuentro, qué sentisteis y qué mejoraríais. Podéis escribírnoslas en el apartado «Habla con nosotros» de la web.</div>` +
+    botonHtml_(habla, 'Cuéntanos tu experiencia') +
+    `</td></tr></table></td></tr>` +
+    // 2) Apoyo (destacado)
+    `<tr><td style="padding:12px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#fbefd6')}"><tr><td ${fondo_('#fbefd6')}padding:22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#8e6020;">APOYA ESTA MISIÓN</div>` +
+    `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Si queréis apoyarnos, podéis hacer un donativo de la cantidad que queráis. Cada aportación nos ayuda a llevar los encuentros a más lugares.</div>` +
+    botonHtml_(apoya, 'Hacer un donativo', '#d9a356', '#0f2138') +
+    `<div style="margin-top:12px;font-size:13px;line-height:1.5;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</div>` +
+    `</td></tr></table></td></tr>` +
+    // 3) Instagram
+    `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Síguenos en Instagram</strong> para estar al día de los próximos encuentros: <a href="${ig}" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.</td></tr>`;
+  const html = marco_({
+    preheader: intro.slice(0, 110),
+    banner: GRACIAS_MALAGA.banner,
+    bannerAlt: 'Encuentros Siloé · Málaga · 14 de noviembre',
+    kicker: 'ENCUENTRO DE MÁLAGA · 14 DE NOVIEMBRE',
+    titulo: 'Gracias por acompañarnos',
+    intro,
+    bloques,
+    cierre: 'Un abrazo y que Dios os bendiga,<br>Equipo de Encuentros Siloé',
+    nota: 'Recibes este correo porque reservaste plaza en el Encuentro de Málaga.',
+  });
+  const texto =
+    `Hola:\n\n${intro}\n\nNos ayudaría mucho conocer vuestras impresiones: qué os pareció el encuentro, qué sentisteis y qué mejoraríais. Podéis escribírnoslas en nuestra web, en el apartado "Habla con nosotros":\n${habla}\n\n` +
+    `Y si queréis apoyarnos, podéis hacer un donativo, de la cantidad que queráis, aquí:\n${apoya}\n(Aviso: por ahora los donativos no desgravan fiscalmente.)\n\n` +
+    `También podéis seguirnos en Instagram para estar al día de los próximos encuentros:\n${ig}\n\n` +
+    `Un abrazo y que Dios os bendiga,\n\nEquipo de Encuentros Siloé\n${EQUIPO}\n${SITE}`;
+  return { html, texto };
+}
+
+// 1) Prueba: se envía solo a estas direcciones (edítalas si hace falta).
+function pruebaGraciasMalaga() {
+  const c = graciasMalagaCorreo_();
+  GmailApp.sendEmail('jarmadae@gmail.com,jhuertan@encuentrossiloe.org', '[PRUEBA] ' + GRACIAS_MALAGA.asunto, c.texto, { htmlBody: c.html, name: REMITENTE, replyTo: EQUIPO });
+}
+
+// 2) Envío real: a info@ con los asistentes en copia oculta (los del borrador). Borra el borrador al terminar.
+// Busca el borrador sin depender de acentos ni mayúsculas; si no lo encuentra, el error lista los asuntos que ve.
+function enviarGraciasMalaga() {
+  const norm = (s) => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const borradores = GmailApp.getDrafts();
+  const borrador = borradores.find((d) => norm(d.getMessage().getSubject()).indexOf('gracias por acompanarnos') >= 0);
+  if (!borrador) {
+    throw new Error('No encuentro el borrador. Borradores vistos: ' + borradores.map((d) => '[' + d.getMessage().getSubject() + ']').join(' '));
+  }
+  const bcc = borrador.getMessage().getBcc();
+  if (!bcc) throw new Error('El borrador no tiene destinatarios en copia oculta.');
+  const c = graciasMalagaCorreo_();
+  GmailApp.sendEmail(EQUIPO, GRACIAS_MALAGA.asunto, c.texto, { htmlBody: c.html, bcc, name: REMITENTE, replyTo: EQUIPO });
+  borrador.deleteDraft();
 }
