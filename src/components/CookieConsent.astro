@@ -3,6 +3,7 @@
 // La elección se guarda en localStorage ("siloe-cookies": "aceptadas" | "rechazadas").
 // Cualquier elemento con [data-cookie-settings] vuelve a abrir el aviso.
 export const GOOGLE_TAG_ID = "GTM-N89W6JWS";
+export const GA_MEASUREMENT_ID = "G-2Y16MLNXVB"; // propiedad GA4 «encuentrossiloe.org»
 ---
 
 <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
@@ -17,7 +18,7 @@ export const GOOGLE_TAG_ID = "GTM-N89W6JWS";
   </div>
 </div>
 
-<script is:inline define:vars={{ tagId: GOOGLE_TAG_ID }}>
+<script is:inline define:vars={{ tagId: GOOGLE_TAG_ID, measurementId: GA_MEASUREMENT_ID }}>
   (function () {
     var KEY = "siloe-cookies";
     var banner = document.getElementById("cookie-banner");
@@ -54,7 +55,8 @@ export const GOOGLE_TAG_ID = "GTM-N89W6JWS";
 
     var eleccion = leer();
     if (eleccion === "aceptadas") cargarAnalytics();
-    else if (eleccion !== "rechazadas") banner.hidden = false;
+    else if (eleccion === "rechazadas") borrarCookiesGa(); // limpia restos de un consentimiento retirado
+    else banner.hidden = false;
 
     banner.addEventListener("click", function (ev) {
       var b = ev.target.closest("[data-cookie-choice]");
@@ -65,6 +67,7 @@ export const GOOGLE_TAG_ID = "GTM-N89W6JWS";
       banner.hidden = true;
       if (v === "aceptadas") cargarAnalytics();
       else if (antes === "aceptadas") {
+        window["ga-disable-" + measurementId] = true; // que Analytics no vuelva a escribir cookies
         borrarCookiesGa();
         location.reload();
       }
