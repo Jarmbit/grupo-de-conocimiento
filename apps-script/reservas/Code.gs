@@ -452,9 +452,14 @@ function pruebaGraciasMalaga() {
 }
 
 // 2) Envío real: a info@ con los asistentes en copia oculta (los del borrador). Borra el borrador al terminar.
+// Busca el borrador sin depender de acentos ni mayúsculas; si no lo encuentra, el error lista los asuntos que ve.
 function enviarGraciasMalaga() {
-  const borrador = GmailApp.getDrafts().find((d) => d.getMessage().getSubject() === GRACIAS_MALAGA.asunto);
-  if (!borrador) throw new Error('No encuentro el borrador con los destinatarios.');
+  const norm = (s) => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const borradores = GmailApp.getDrafts();
+  const borrador = borradores.find((d) => norm(d.getMessage().getSubject()).indexOf('gracias por acompanarnos') >= 0);
+  if (!borrador) {
+    throw new Error('No encuentro el borrador. Borradores vistos: ' + borradores.map((d) => '[' + d.getMessage().getSubject() + ']').join(' '));
+  }
   const bcc = borrador.getMessage().getBcc();
   if (!bcc) throw new Error('El borrador no tiene destinatarios en copia oculta.');
   const c = graciasMalagaCorreo_();
