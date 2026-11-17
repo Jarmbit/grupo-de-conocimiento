@@ -1,0 +1,142 @@
+---
+// Aviso de cookies. Google Analytics (etiqueta de Google) solo se carga si la persona acepta.
+// La elección se guarda en localStorage ("siloe-cookies": "aceptadas" | "rechazadas").
+// Cualquier elemento con [data-cookie-settings] vuelve a abrir el aviso.
+export const GOOGLE_TAG_ID = "GTM-N89W6JWS";
+export const GA_MEASUREMENT_ID = "G-2Y16MLNXVB"; // propiedad GA4 «encuentrossiloe.org»
+---
+
+<div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
+  <p>
+    Usamos cookies de Google Analytics para saber cuántas personas visitan la web y qué páginas
+    les interesan. Solo las activamos si aceptas. Más información en la
+    <a href="/cookies">política de cookies</a>.
+  </p>
+  <div class="actions">
+    <button type="button" class="btn" data-cookie-choice="rechazadas">Rechazar</button>
+    <button type="button" class="btn" data-cookie-choice="aceptadas">Aceptar</button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ tagId: GOOGLE_TAG_ID, measurementId: GA_MEASUREMENT_ID }}>
+  (function () {
+    var KEY = "siloe-cookies";
+    var banner = document.getElementById("cookie-banner");
+
+    function leer() {
+      try { return localStorage.getItem(KEY); } catch (e) { return null; }
+    }
+    function guardar(v) {
+      try { localStorage.setItem(KEY, v); } catch (e) {}
+    }
+    function cargarAnalytics() {
+      if (window.__siloeGtag) return;
+      window.__siloeGtag = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtm.js?id=" + tagId;
+      document.head.appendChild(s);
+    }
+    function borrarCookiesGa() {
+      var dominios = [location.hostname, "." + location.hostname.replace(/^www\./, "")];
+      document.cookie.split(";").forEach(function (c) {
+        var nombre = c.split("=")[0].trim();
+        if (/^_ga/.test(nombre) || nombre === "_gid") {
+          dominios.forEach(function (d) {
+            document.cookie = nombre + "=; Max-Age=0; path=/; domain=" + d;
+          });
+          document.cookie = nombre + "=; Max-Age=0; path=/";
+        }
+      });
+    }
+
+    var eleccion = leer();
+    if (eleccion === "aceptadas") cargarAnalytics();
+    else if (eleccion === "rechazadas") borrarCookiesGa(); // limpia restos de un consentimiento retirado
+    else banner.hidden = false;
+
+    banner.addEventListener("click", function (ev) {
+      var b = ev.target.closest("[data-cookie-choice]");
+      if (!b) return;
+      var v = b.getAttribute("data-cookie-choice");
+      var antes = leer();
+      guardar(v);
+      banner.hidden = true;
+      if (v === "aceptadas") cargarAnalytics();
+      else if (antes === "aceptadas") {
+        window["ga-disable-" + measurementId] = true; // que Analytics no vuelva a escribir cookies
+        borrarCookiesGa();
+        location.reload();
+      }
+    });
+
+    document.addEventListener("click", function (ev) {
+      if (ev.target.closest("[data-cookie-settings]")) {
+        ev.preventDefault();
+        banner.hidden = false;
+      }
+    });
+  })();
+</script>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 1000;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    background: var(--primary-dark);
+    color: var(--white);
+    border-radius: var(--radius-card);
+    box-shadow: 0 10px 30px rgba(15, 33, 56, 0.35);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .cookie-banner[hidden] {
+    display: none;
+  }
+
+  .cookie-banner p {
+    margin: 0;
+    flex: 1 1 320px;
+  }
+
+  .cookie-banner a {
+    color: var(--accent-light);
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+
+  /* Ambos botones con el mismo peso visual: rechazar debe ser tan fácil como aceptar. */
+  .btn {
+    font: inherit;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    background: var(--accent);
+    color: var(--primary-dark);
+    cursor: pointer;
+  }
+
+  .btn:focus-visible {
+    outline: 3px solid var(--white);
+    outline-offset: 2px;
+  }
+</style>
