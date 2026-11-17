@@ -4,7 +4,7 @@
 //   GET  /api/reserva?libres=<evento> → plazas libres
 //   GET  /api/reserva?cancelar=ID.TOKEN → cancela (enlace del correo; devuelve una página HTML)
 
-const EVENTOS = new Set(["horche"]);
+const EVENTOS = new Set(["horche", "costarica"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
 

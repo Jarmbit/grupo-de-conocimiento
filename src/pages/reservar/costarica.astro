@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Costa Rica: El origen de la vida · Encuentros Siloé"
+  description="Reserva tu plaza en el encuentro «El origen de la vida» en Costa Rica (sábado 5 de diciembre, 19:00 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="costarica"
+    titulo="Costa Rica · El origen de la vida"
+    cuando="Sábado 5 de diciembre · 19:00 h (hora de Costa Rica)"
+    lugar="Condominio Las Palmas 32 y 33, Costa Rica"
+  />
+  <Footer />
+</Layout>
