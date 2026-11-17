@@ -307,14 +307,6 @@ export const events: EventItem[] = [
   },
   {
     month: "Nov",
-    day: "25",
-    title: "Encuentro en Barajas",
-    location: "Parroquia del Padre Nuestro, Av. de Cantabria 4, Barajas · 19:30h",
-    spots: "Vídeo Jesús de Nazaret, testimonio y diálogo · Entrada libre",
-    image: "/images/events/encuentro-barajas.jpg",
-  },
-  {
-    month: "Nov",
     day: "28",
     title: "Encuentro en Burgos",
     location: "Auditorio Círculo Católico, C/ Concepción s/n, Burgos · 18:00h",
