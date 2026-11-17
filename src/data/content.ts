@@ -323,6 +323,15 @@ export const events: EventItem[] = [
   },
   {
     month: "Dic",
+    day: "5",
+    title: "Costa Rica · El origen de la vida",
+    location: "Condominio Las Palmas 32 y 33 (Costa Rica) · 19:00h",
+    spots: "Ciencia, universo y un origen con sentido · Vídeo y música en directo",
+    image: "/images/events/encuentro-costarica.jpg",
+    reserveUrl: "/reservar/costarica",
+  },
+  {
+    month: "Dic",
     day: "11",
     title: "Encuentro en Espinosa de los Monteros",
     location: "Parroquia, Sancho García 9, Espinosa de los Monteros (Burgos) · 19:30h",

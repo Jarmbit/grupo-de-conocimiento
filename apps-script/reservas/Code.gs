@@ -23,6 +23,16 @@ const EVENTOS = {
     mapa: 'https://www.google.com/maps/search/?api=1&query=Prolongaci%C3%B3n+San+Roque+1%2C+Horche%2C+Guadalajara',
     resumen: 'v\u00eddeo, m\u00fasica en directo y picoteo para compartir al final',
   },
+  costarica: {
+    titulo: 'Costa Rica · El origen de la vida',
+    fecha: '2026-12-05', // AAAA-MM-DD (para el recordatorio del día anterior)
+    cuando: 's\u00e1bado 5 de diciembre, 19:00 h (hora de Costa Rica)',
+    lugar: 'Condominio Las Palmas 32 y 33',
+    capacidad: 15, // aforo de Costa Rica (15 personas)
+    banner: 'https://encuentrossiloe.org/images/email/costarica-banner.jpg', // cabecera de los correos
+    mapa: 'https://www.google.com/maps/search/?api=1&query=Condominio+Las+Palmas%2C+Costa+Rica',
+    resumen: 'ciencia, universo y un origen con sentido, con v\u00eddeo y m\u00fasica en directo',
+  },
 };
 
 const SITE = 'https://encuentrossiloe.org';
