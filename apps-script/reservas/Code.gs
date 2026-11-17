@@ -24,7 +24,7 @@ const EVENTOS = {
     resumen: 'v\u00eddeo, m\u00fasica en directo y picoteo para compartir al final',
   },
   costarica: {
-    titulo: 'Costa Rica · El origen de la vida',
+    titulo: 'Encuentro en Costa Rica: El origen de la vida',
     fecha: '2026-12-05', // AAAA-MM-DD (para el recordatorio del día anterior)
     cuando: 's\u00e1bado 5 de diciembre, 19:00 h (hora de Costa Rica)',
     lugar: 'Condominio Las Palmas 32 y 33',
