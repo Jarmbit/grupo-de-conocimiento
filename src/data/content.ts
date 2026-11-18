@@ -600,6 +600,8 @@ export const continuity = {
   kicker: "Continuidad",
   title: "Hijos en el Hijo",
   subtitle: "Un camino para descubrir la vida nueva en Jesús",
+  // Aviso mientras no haya calendario del itinerario.
+  dates: "Comunicaremos las fechas del acompañamiento próximamente.",
   intro: [
     "¿Y si Dios te está buscando? ¿Y si tu vida puede comenzar de nuevo?",
     "Encuentros Siloé te invita a recorrer un camino de encuentro con Jesucristo, para descubrir el amor del Padre, crecer en la fe y aprender a vivir como hijo amado de Dios.",

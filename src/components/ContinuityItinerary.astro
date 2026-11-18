@@ -16,6 +16,11 @@ const blocks = continuity.blocks.map((block) => ({
     ))
   }
 
+  <p class="dates" role="note">
+    <span class="dates-kicker">Fechas</span>
+    {continuity.dates}
+  </p>
+
   {
     blocks.map((block) => (
       <section class="block">
@@ -54,7 +59,7 @@ const blocks = continuity.blocks.map((block) => ({
     <h3>Apúntate al itinerario</h3>
     <p>
       Déjanos tus datos y cuéntanos en qué punto del camino te gustaría incorporarte. Nos pondremos
-      en contacto contigo.
+      en contacto contigo. {continuity.dates}
     </p>
   </div>
 </div>
@@ -146,6 +151,28 @@ const blocks = continuity.blocks.map((block) => ({
 
   .desc {
     font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .dates {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px;
+    background: var(--bg-alt);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .dates-kicker {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     color: var(--ink-muted);
   }
 
