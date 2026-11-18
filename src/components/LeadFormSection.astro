@@ -1,45 +1,34 @@
 ---
-import { contact } from "../data/content";
+import ContactForm from "./ContactForm.astro";
 
 interface Props {
   id: string;
   kicker: string;
   title: string;
   intro: string;
-  /** Texto fijo con el que se rellena el campo Comentario del formulario. */
+  /** A qué bandeja va el formulario (pestaña «Solicitudes» de la hoja de la asociación). */
+  tipo: "pide-un-encuentro" | "voluntariado" | "continuidad" | "habla-con-nosotros";
+  /** Texto inicial del mensaje. */
   prefill?: string;
-  /** Si la URL trae ?encuentro=…, se muestra y se usa como relleno (reserva de plaza). */
-  useEventParam?: boolean;
-  /** Plantilla del relleno cuando hay ?encuentro=…; "{encuentro}" se sustituye por su nombre. */
-  eventTemplate?: string;
 }
 
-const { id, kicker, title, intro, prefill = "", useEventParam = false, eventTemplate = "Reserva de plaza para: {encuentro}. Número de plazas: " } = Astro.props;
+const { id, kicker, title, intro, tipo, prefill = "" } = Astro.props;
 ---
 
-<section id={id} data-screen-label={kicker} class="lead" data-prefill={prefill} data-event-param={useEventParam ? "1" : undefined} data-event-template={eventTemplate}>
+<section id={id} data-screen-label={kicker} class="lead">
   <div class="intro">
     <span class="kicker">{kicker}</span>
     <h2>{title}</h2>
-    <p class="event-line" id="lead-event" hidden>
-      Encuentro: <strong id="lead-event-name"></strong>
-    </p>
     <p>{intro}</p>
   </div>
 
   <slot />
 
-  <div class="form">
-    <div data-lead-form data-pk="pk_0qWzBZIIahKTIPIDtjTNQ5tmsrZIczFbxYKA2yQKqjg" data-country="ES"></div>
-    <p class="fallback">
-      ¿Prefieres escribirnos directamente? <a href={`mailto:${contact.email}`}>{contact.email}</a>
-    </p>
-  </div>
-  <script is:inline src="https://storage.googleapis.com/sdk-os/prod/widgets/lead-form/latest/lead-form.js" defer></script>
+  <ContactForm tipo={tipo} prefill={prefill} />
 </section>
 
 <style is:global>
-  /* El formulario de Bewe queda bloqueado hasta que se completen los datos obligatorios de la página. */
+  /* El formulario queda bloqueado hasta que se completen los datos obligatorios de la página. */
   [data-lead-form].lead-locked {
     opacity: 0.45;
   }
@@ -83,74 +72,4 @@ const { id, kicker, title, intro, prefill = "", useEventParam = false, eventTemp
     color: var(--ink-muted);
     line-height: var(--text-body-line);
   }
-
-  .event-line {
-    color: var(--primary-dark);
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    padding: 32px;
-    background: var(--bg-alt);
-    border-radius: var(--radius-card);
-  }
-
-  /* Estilo del formulario de Bewe (variables que lee el widget). */
-  [data-lead-form] {
-    --lead-form-primary: #1f3a5f;
-    --lead-form-background: #edf0f3;
-    --lead-form-text: #1c2530;
-    --lead-form-border: #c9d2dc;
-    --lead-form-font: "Source Sans 3", sans-serif;
-  }
-
-  .fallback {
-    font-size: 14px;
-    color: var(--ink-muted);
-  }
-
-  .fallback a {
-    text-decoration: underline;
-    color: var(--primary);
-  }
 </style>
-
-<script>
-  // Rellena el campo Comentario del widget de Bewe. Es un extra: si Bewe cambia su widget y falla,
-  // el texto de la página sigue pidiendo el dato.
-  const section = document.querySelector<HTMLElement>("section.lead");
-  if (section) {
-    let text = section.dataset.prefill ?? "";
-    if (section.dataset.eventParam) {
-      const encuentro = new URLSearchParams(location.search).get("encuentro")?.trim().slice(0, 120);
-      if (encuentro) {
-        const line = document.getElementById("lead-event");
-        const name = document.getElementById("lead-event-name");
-        if (line && name) {
-          name.textContent = encuentro;
-          line.hidden = false;
-        }
-        text = (section.dataset.eventTemplate ?? "").replace("{encuentro}", encuentro);
-      }
-    }
-
-    if (text) {
-      const fill = () => {
-        const area = document.querySelector("[data-lead-form]")?.shadowRoot?.querySelector("textarea");
-        if (!area) return false;
-        if (!area.value) {
-          const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")?.set;
-          setter?.call(area, text);
-          area.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-        return true;
-      };
-      let tries = 0;
-      const timer = setInterval(() => {
-        if (fill() || ++tries > 40) clearInterval(timer);
-      }, 250);
-    }
-  }
-</script>

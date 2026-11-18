@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Encuentro en Espinosa de los Monteros · Encuentros Siloé"
+  description="Reserva tu plaza en «Encuentro en Espinosa de los Monteros» (viernes 11 de diciembre, 19:30 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="espinosa"
+    titulo="Encuentro en Espinosa de los Monteros"
+    cuando="Viernes 11 de diciembre · 19:30 h"
+    lugar="Parroquia, Sancho García 9, Espinosa de los Monteros (Burgos)"
+  />
+  <Footer />
+</Layout>

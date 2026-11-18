@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Encuentro en Burgos · Encuentros Siloé"
+  description="Reserva tu plaza en «Encuentro en Burgos» (sábado 28 de noviembre, 18:00 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="burgos"
+    titulo="Encuentro en Burgos"
+    cuando="Sábado 28 de noviembre · 18:00 h"
+    lugar="Auditorio Círculo Católico, C/ Concepción s/n, Burgos"
+  />
+  <Footer />
+</Layout>

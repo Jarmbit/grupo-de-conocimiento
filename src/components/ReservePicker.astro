@@ -1,31 +1,23 @@
 ---
 import { events } from "../data/content";
 import { eventLabel } from "../data/eventLabel";
-
-// Solo los encuentros que se reservan en esta web (los que tienen enlace propio no pasan por aquí).
-const options = events.filter((e) => !e.link && !e.full && !e.reserveUrl).map((e) => eventLabel(e));
-const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
+// Cada encuentro tiene su página de reserva propia (/reservar/<clave>). Este selector lleva a ella;
+// los enlaces antiguos /reservar?encuentro=… redirigen directamente.
+const options = events
+  .filter((e) => !e.full && (e.reserveUrl || e.link))
+  .map((e) => ({ label: eventLabel(e), url: (e.reserveUrl ?? e.link)! }));
 ---
 
 <div class="picker" id="reserve-picker">
   <div class="step">
-    <label for="reserve-event">1. ¿A qué encuentro quieres venir?</label>
+    <label for="reserve-event">¿A qué encuentro quieres venir?</label>
     <select id="reserve-event">
       <option value="">Elige el encuentro…</option>
-      {options.map((o) => <option value={o}>{o}</option>)}
+      {options.map((o) => <option value={o.url} data-label={o.label}>{o.label}</option>)}
     </select>
   </div>
-  <div class="step">
-    <label for="reserve-places">2. ¿Cuántas plazas necesitas?</label>
-    <select id="reserve-places">
-      <option value="">Elige el número de plazas…</option>
-      {PLACES.map((n) => <option value={String(n)}>{n} {n === 1 ? "plaza" : "plazas"}</option>)}
-    </select>
-    <span class="hint">Si sois más de 10, escríbenos a info@encuentrossiloe.org.</span>
-  </div>
-  <p class="status" id="reserve-status" role="status" aria-live="polite">
-    Elige el encuentro y las plazas para poder enviar tus datos.
-  </p>
+  <a class="btn" id="reserve-go" href="#" aria-disabled="true">Continuar</a>
+  <p class="status">En el siguiente paso eliges las plazas y dejas tus datos. La confirmación te llega al momento por correo.</p>
 </div>
 
 <style>
@@ -66,9 +58,18 @@ const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
     outline-offset: 1px;
   }
 
-  .hint {
-    font-size: 13px;
-    color: var(--ink-muted);
+  .btn {
+    align-self: flex-start;
+    font-weight: 600;
+    padding: 14px 26px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: var(--white);
+    text-decoration: none;
+  }
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    pointer-events: none;
   }
 
   .status {
@@ -88,48 +89,24 @@ const PLACES = Array.from({ length: 10 }, (_, i) => i + 1);
 </style>
 
 <script>
-  import { setupLeadCompose } from "../scripts/leadCompose";
-
-  const PREFIX = "Reserva de plaza para: ";
-  const picker = document.getElementById("reserve-picker");
-
-  if (picker) {
-    const eventSel = document.getElementById("reserve-event") as HTMLSelectElement;
-    const placesSel = document.getElementById("reserve-places") as HTMLSelectElement;
-    const status = document.getElementById("reserve-status") as HTMLElement;
-    const host = document.querySelector<HTMLElement>("[data-lead-form]");
-
-    // Preselección desde ?encuentro=… (botón "Reservar plaza" de cada encuentro). También acepta
-    // enlaces antiguos sin fecha, siempre que identifiquen un único encuentro.
+  const sel = document.getElementById("reserve-event") as HTMLSelectElement | null;
+  const go = document.getElementById("reserve-go") as HTMLAnchorElement | null;
+  if (sel && go) {
+    const opts = Array.from(sel.options).filter((o) => o.value);
+    // Enlaces antiguos: /reservar?encuentro=<encuentro · fecha> (también sin fecha si no es ambiguo).
     const param = new URLSearchParams(location.search).get("encuentro")?.trim().toLowerCase();
     if (param) {
-      const opts = Array.from(eventSel.options).filter((o) => o.value);
-      const exact = opts.find((o) => o.value.toLowerCase() === param);
-      const partial = opts.filter((o) => o.value.toLowerCase().startsWith(param));
+      const label = (o: HTMLOptionElement) => (o.dataset.label ?? "").toLowerCase();
+      const exact = opts.find((o) => label(o) === param);
+      const partial = opts.filter((o) => label(o).startsWith(param));
       const match = exact ?? (partial.length === 1 ? partial[0] : undefined);
-      if (match) eventSel.value = match.value;
+      if (match) location.replace(match.value);
     }
-
-    const lead = setupLeadCompose({
-      host,
-      ready: () => Boolean(eventSel.value && placesSel.value),
-      header: () => `${PREFIX}${eventSel.value}. Número de plazas: ${placesSel.value}. `,
-      stripFull: /^Reserva de plaza para:[\s\S]*?Número de plazas:\s*[^.]*\.?\s*/,
-      onState: ({ ready, failOpen }) => {
-        status.classList.toggle("ok", ready);
-        status.classList.toggle("warn", failOpen && !ready);
-        if (ready) {
-          status.textContent = `Vas a reservar ${placesSel.value} ${placesSel.value === "1" ? "plaza" : "plazas"} para: ${eventSel.value}.`;
-        } else if (failOpen) {
-          status.textContent =
-            "Indica en el comentario del formulario a qué encuentro quieres venir y cuántas plazas necesitas.";
-        } else {
-          status.textContent = "Elige el encuentro y las plazas para poder enviar tus datos.";
-        }
-      },
-    });
-
-    eventSel.addEventListener("change", lead.refresh);
-    placesSel.addEventListener("change", lead.refresh);
+    const update = () => {
+      go.href = sel.value || "#";
+      go.setAttribute("aria-disabled", sel.value ? "false" : "true");
+    };
+    sel.addEventListener("change", update);
+    update();
   }
 </script>
