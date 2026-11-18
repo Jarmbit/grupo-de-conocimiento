@@ -33,6 +33,56 @@ const EVENTOS = {
     mapa: 'https://www.google.com/maps/search/?api=1&query=Condominio+Las+Palmas%2C+Costa+Rica',
     resumen: 'ciencia, universo y un origen con sentido, con v\u00eddeo y m\u00fasica en directo',
   },
+  jovenes: {
+    titulo: 'Encuentro jóvenes',
+    fecha: '2026-11-20',
+    cuando: 'viernes 20 de noviembre, 20:00 h',
+    lugar: 'Las Rozas (te enviaremos la dirección por privado)',
+    capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_JOVENES
+    banner: 'https://encuentrossiloe.org/images/email/jovenes-banner.jpg',
+    mapa: null, // dirección privada: sin botón «Cómo llegar»
+    resumen: 'la película Jesús de Nazaret, música en directo, testimonio y diálogo',
+  },
+  razonable: {
+    titulo: 'Encuentro «Dios: una creencia razonable»',
+    fecha: '2026-11-20',
+    cuando: 'viernes 20 de noviembre, 20:00 h',
+    lugar: 'Avenida de los Rubios 18, Las Rozas',
+    capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_RAZONABLE
+    banner: 'https://encuentrossiloe.org/images/email/razonable-banner.jpg',
+    mapa: 'https://www.google.com/maps/search/?api=1&query=Avenida+de+los+Rubios+18%2C+Las+Rozas',
+    resumen: 'vídeo y música en directo',
+  },
+  adultos: {
+    titulo: 'Encuentro adultos',
+    fecha: '2026-11-21',
+    cuando: 'sábado 21 de noviembre, 20:00 h',
+    lugar: 'Las Rozas (te enviaremos la dirección por privado)',
+    capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_ADULTOS
+    banner: 'https://encuentrossiloe.org/images/email/adultos-banner.jpg',
+    mapa: null, // dirección privada: sin botón «Cómo llegar»
+    resumen: 'música, la película Jesús de Nazaret, testimonio y diálogo',
+  },
+  burgos: {
+    titulo: 'Encuentro en Burgos',
+    fecha: '2026-11-28',
+    cuando: 'sábado 28 de noviembre, 18:00 h',
+    lugar: 'Auditorio Círculo Católico, C/ Concepción s/n, Burgos',
+    capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_BURGOS
+    banner: 'https://encuentrossiloe.org/images/email/burgos-banner.jpg',
+    mapa: 'https://www.google.com/maps/search/?api=1&query=C%C3%ADrculo+Cat%C3%B3lico+Calle+Concepci%C3%B3n%2C+Burgos',
+    resumen: 'la película Jesús de Nazaret y música en directo',
+  },
+  espinosa: {
+    titulo: 'Encuentro en Espinosa de los Monteros',
+    fecha: '2026-12-11',
+    cuando: 'viernes 11 de diciembre, 19:30 h',
+    lugar: 'Parroquia, Sancho García 9, Espinosa de los Monteros (Burgos)',
+    capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_ESPINOSA
+    banner: 'https://encuentrossiloe.org/images/email/espinosa-banner.jpg',
+    mapa: 'https://www.google.com/maps/search/?api=1&query=Calle+Sancho+Garc%C3%ADa+9%2C+Espinosa+de+los+Monteros',
+    resumen: 'vídeo Jesús de Nazaret, música en directo y picoteo para compartir al final',
+  },
 };
 
 const SITE = 'https://encuentrossiloe.org';
@@ -66,6 +116,7 @@ function doPost(e) {
     if (data.action === 'cancelar') return json_(cancelar_(data));
     if (data.action === 'boletin') return json_(boletin_(data));
     if (data.action === 'donativo') return json_(donativo_(data));
+    if (data.action === 'contacto') return json_(contacto_(data));
     return json_({ ok: false, error: 'accion_desconocida' });
   } catch (err) {
     console.error(err && err.stack ? err.stack : err);
@@ -473,6 +524,74 @@ function donativo_(d) {
   return { ok: true, enviado: true };
 }
 
+// ── Formularios de contacto (pide un encuentro, voluntariado, continuidad, habla con nosotros) ──
+const TIPOS_CONTACTO = {
+  'pide-un-encuentro': {
+    nombre: 'Pide un encuentro',
+    asunto: 'Hemos recibido tu solicitud de encuentro',
+    kicker: 'SOLICITUD RECIBIDA',
+    intro: 'Gracias por querer organizar un encuentro. Hemos recibido tu solicitud y nos pondremos en contacto contigo en los próximos días para concretarlo.',
+  },
+  voluntariado: {
+    nombre: 'Voluntariado',
+    asunto: 'Gracias por querer ayudar',
+    kicker: 'VOLUNTARIADO',
+    intro: 'Gracias por ofrecer tu tiempo y tu talento. Hemos recibido tus datos y te escribiremos pronto para contarte cómo puedes colaborar.',
+  },
+  continuidad: {
+    nombre: 'Continuidad (Hijos en el Hijo)',
+    asunto: 'Te has apuntado al itinerario «Hijos en el Hijo»',
+    kicker: 'HIJOS EN EL HIJO',
+    intro: 'Gracias por querer seguir caminando con nosotros. Comunicaremos las fechas del acompañamiento próximamente y te escribiremos en cuanto las tengamos.',
+  },
+  'habla-con-nosotros': {
+    nombre: 'Habla con nosotros',
+    asunto: 'Hemos recibido tu mensaje',
+    kicker: 'MENSAJE RECIBIDO',
+    intro: 'Gracias por escribirnos. Hemos recibido tu mensaje y lo leeremos con cariño; si nos has hecho una pregunta, te responderemos pronto.',
+  },
+};
+
+function contacto_(d) {
+  const t = TIPOS_CONTACTO[d.tipo];
+  if (!t) return { ok: false, error: 'tipo_desconocido' };
+  const nombre = limpiar_(d.nombre, 80);
+  const email = limpiar_(d.email, 120).toLowerCase();
+  const telefono = limpiar_(d.telefono, 30);
+  const mensaje = String(d.mensaje == null ? '' : d.mensaje).replace(/[\u0000-\u0009\u000b-\u001f<>]/g, ' ').trim().slice(0, 2000);
+  if (nombre.length < 2) return { ok: false, error: 'nombre_invalido' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, error: 'email_invalido' };
+  if (d.consentimiento !== true) return { ok: false, error: 'falta_consentimiento' };
+
+  const sh = pestana_('Solicitudes', ['Fecha', 'Tipo', 'Nombre', 'Email', 'Teléfono', 'Mensaje', 'Estado']);
+  sh.appendRow([new Date(), t.nombre, nombre, email, telefono, mensaje, 'Pendiente']);
+
+  const cita = mensaje
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:18px 22px;">` +
+      `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">LO QUE NOS HAS ESCRITO</div>` +
+      `<div style="margin-top:6px;font-size:15px;line-height:1.6;color:#1c2530;">${esc_(mensaje).replace(/\n/g, '<br>')}</div></td></tr></table>`
+    : '';
+  enviar_(
+    email,
+    t.asunto,
+    `Hola, ${nombre}:\n\n${t.intro}${mensaje ? '\n\nLo que nos has escrito:\n' + mensaje : ''}${FIRMA}`,
+    correoSimple_({
+      kicker: t.kicker,
+      titulo: `Gracias, ${primerNombre_(nombre)}`,
+      intro: t.intro,
+      parrafos: [cita, `Mientras tanto, puedes seguirnos en Instagram: <a href="https://www.instagram.com/encuentrossiloe" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.`].filter(Boolean),
+      nota: 'Recibes este correo porque nos has escrito desde encuentrossiloe.org.',
+    })
+  );
+  GmailApp.sendEmail(
+    EQUIPO,
+    `${t.nombre}: ${nombre}`,
+    `${nombre} <${email}>${telefono ? ' · ' + telefono : ''}\n\n${mensaje || '(sin mensaje)'}\n\nResponde a este correo para escribirle directamente.\nHoja: ${sh.getParent().getUrl()}`,
+    { name: REMITENTE, replyTo: email }
+  );
+  return { ok: true };
+}
+
 // Pestaña auxiliar del mismo libro (la crea con cabecera si no existe).
 function pestana_(nombre, cabecera) {
   const ss = hoja_().getParent();
@@ -487,6 +606,15 @@ function pestana_(nombre, cabecera) {
 
 // Pruebas: envían cada correo nuevo solo a esta dirección, sin tocar la hoja.
 const CORREO_PRUEBAS = 'jarmadae@gmail.com';
+function pruebaConfirmaciones() {
+  ['confirmada', 'espera', 'recordatorio'].forEach((tipo) => {
+    const c = contenidoCorreo_(tipo, EVENTOS.razonable, 'Juan Armada', 2, 'PRU-000000', 'prueba');
+    GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto, c.texto, { htmlBody: htmlCorreo_(EVENTOS.razonable, c), name: REMITENTE, replyTo: EQUIPO });
+  });
+  const c = contenidoCorreo_('confirmada', EVENTOS.jovenes, 'Juan Armada', 1, 'PRU-000000', 'prueba');
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto + ' (dirección privada)', c.texto, { htmlBody: htmlCorreo_(EVENTOS.jovenes, c), name: REMITENTE, replyTo: EQUIPO });
+}
+
 function pruebaCorreosNuevos() {
   const g = graciasCorreo_(EVENTOS.horche, 'Juan Armada');
   GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + g.asunto, g.texto, { htmlBody: g.html, name: REMITENTE, replyTo: EQUIPO });
@@ -576,20 +704,31 @@ function marco_(o) {
   );
 }
 
+// Correos de reserva (confirmada, plaza liberada, recordatorio, lista de espera), con el mismo
+// formato que el agradecimiento: bloque gris con los datos, bloque dorado de apoyo e Instagram.
 function htmlCorreo_(ev, c) {
+  const comoLlegar = c.boton && ev.mapa ? `<div style="margin-top:18px;">${botonHtml_(ev.mapa, 'Cómo llegar')}</div>` : '';
   const panel =
-    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:6px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">` +
+    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:20px 24px 22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">${c.apoyo ? 'TU RESERVA' : 'TU SOLICITUD'}</div>` +
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">` +
     filaDato_('FECHA Y HORA', mayus_(ev.cuando).replace(', ', ' · '), false) +
     filaDato_('LUGAR', ev.lugar, false) +
     filaDato_(c.etiquetaPlazas, c.plazas, true) +
-    `</table></td></tr></table></td></tr>`;
-  const boton = c.boton ? `<tr><td style="padding:20px 40px 0 40px;">${botonHtml_(c.mapa, 'Cómo llegar')}</td></tr>` : '';
-  const enlace = `<tr><td style="padding:28px 40px 4px 40px;font-size:15px;line-height:1.6;color:#1c2530;">${esc_(c.enlaceTxt)} <a href="${esc_(c.baja)}" style="color:#1f3a5f;font-weight:700;">${esc_(c.enlaceLabel)}</a>.</td></tr>`;
-  const apoyo = c.apoyo
-    ? `<tr><td style="padding:20px 40px 0 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>` +
-      `<td ${fondo_('#fbf3e6')}border-left:3px solid #d9a356;padding:14px 18px;font-size:15px;line-height:1.6;color:#1c2530;">` +
-      `${esc_(APOYO_TXT)} <a href="${APOYA}" style="color:#8e6020;font-weight:700;">en nuestra web</a>.</td></tr></table></td></tr>`
+    `</table>${comoLlegar}</td></tr></table></td></tr>`;
+  const vivir = ev.resumen
+    ? `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Qué vas a vivir:</strong> ${esc_(ev.resumen)}.</td></tr>`
     : '';
+  const apoyo = c.apoyo
+    ? `<tr><td style="padding:16px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#fbefd6')}"><tr><td ${fondo_('#fbefd6')}padding:22px 24px;">` +
+      `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#8e6020;">APOYA ESTA MISIÓN</div>` +
+      `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">${esc_(APOYO_TXT)}.</div>` +
+      botonHtml_(APOYA, 'Hacer un donativo', '#d9a356', '#0f2138') +
+      `<div style="margin-top:12px;font-size:13px;line-height:1.5;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</div>` +
+      `</td></tr></table></td></tr>`
+    : '';
+  const ig = `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Síguenos en Instagram</strong> para estar al día de los próximos encuentros: <a href="https://www.instagram.com/encuentrossiloe" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.</td></tr>`;
+  const enlace = `<tr><td style="padding:20px 40px 0 40px;font-size:14px;line-height:1.6;color:#5b6570;">${esc_(c.enlaceTxt)} <a href="${esc_(c.baja)}" style="color:#1f3a5f;font-weight:700;">${esc_(c.enlaceLabel)}</a>.</td></tr>`;
   return marco_({
     preheader: c.intro,
     banner: ev.banner,
@@ -597,7 +736,7 @@ function htmlCorreo_(ev, c) {
     kicker: c.kicker,
     titulo: c.titulo,
     intro: c.intro,
-    bloques: panel + boton + enlace + apoyo,
+    bloques: panel + vivir + apoyo + ig + enlace,
     cierre: esc_(c.cierre) + '<br>Equipo de Encuentros Siloé',
     nota: 'Recibes este correo porque has reservado plaza en encuentrossiloe.org.',
   });

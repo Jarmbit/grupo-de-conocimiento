@@ -1,0 +1,129 @@
+---
+// Formulario de contacto propio (sustituye al widget de Bewe). Envía a /api/contacto, que guarda la
+// solicitud en la hoja de la asociación (pestaña «Solicitudes»), acusa recibo y avisa a info@.
+// Lleva [data-lead-form] para que los selectores de la página (pedir un encuentro) puedan escribir
+// sus datos al principio del mensaje y bloquear el envío hasta tenerlos (scripts/leadCompose.ts).
+import { contact } from "../data/content";
+
+interface Props {
+  tipo: "pide-un-encuentro" | "voluntariado" | "continuidad" | "habla-con-nosotros";
+  /** Texto inicial del mensaje. */
+  prefill?: string;
+  /** Etiqueta del campo de mensaje. */
+  mensajeLabel?: string;
+  boton?: string;
+}
+const { tipo, prefill = "", mensajeLabel = "Mensaje", boton = "Enviar" } = Astro.props;
+---
+
+<div class="form-wrap">
+  <form class="cform" data-lead-form data-tipo={tipo} novalidate>
+    <label>Nombre y apellidos
+      <input name="nombre" required autocomplete="name" maxlength="80" />
+    </label>
+    <label>Correo electrónico
+      <input name="email" type="email" required autocomplete="email" maxlength="120" />
+    </label>
+    <label>Teléfono <span class="opt">(opcional)</span>
+      <input name="telefono" type="tel" autocomplete="tel" maxlength="30" />
+    </label>
+    <label>{mensajeLabel}
+      <textarea name="mensaje" rows="5" maxlength="2000">{prefill}</textarea>
+    </label>
+    <!-- Cebo anti-bots: oculto para las personas. -->
+    <div class="cebo" aria-hidden="true">
+      <label>Web <input name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <label class="check">
+      <input type="checkbox" name="consentimiento" required />
+      <span>
+        He leído la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a> y consiento
+        que Encuentros Siloé trate mis datos para responder a este mensaje y contactarme sobre él.
+      </span>
+    </label>
+    <button type="submit" class="btn">{boton}</button>
+    <p class="msg" role="status" aria-live="polite"></p>
+  </form>
+  <p class="fallback">
+    ¿Prefieres escribirnos directamente? <a href={`mailto:${contact.email}`}>{contact.email}</a>
+  </p>
+</div>
+
+<style>
+  .form-wrap { display: flex; flex-direction: column; gap: 18px; padding: 28px; background: var(--bg-alt); border-radius: var(--radius-card); }
+  .cform { display: flex; flex-direction: column; gap: 18px; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 600; color: var(--primary-dark); }
+  .opt { font-weight: 400; font-size: 13px; color: var(--ink-muted); }
+  input, textarea { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--border-subtle); background: var(--white); color: var(--ink); min-height: 46px; font-weight: 400; }
+  textarea { resize: vertical; line-height: 1.5; }
+  input:focus-visible, textarea:focus-visible { outline: 2px solid var(--secondary); outline-offset: 1px; }
+  .check { flex-direction: row; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+  .check input { min-height: 0; width: 20px; height: 20px; margin-top: 2px; flex: none; }
+  .check a { color: var(--primary); text-decoration: underline; }
+  .cebo { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .btn { font: inherit; font-weight: 600; padding: 14px 22px; border: 0; border-radius: 999px; background: var(--primary); color: var(--white); cursor: pointer; min-height: 48px; }
+  .btn:disabled { opacity: 0.55; cursor: progress; }
+  .msg { font-size: 15px; line-height: 1.45; color: var(--ink-muted); }
+  .msg:empty { display: none; }
+  .msg.ok { color: var(--primary-dark); font-weight: 600; }
+  .msg.err { color: #8a3b12; }
+  .fallback { font-size: 14px; color: var(--ink-muted); }
+  .fallback a { color: var(--primary); text-decoration: underline; }
+</style>
+
+<script>
+  const ERRORES: Record<string, string> = {
+    email_invalido: "Revisa el correo electrónico.",
+    nombre_invalido: "Indica tu nombre y apellidos.",
+    falta_consentimiento: "Necesitamos que aceptes la política de privacidad.",
+  };
+  document.querySelectorAll<HTMLFormElement>("form.cform").forEach((form) => {
+    const msg = form.querySelector<HTMLElement>(".msg")!;
+    const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+    const prefill = form.querySelector("textarea")?.value ?? "";
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.className = "msg";
+      const f = new FormData(form);
+      const consentimiento = f.get("consentimiento") === "on";
+      if (!form.reportValidity() || !consentimiento) {
+        msg.classList.add("err");
+        msg.textContent = consentimiento ? "Revisa los campos marcados." : ERRORES.falta_consentimiento;
+        return;
+      }
+      btn.disabled = true;
+      msg.textContent = "Enviando…";
+      try {
+        const res = await fetch("/api/contacto", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tipo: form.dataset.tipo,
+            nombre: f.get("nombre"),
+            email: f.get("email"),
+            telefono: f.get("telefono"),
+            mensaje: f.get("mensaje"),
+            website: f.get("website"),
+            consentimiento,
+          }),
+        });
+        const d = await res.json().catch(() => ({}));
+        if (d?.ok) {
+          msg.classList.add("ok");
+          msg.textContent = "¡Recibido! Te hemos enviado un correo de confirmación. Si no lo ves, mira en spam.";
+          form.reset();
+          const area = form.querySelector("textarea");
+          if (area) area.value = prefill;
+        } else {
+          msg.classList.add("err");
+          msg.textContent = ERRORES[d?.error] ?? "No hemos podido enviar tu mensaje. Inténtalo de nuevo o escríbenos a info@encuentrossiloe.org.";
+        }
+      } catch {
+        msg.classList.add("err");
+        msg.textContent = "No hemos podido conectar. Inténtalo de nuevo o escríbenos a info@encuentrossiloe.org.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>

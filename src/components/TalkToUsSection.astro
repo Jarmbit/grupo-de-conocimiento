@@ -1,5 +1,5 @@
 ---
-import { contact } from "../data/content";
+import ContactForm from "./ContactForm.astro";
 ---
 
 <section id="habla-con-nosotros" data-screen-label="Habla con nosotros" class="talk-to-us">
@@ -12,13 +12,7 @@ import { contact } from "../data/content";
     </p>
   </div>
 
-  <div class="form">
-    <div data-lead-form data-pk="pk_0qWzBZIIahKTIPIDtjTNQ5tmsrZIczFbxYKA2yQKqjg" data-country="ES"></div>
-    <p class="fallback">
-      ¿Prefieres escribirnos directamente? <a href={`mailto:${contact.email}`}>{contact.email}</a>
-    </p>
-  </div>
-  <script is:inline src="https://storage.googleapis.com/sdk-os/prod/widgets/lead-form/latest/lead-form.js" defer></script>
+  <ContactForm tipo="habla-con-nosotros" mensajeLabel="¿Qué nos quieres contar?" />
 </section>
 
 <style>
@@ -60,14 +54,6 @@ import { contact } from "../data/content";
     line-height: var(--text-body-line);
   }
 
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    padding: 32px;
-    background: var(--bg-alt);
-    border-radius: var(--radius-card);
-  }
 
   .field-group {
     display: flex;
@@ -129,24 +115,8 @@ import { contact } from "../data/content";
     outline-offset: 1px;
   }
 
-  /* Estilo del formulario de Bewe (variables que lee el widget). */
-  [data-lead-form] {
-    --lead-form-primary: #1f3a5f;
-    --lead-form-background: #edf0f3;
-    --lead-form-text: #1c2530;
-    --lead-form-border: #c9d2dc;
-    --lead-form-font: "Source Sans 3", sans-serif;
-  }
 
-  .fallback {
-    font-size: 14px;
-    color: var(--ink-muted);
-  }
 
-  .fallback a {
-    text-decoration: underline;
-    color: var(--primary);
-  }
 
   :global(.btn-primary) {
     align-self: flex-start;

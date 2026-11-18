@@ -1,8 +1,8 @@
 // Lógica común de los formularios con datos obligatorios (reservas, pedir un encuentro):
-//  - bloquea el formulario de Bewe hasta que los datos de la página estén completos;
-//  - escribe esos datos como cabecera del campo "Comentario" (con el evento de input que Bewe espera);
+//  - bloquea el formulario propio (ContactForm) hasta que los datos de la página estén completos;
+//  - escribe esos datos como cabecera del campo "Mensaje";
 //  - repone la cabecera si la persona la borra o la estropea, conservando lo que haya escrito;
-//  - si el formulario de Bewe no aparece o cambia, no bloquea a nadie (fail-open a los 20 s).
+//  - si el formulario no aparece, no bloquea a nadie (fail-open a los 20 s).
 
 interface Options {
   host: HTMLElement | null;
@@ -23,9 +23,9 @@ export function setupLeadCompose(o: Options) {
   let applied = "";
   let failOpen = false;
 
-  const getArea = () => host?.shadowRoot?.querySelector<HTMLTextAreaElement>("textarea") ?? null;
+  const getArea = () => host?.querySelector<HTMLTextAreaElement>("textarea") ?? null;
 
-  // Escribe el valor de forma que el formulario de Bewe lo registre como si lo hubiera tecleado.
+  // Escribe el valor como si se hubiera tecleado.
   const setValue = (area: HTMLTextAreaElement, value: string) => {
     const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")?.set;
     setter?.call(area, value);
@@ -67,13 +67,13 @@ export function setupLeadCompose(o: Options) {
 
   refresh();
 
-  // Esperar al formulario de Bewe (se carga desde su CDN).
+  // Esperar al formulario.
   let tries = 0;
   const waiter = setInterval(() => {
     if (getArea()) {
       clearInterval(waiter);
       compose();
-      const root = host?.shadowRoot;
+      const root = host;
       // Antes de enviar (clic en "Enviar" o envío del formulario) se vuelve a asegurar la cabecera.
       root?.addEventListener("click", () => compose(), true);
       root?.addEventListener("submit", () => compose(), true);
@@ -81,7 +81,7 @@ export function setupLeadCompose(o: Options) {
       // Si el formulario se vuelve a pintar y pierde el texto, se repone sin molestar mientras se escribe.
       setInterval(() => {
         const area = getArea();
-        if (area && o.ready() && root?.activeElement !== area && !area.value.startsWith(applied)) compose();
+        if (area && o.ready() && document.activeElement !== area && !area.value.startsWith(applied)) compose();
       }, 1000);
     } else if (++tries > 80) {
       clearInterval(waiter);

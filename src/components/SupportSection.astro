@@ -1,7 +1,7 @@
 ---
 import { donationModels, highlightDonation, contact, bankAccount } from "../data/content";
 
-// Voluntariado va al formulario de contacto de Bewe; el resto de modalidades no pagadas, por email.
+// Voluntariado va a su formulario (/voluntariado); el resto de modalidades no pagadas, por email.
 function supportHref(key: string, title: string) {
   if (key === "voluntariado") return "/voluntariado";
   const subject = `Quiero informarme: ${title}`;

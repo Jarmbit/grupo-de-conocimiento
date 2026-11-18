@@ -267,7 +267,7 @@ export interface EventItem {
   link?: string;
   /** Aforo completo: no se admiten más reservas. */
   full?: boolean;
-  /** Página propia de reserva (formulario directo, sin el widget de Bewe). */
+  /** Página propia de reserva (/reservar/<clave>, gestionada con el Apps Script). */
   reserveUrl?: string;
 }
 
@@ -279,6 +279,7 @@ export const events: EventItem[] = [
     location: "Las Rozas · 20:00h · Dirección por privado",
     spots: "Película Jesús de Nazaret, música en directo, testimonio y diálogo",
     image: "/images/events/encuentro-jovenes.jpg",
+    reserveUrl: "/reservar/jovenes",
   },
   {
     month: "Nov",
@@ -287,6 +288,7 @@ export const events: EventItem[] = [
     location: "Avenida de los Rubios 18, Las Rozas · 20:00h",
     spots: "Vídeo y música en directo",
     image: "/images/events/encuentro-dios-razonable.jpg",
+    reserveUrl: "/reservar/razonable",
   },
   {
     month: "Nov",
@@ -304,6 +306,7 @@ export const events: EventItem[] = [
     location: "Las Rozas · 20:00h · Dirección por invitación",
     spots: "Música, película, testimonio y diálogo",
     image: "/images/events/encuentro-adultos.jpg",
+    reserveUrl: "/reservar/adultos",
   },
   {
     month: "Nov",
@@ -312,6 +315,7 @@ export const events: EventItem[] = [
     location: "Auditorio Círculo Católico, C/ Concepción s/n, Burgos · 18:00h",
     spots: "Película Jesús de Nazaret y música en directo",
     image: "/images/events/encuentro-burgos.jpg",
+    reserveUrl: "/reservar/burgos",
   },
   {
     month: "Dic",
@@ -329,6 +333,7 @@ export const events: EventItem[] = [
     location: "Parroquia, Sancho García 9, Espinosa de los Monteros (Burgos) · 19:30h",
     spots: "Vídeo Jesús de Nazaret, música en directo y picoteo al final",
     image: "/images/events/encuentro-espinosa.jpg",
+    reserveUrl: "/reservar/espinosa",
   },
 ];
 
@@ -486,7 +491,7 @@ export interface DonationModel {
 }
 
 export const donationModels: DonationModel[] = [
-  // Socio mensual (suscripción) pendiente hasta tener el CRM de Bewe: se reactivará entonces.
+  // Socio mensual (suscripción) pendiente: se reactivará más adelante.
   {
     key: "puntual",
     title: "Donación puntual",

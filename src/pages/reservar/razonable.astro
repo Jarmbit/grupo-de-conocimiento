@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Dios: una creencia razonable · Encuentros Siloé"
+  description="Reserva tu plaza en «Dios: una creencia razonable» (viernes 20 de noviembre, 20:00 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="razonable"
+    titulo="Dios: una creencia razonable"
+    cuando="Viernes 20 de noviembre · 20:00 h"
+    lugar="Avenida de los Rubios 18, Las Rozas"
+  />
+  <Footer />
+</Layout>

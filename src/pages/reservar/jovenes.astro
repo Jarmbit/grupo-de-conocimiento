@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ReservaDirecta from "../../components/ReservaDirecta.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Reservar plaza — Encuentro jóvenes · Encuentros Siloé"
+  description="Reserva tu plaza en «Encuentro jóvenes» (viernes 20 de noviembre, 20:00 h). Confirmación inmediata por correo."
+>
+  <Header />
+  <ReservaDirecta
+    evento="jovenes"
+    titulo="Encuentro jóvenes"
+    cuando="Viernes 20 de noviembre · 20:00 h"
+    lugar="Las Rozas · te enviaremos la dirección por privado"
+  />
+  <Footer />
+</Layout>

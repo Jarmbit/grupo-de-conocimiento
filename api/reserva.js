@@ -6,7 +6,7 @@
 
 import { callScript } from "./_lib/script.js";
 
-const EVENTOS = new Set(["horche", "costarica"]);
+const EVENTOS = new Set(["horche", "costarica", "jovenes", "razonable", "adultos", "burgos", "espinosa"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
 
