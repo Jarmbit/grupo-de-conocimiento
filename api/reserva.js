@@ -4,29 +4,11 @@
 //   GET  /api/reserva?libres=<evento> → plazas libres
 //   GET  /api/reserva?cancelar=ID.TOKEN → cancela (enlace del correo; devuelve una página HTML)
 
+import { callScript } from "./_lib/script.js";
+
 const EVENTOS = new Set(["horche", "costarica"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
-
-async function callScript(payload, env = process.env) {
-  const url = env.RESERVAS_SCRIPT_URL;
-  const secret = env.RESERVAS_SECRET;
-  if (!url || !secret) return { status: 503, body: { ok: false, error: "no_configurado" } };
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ ...payload, secret }),
-      signal: AbortSignal.timeout(20000),
-    });
-    const body = await res.json();
-    return { status: 200, body };
-  } catch (err) {
-    console.error("Reservas: fallo llamando al Apps Script", err?.message ?? err);
-    return { status: 502, body: { ok: false, error: "servicio_no_disponible" } };
-  }
-}
 
 const page = (title, text) => `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — Encuentros Siloé</title>
 <body style="font-family:system-ui,sans-serif;max-width:520px;margin:12vh auto;padding:0 20px;color:#1c2530;line-height:1.5">

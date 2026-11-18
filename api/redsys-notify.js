@@ -1,4 +1,5 @@
 import { sendDonationEmail } from "./_lib/notify-email.js";
+import { callScript } from "./_lib/script.js";
 import { decodeParameters, getConfig, isAuthorised, sign, signaturesMatch } from "./_lib/redsys.js";
 
 // Notificación servidor a servidor (Ds_Merchant_MerchantURL). Redsys envía un POST
@@ -74,6 +75,19 @@ export default async function handler(req, res) {
     } catch (err) {
       // El pago ya está hecho: un fallo de email nunca debe romper la respuesta a Redsys.
       console.error("Email donación: fallo inesperado", err instanceof Error ? err.message : err);
+    }
+    // Agradecimiento al donante (correo corporativo desde info@, vía Apps Script). Solo pagos reales.
+    if (config.mode === "live" && donor?.e) {
+      const KIND = { puntual: "Donación puntual", patrocinio: "Patrocinio de un encuentro", socio: "Cuota de socio" };
+      const r = await callScript({
+        action: "donativo",
+        pedido: String(order),
+        nombre: donor.n ?? "",
+        email: donor.e,
+        importe: (Number(data.Ds_Amount ?? data.DS_AMOUNT) / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" }),
+        tipo: KIND[donor.k] ?? "Donación",
+      });
+      console.log("Agradecimiento donante:", r.body?.ok ? (r.body.repetido ? "ya enviado" : "enviado") : r.body?.error);
     }
   }
 
