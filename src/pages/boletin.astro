@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
-import LeadFormSection from "../components/LeadFormSection.astro";
+import BoletinForm from "../components/BoletinForm.astro";
 import Footer from "../components/Footer.astro";
 ---
 
@@ -10,12 +10,6 @@ import Footer from "../components/Footer.astro";
   description="Suscríbete al boletín de Encuentros Siloé: noticias, vídeos y próximos encuentros."
 >
   <Header />
-  <LeadFormSection
-    id="boletin"
-    kicker="Boletín"
-    title="Suscríbete al boletín"
-    intro="Un resumen mensual con noticias, vídeos y próximos encuentros. Déjanos tu nombre y tu correo."
-    prefill="Quiero suscribirme al boletín de Encuentros Siloé."
-  />
+  <BoletinForm />
   <Footer />
 </Layout>

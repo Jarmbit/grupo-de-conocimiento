@@ -42,9 +42,9 @@ const MAX_PLAZAS_POR_RESERVA = 6;
 
 const COLUMNAS = [
   'Registro', 'ID', 'Evento', 'Nombre', 'Email', 'Teléfono', 'Plazas',
-  'Comentario', 'Estado', 'Token', 'Consentimiento', 'Recordatorio',
+  'Comentario', 'Estado', 'Token', 'Consentimiento', 'Recordatorio', 'Agradecimiento',
 ];
-const C = { REG: 0, ID: 1, EVENTO: 2, NOMBRE: 3, EMAIL: 4, TEL: 5, PLAZAS: 6, COM: 7, ESTADO: 8, TOKEN: 9, CONS: 10, REC: 11 };
+const C = { REG: 0, ID: 1, EVENTO: 2, NOMBRE: 3, EMAIL: 4, TEL: 5, PLAZAS: 6, COM: 7, ESTADO: 8, TOKEN: 9, CONS: 10, REC: 11, GRACIAS: 12 };
 const ESTADO = { OK: 'Confirmada', ESPERA: 'Lista de espera', CANCELADA: 'Cancelada' };
 
 // ── Puntos de entrada web ──────────────────────────────────────────────────────────────────
@@ -64,6 +64,8 @@ function doPost(e) {
     if (data.action === 'libres') return json_(libres_(data));
     if (data.action === 'reservar') return json_(reservar_(data));
     if (data.action === 'cancelar') return json_(cancelar_(data));
+    if (data.action === 'boletin') return json_(boletin_(data));
+    if (data.action === 'donativo') return json_(donativo_(data));
     return json_({ ok: false, error: 'accion_desconocida' });
   } catch (err) {
     console.error(err && err.stack ? err.stack : err);
@@ -112,7 +114,7 @@ function reservar_(d) {
   const id = d.evento.slice(0, 3).toUpperCase() + '-' + Utilities.getUuid().slice(0, 6).toUpperCase();
   const token = Utilities.getUuid().replace(/-/g, '').slice(0, 16);
 
-  sh.appendRow([new Date(), id, d.evento, nombre, email, telefono, plazas, comentario, estado, token, 'Sí', '']);
+  sh.appendRow([new Date(), id, d.evento, nombre, email, telefono, plazas, comentario, estado, token, 'Sí', '', '']);
 
   enviarReserva_(estado === ESTADO.OK ? 'confirmada' : 'espera', ev, email, nombre, plazas, id, token);
   enviar_(
@@ -172,6 +174,27 @@ function enviarRecordatorios() {
     enviarReserva_('recordatorio', ev, r[C.EMAIL], r[C.NOMBRE], Number(r[C.PLAZAS]), r[C.ID], r[C.TOKEN]);
     sh.getRange(i + 2, C.REC + 1).setValue(new Date());
   });
+  enviarAgradecimientos();
+}
+
+// ── Agradecimiento (cada día; el día siguiente al encuentro, a quien tenía plaza confirmada) ──
+function enviarAgradecimientos() {
+  const ayer = Utilities.formatDate(new Date(Date.now() - 24 * 3600 * 1000), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const sh = hoja_();
+  if (!sh.getRange(1, C.GRACIAS + 1).getValue()) sh.getRange(1, C.GRACIAS + 1).setValue(COLUMNAS[C.GRACIAS]);
+  const filas = filas_(sh);
+  const enviados = {};
+  filas.forEach((r, i) => {
+    const ev = EVENTOS[r[C.EVENTO]];
+    if (!ev || ev.fecha !== ayer || r[C.ESTADO] !== ESTADO.OK || r[C.GRACIAS]) return;
+    const c = graciasCorreo_(ev, r[C.NOMBRE]);
+    enviar_(r[C.EMAIL], c.asunto, c.texto, c.html);
+    sh.getRange(i + 2, C.GRACIAS + 1).setValue(new Date());
+    enviados[ev.titulo] = (enviados[ev.titulo] || 0) + 1;
+  });
+  Object.keys(enviados).forEach((t) =>
+    enviar_(EQUIPO, `Agradecimiento enviado · ${t}`, `Se ha enviado el correo de agradecimiento a ${enviados[t]} persona(s) con plaza confirmada.`)
+  );
 }
 
 // ── Configuración inicial (ejecutar UNA vez a mano desde el editor) ────────────────────────
@@ -322,6 +345,168 @@ function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
   return c;
 }
 
+// Correo de agradecimiento tras un encuentro (versión general del de Málaga).
+function graciasCorreo_(ev, nombre) {
+  const yo = primerNombre_(nombre);
+  const habla = SITE + '/habla-con-nosotros';
+  const continuidad = SITE + '/continuidad';
+  const ig = 'https://www.instagram.com/encuentrossiloe';
+  const asunto = `Gracias por acompañarnos — ${ev.titulo}`;
+  const intro = `Gracias de corazón por venir al ${ev.titulo}. Ha sido un regalo compartir este encuentro contigo, y esperamos que sea el comienzo de un camino.`;
+  const bloques =
+    `<tr><td style="padding:20px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5b6570;">NOS AYUDARÍA MUCHO</div>` +
+    `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Conocer tus impresiones: qué te pareció el encuentro, qué sentiste y qué mejorarías. Puedes contárnoslo en el apartado «Habla con nosotros» de la web.</div>` +
+    botonHtml_(habla, 'Cuéntanos tu experiencia') +
+    `</td></tr></table></td></tr>` +
+    `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">¿Y después qué?</strong> El encuentro no termina: puedes seguir caminando con nosotros en el itinerario <a href="${continuidad}" style="color:#1f3a5f;font-weight:700;">«Hijos en el Hijo»</a>.</td></tr>` +
+    `<tr><td style="padding:16px 40px 8px 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#fbefd6')}"><tr><td ${fondo_('#fbefd6')}padding:22px 24px;">` +
+    `<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#8e6020;">APOYA ESTA MISIÓN</div>` +
+    `<div style="margin:6px 0 16px 0;font-size:16px;line-height:1.6;color:#1c2530;">Si quieres ayudarnos a llevar los encuentros a más lugares, puedes hacer un donativo de la cantidad que quieras.</div>` +
+    botonHtml_(APOYA, 'Hacer un donativo', '#d9a356', '#0f2138') +
+    `<div style="margin-top:12px;font-size:13px;line-height:1.5;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</div>` +
+    `</td></tr></table></td></tr>` +
+    `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Síguenos en Instagram</strong> para estar al día de los próximos encuentros: <a href="${ig}" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.</td></tr>`;
+  const html = marco_({
+    preheader: intro,
+    banner: ev.banner,
+    bannerAlt: `Cartel del ${ev.titulo}`,
+    kicker: 'GRACIAS',
+    titulo: `Gracias por acompañarnos, ${yo}`,
+    intro,
+    bloques,
+    cierre: 'Un abrazo y que Dios te bendiga,<br>Equipo de Encuentros Siloé',
+    nota: 'Recibes este correo porque reservaste plaza en este encuentro.',
+  });
+  const texto =
+    `Hola, ${nombre}:\n\n${intro}\n\nNos ayudaría mucho conocer tus impresiones: qué te pareció, qué sentiste y qué mejorarías. Puedes contárnoslo aquí:\n${habla}\n\n` +
+    `El encuentro no termina: puedes seguir caminando con nosotros en el itinerario «Hijos en el Hijo»:\n${continuidad}\n\n` +
+    `Si quieres ayudarnos a llevar los encuentros a más lugares, puedes hacer un donativo de la cantidad que quieras:\n${APOYA}\n(Aviso: por ahora los donativos no desgravan fiscalmente.)` +
+    FIRMA;
+  return { asunto, html, texto };
+}
+
+// Correo sencillo con la maquetación corporativa y sin cartel (boletín, donativos).
+function correoSimple_(o) {
+  const bloques = (o.parrafos || [])
+    .map((p) => `<tr><td style="padding:16px 40px 0 40px;font-size:16px;line-height:1.6;color:#1c2530;">${p}</td></tr>`)
+    .join('') + (o.boton ? `<tr><td style="padding:24px 40px 0 40px;">${botonHtml_(o.boton.url, o.boton.texto)}</td></tr>` : '');
+  return marco_({
+    preheader: o.intro,
+    kicker: o.kicker,
+    titulo: o.titulo,
+    intro: o.intro,
+    bloques,
+    cierre: 'Un abrazo,<br>Equipo de Encuentros Siloé',
+    nota: o.nota,
+  });
+}
+
+// ── Boletín: alta desde la web ─────────────────────────────────────────────────────────────
+function boletin_(d) {
+  const nombre = limpiar_(d.nombre, 80);
+  const email = limpiar_(d.email, 120).toLowerCase();
+  if (nombre.length < 2) return { ok: false, error: 'nombre_invalido' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, error: 'email_invalido' };
+  if (d.consentimiento !== true) return { ok: false, error: 'falta_consentimiento' };
+
+  const sh = pestana_('Boletín', ['Alta', 'Nombre', 'Email', 'Consentimiento', 'Estado']);
+  const ya = filas_(sh).some((r) => String(r[2]).toLowerCase() === email && r[4] !== 'Baja');
+  if (ya) return { ok: true, yaSuscrito: true };
+  sh.appendRow([new Date(), nombre, email, 'Sí', 'Activa']);
+
+  const yo = primerNombre_(nombre);
+  const intro = 'Gracias por suscribirte al boletín de Encuentros Siloé. Una vez al mes te contaremos las novedades, los vídeos y los próximos encuentros.';
+  enviar_(
+    email,
+    'Te damos la bienvenida al boletín de Encuentros Siloé',
+    `Hola, ${nombre}:\n\n${intro}\n\nMientras tanto, puedes ver los próximos encuentros en ${SITE}\n\nSi en algún momento no quieres recibirlo, responde a este correo y te daremos de baja.${FIRMA}`,
+    correoSimple_({
+      kicker: 'BOLETÍN',
+      titulo: `¡Te damos la bienvenida, ${yo}!`,
+      intro,
+      parrafos: [
+        `Mientras tanto, puedes ver los próximos encuentros en la web y seguirnos en Instagram: <a href="https://www.instagram.com/encuentrossiloe" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.`,
+        'Si en algún momento no quieres recibirlo, responde a este correo y te daremos de baja.',
+      ],
+      boton: { url: SITE + '/#encuentros', texto: 'Ver próximos encuentros' },
+      nota: 'Recibes este correo porque te has suscrito al boletín en encuentrossiloe.org.',
+    })
+  );
+  enviar_(EQUIPO, `Nueva suscripción al boletín: ${nombre}`, `${nombre} <${email}> se ha suscrito al boletín.\nHoja: ${sh.getParent().getUrl()}`);
+  return { ok: true };
+}
+
+// ── Donativo: agradecimiento al donante (lo llama /api/redsys-notify tras un pago aprobado) ──
+function donativo_(d) {
+  const pedido = limpiar_(d.pedido, 30);
+  const nombre = limpiar_(d.nombre, 80);
+  const email = limpiar_(d.email, 120).toLowerCase();
+  const importe = limpiar_(d.importe, 20);
+  const tipo = limpiar_(d.tipo, 40);
+  if (!pedido) return { ok: false, error: 'pedido_invalido' };
+
+  const sh = pestana_('Donativos', ['Fecha', 'Pedido', 'Nombre', 'Email', 'Importe', 'Tipo', 'Agradecimiento']);
+  if (filas_(sh).some((r) => String(r[1]) === pedido)) return { ok: true, repetido: true }; // Redsys puede notificar dos veces
+  const valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  sh.appendRow([new Date(), pedido, nombre, email, importe, tipo, valido ? new Date() : 'Sin correo']);
+  if (!valido) return { ok: true, enviado: false };
+
+  const yo = nombre ? primerNombre_(nombre) : '';
+  const intro = `Hemos recibido tu donativo de ${importe}. Muchas gracias por tu generosidad: nos ayuda a llevar los encuentros a más lugares y a más personas.`;
+  enviar_(
+    email,
+    'Gracias por tu donativo',
+    `Hola${nombre ? ', ' + nombre : ''}:\n\n${intro}\n\nReferencia del pago: ${pedido}\nAviso: por ahora los donativos no desgravan fiscalmente.\n\nRezamos por ti y por tus intenciones.${FIRMA}`,
+    correoSimple_({
+      kicker: 'DONATIVO RECIBIDO',
+      titulo: yo ? `¡Gracias, ${yo}!` : '¡Gracias!',
+      intro,
+      parrafos: [
+        `Referencia del pago: <strong>${esc_(pedido)}</strong>${tipo ? ' · ' + esc_(tipo) : ''}.`,
+        'Rezamos por ti y por tus intenciones.',
+        '<span style="font-size:13px;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</span>',
+      ],
+      nota: 'Recibes este correo porque has hecho un donativo en encuentrossiloe.org.',
+    })
+  );
+  return { ok: true, enviado: true };
+}
+
+// Pestaña auxiliar del mismo libro (la crea con cabecera si no existe).
+function pestana_(nombre, cabecera) {
+  const ss = hoja_().getParent();
+  let sh = ss.getSheetByName(nombre);
+  if (!sh) {
+    sh = ss.insertSheet(nombre);
+    sh.appendRow(cabecera);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// Pruebas: envían cada correo nuevo solo a esta dirección, sin tocar la hoja.
+const CORREO_PRUEBAS = 'jarmadae@gmail.com';
+function pruebaCorreosNuevos() {
+  const g = graciasCorreo_(EVENTOS.horche, 'Juan Armada');
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + g.asunto, g.texto, { htmlBody: g.html, name: REMITENTE, replyTo: EQUIPO });
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] Te damos la bienvenida al boletín de Encuentros Siloé', 'Prueba', {
+    htmlBody: correoSimple_({
+      kicker: 'BOLETÍN', titulo: '¡Te damos la bienvenida, Juan!',
+      intro: 'Gracias por suscribirte al boletín de Encuentros Siloé. Una vez al mes te contaremos las novedades, los vídeos y los próximos encuentros.',
+      parrafos: ['Mientras tanto, puedes ver los próximos encuentros en la web y seguirnos en Instagram: <a href="https://www.instagram.com/encuentrossiloe" style="color:#1f3a5f;font-weight:700;">@encuentrossiloe</a>.', 'Si en algún momento no quieres recibirlo, responde a este correo y te daremos de baja.'],
+      boton: { url: SITE + '/#encuentros', texto: 'Ver próximos encuentros' },
+      nota: 'Recibes este correo porque te has suscrito al boletín en encuentrossiloe.org.',
+    }), name: REMITENTE, replyTo: EQUIPO });
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] Gracias por tu donativo', 'Prueba', {
+    htmlBody: correoSimple_({
+      kicker: 'DONATIVO RECIBIDO', titulo: '¡Gracias, Juan!',
+      intro: 'Hemos recibido tu donativo de 20,00 €. Muchas gracias por tu generosidad: nos ayuda a llevar los encuentros a más lugares y a más personas.',
+      parrafos: ['Referencia del pago: <strong>PRUEBA123</strong> · Donación puntual.', 'Rezamos por ti y por tus intenciones.', '<span style="font-size:13px;color:#5b6570;">Aviso: por ahora los donativos no desgravan fiscalmente.</span>'],
+      nota: 'Recibes este correo porque has hecho un donativo en encuentrossiloe.org.',
+    }), name: REMITENTE, replyTo: EQUIPO });
+}
+
 function enviarReserva_(tipo, ev, email, nombre, plazas, id, token) {
   const c = contenidoCorreo_(tipo, ev, nombre, plazas, id, token);
   enviar_(email, c.asunto, c.texto, htmlCorreo_(ev, c));
@@ -371,7 +556,9 @@ function marco_(o) {
     `<td style="color:#ffffff;font-size:13px;font-weight:700;letter-spacing:3px;font-family:${F_SANS};">ENCUENTROS SILOÉ</td></tr></table></td></tr>` +
     `<tr><td height="3" ${fondo_('#d9a356')}height:3px;line-height:3px;font-size:3px;">&nbsp;</td></tr>` +
     // banner
-    `<tr><td ${fondo_('#0f2138')}"><img src="${esc_(o.banner)}" width="600" alt="${esc_(o.bannerAlt)}" style="display:block;width:100%;max-width:600px;height:auto;border:0;color:#ffffff;font-size:16px;"></td></tr>` +
+    (o.banner
+      ? `<tr><td ${fondo_('#0f2138')}"><img src="${esc_(o.banner)}" width="600" alt="${esc_(o.bannerAlt)}" style="display:block;width:100%;max-width:600px;height:auto;border:0;color:#ffffff;font-size:16px;"></td></tr>`
+      : '') +
     // titular
     `<tr><td style="padding:36px 40px 8px 40px;">` +
     `<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#8e6020;">${esc_(o.kicker)}</div>` +
