@@ -260,6 +260,11 @@ function enlaceCancelar_(id, token) {
   return `${SITE}/api/reserva?cancelar=${id}.${token}`;
 }
 
+// Invitación a apoyar (correos de reserva confirmada, plaza liberada y recordatorio).
+const APOYA = SITE + '/apoya';
+const APOYO_TXT = '¿Quieres ayudarnos a llevar los encuentros a más lugares? Puedes hacer un donativo de la cantidad que quieras';
+const APOYO_TXT_PLANO = `\n\n${APOYO_TXT}:\n${APOYA}`;
+
 function plazasTxt_(n) {
   return n === 1 ? '1 plaza' : `${n} plazas`;
 }
@@ -277,7 +282,7 @@ function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
   const yo = primerNombre_(nombre);
   const baja = enlaceCancelar_(id, token);
   const datosTxt = `- Fecha y hora: ${ev.cuando}\n- Lugar: ${ev.lugar}\n`;
-  const c = { baja, mapa: ev.mapa, plazas: plazasTxt_(plazas), etiquetaPlazas: 'PLAZAS' };
+  const c = { baja, mapa: ev.mapa, plazas: plazasTxt_(plazas), etiquetaPlazas: 'PLAZAS', apoyo: tipo !== 'espera' };
 
   if (tipo === 'espera') {
     c.asunto = `Lista de espera — ${ev.titulo}`;
@@ -299,7 +304,7 @@ function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
     c.enlaceTxt = 'Si al final no puedes venir, avísanos para dar tu plaza a otra persona:';
     c.enlaceLabel = 'liberar mi plaza';
     c.cierre = '¡Te esperamos!';
-    c.texto = `Hola, ${nombre}:\n\nTe recordamos que mañana es el ${ev.titulo}, con ${plazasTxt_(plazas)} a tu nombre:\n${datosTxt}\nSi al final no puedes venir, avísanos para dar tu plaza a otra persona:\n${baja}\n\n¡Te esperamos!${FIRMA}`;
+    c.texto = `Hola, ${nombre}:\n\nTe recordamos que mañana es el ${ev.titulo}, con ${plazasTxt_(plazas)} a tu nombre:\n${datosTxt}\nSi al final no puedes venir, avísanos para dar tu plaza a otra persona:\n${baja}\n\n¡Te esperamos!${APOYO_TXT_PLANO}${FIRMA}`;
   } else {
     const prom = tipo === 'promocionada';
     c.asunto = prom ? `¡Se ha liberado plaza! — ${ev.titulo}` : `Reserva confirmada — ${ev.titulo}`;
@@ -312,7 +317,7 @@ function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
     c.enlaceTxt = '¿No puedes venir? Avísanos para dar tu plaza a otra persona:';
     c.enlaceLabel = 'liberar mi plaza';
     c.cierre = 'Un abrazo,';
-    c.texto = `Hola, ${nombre}:\n\n${c.intro}\n${datosTxt}\n¡Te esperamos!\n\nSi no puedes venir, avísanos para liberar tu plaza para otra persona:\n${baja}${FIRMA}`;
+    c.texto = `Hola, ${nombre}:\n\n${c.intro}\n${datosTxt}\n¡Te esperamos!\n\nSi no puedes venir, avísanos para liberar tu plaza para otra persona:\n${baja}${APOYO_TXT_PLANO}${FIRMA}`;
   }
   return c;
 }
@@ -393,6 +398,11 @@ function htmlCorreo_(ev, c) {
     `</table></td></tr></table></td></tr>`;
   const boton = c.boton ? `<tr><td style="padding:20px 40px 0 40px;">${botonHtml_(c.mapa, 'Cómo llegar')}</td></tr>` : '';
   const enlace = `<tr><td style="padding:28px 40px 4px 40px;font-size:15px;line-height:1.6;color:#1c2530;">${esc_(c.enlaceTxt)} <a href="${esc_(c.baja)}" style="color:#1f3a5f;font-weight:700;">${esc_(c.enlaceLabel)}</a>.</td></tr>`;
+  const apoyo = c.apoyo
+    ? `<tr><td style="padding:20px 40px 0 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>` +
+      `<td ${fondo_('#fbf3e6')}border-left:3px solid #d9a356;padding:14px 18px;font-size:15px;line-height:1.6;color:#1c2530;">` +
+      `${esc_(APOYO_TXT)} <a href="${APOYA}" style="color:#8e6020;font-weight:700;">en nuestra web</a>.</td></tr></table></td></tr>`
+    : '';
   return marco_({
     preheader: c.intro,
     banner: ev.banner,
@@ -400,7 +410,7 @@ function htmlCorreo_(ev, c) {
     kicker: c.kicker,
     titulo: c.titulo,
     intro: c.intro,
-    bloques: panel + boton + enlace,
+    bloques: panel + boton + enlace + apoyo,
     cierre: esc_(c.cierre) + '<br>Equipo de Encuentros Siloé',
     nota: 'Recibes este correo porque has reservado plaza en encuentrossiloe.org.',
   });
