@@ -828,3 +828,141 @@ function enviarGraciasMalaga() {
   GmailApp.sendEmail(EQUIPO, GRACIAS_MALAGA.asunto, c.texto, { htmlBody: c.html, bcc, name: REMITENTE, replyTo: EQUIPO });
   borrador.deleteDraft();
 }
+
+// ── Resumen diario para el comité ──────────────────────────────────────────────────────────
+// Cada mañana manda a COMITE lo pendiente: próximos encuentros con su ocupación, acciones
+// pendientes de la pestaña «Contactos» (columna «Acción pendiente»), solicitudes sin atender y
+// reservas de las últimas 24 h. Para instalarlo, ejecutar UNA vez instalarResumenComite().
+const COMITE = 'comite@encuentrossiloe.org';
+const DIAS_PROXIMOS = 14;
+
+function resumenComite() {
+  const r = datosResumen_();
+  const c = correoResumen_(r);
+  GmailApp.sendEmail(COMITE, c.asunto, c.texto, { htmlBody: c.html, name: REMITENTE, replyTo: EQUIPO });
+}
+
+// Prueba: el mismo resumen, solo a CORREO_PRUEBAS.
+function pruebaResumenComite() {
+  const c = correoResumen_(datosResumen_());
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto, c.texto, { htmlBody: c.html, name: REMITENTE, replyTo: EQUIPO });
+}
+
+function instalarResumenComite() {
+  ScriptApp.getProjectTriggers()
+    .filter((t) => t.getHandlerFunction() === 'resumenComite')
+    .forEach((t) => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('resumenComite').timeBased().everyDays(1).atHour(8).create(); // entre 8:00 y 9:00
+}
+
+function datosResumen_() {
+  const tz = Session.getScriptTimeZone();
+  const hoy = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');
+  const limite = Utilities.formatDate(new Date(Date.now() + DIAS_PROXIMOS * 24 * 3600 * 1000), tz, 'yyyy-MM-dd');
+  const sh = hoja_();
+  const ss = sh.getParent();
+  const filas = filas_(sh);
+
+  const proximos = Object.keys(EVENTOS)
+    .filter((k) => EVENTOS[k].fecha >= hoy && EVENTOS[k].fecha <= limite)
+    .sort((a, b) => (EVENTOS[a].fecha < EVENTOS[b].fecha ? -1 : 1))
+    .map((k) => ({
+      titulo: EVENTOS[k].titulo,
+      cuando: EVENTOS[k].cuando,
+      ocupadas: ocupadas_(filas, k),
+      capacidad: capacidad_(k),
+      espera: filas.filter((f) => f[C.EVENTO] === k && f[C.ESTADO] === ESTADO.ESPERA).length,
+    }));
+
+  const desde = Date.now() - 24 * 3600 * 1000;
+  const nuevas = filas
+    .filter((f) => f[C.REG] instanceof Date && f[C.REG].getTime() >= desde && EVENTOS[f[C.EVENTO]])
+    .map((f) => ({ nombre: f[C.NOMBRE], evento: EVENTOS[f[C.EVENTO]].titulo, plazas: Number(f[C.PLAZAS]), estado: f[C.ESTADO] }));
+
+  return { hoy, proximos, nuevas, pendientes: tablaPendiente_(ss, 'Contactos'), solicitudes: solicitudesPendientes_(ss), url: ss.getUrl() };
+}
+
+// Filas de «Contactos» con algo en «Acción pendiente», las que llevan más tiempo esperando primero.
+function tablaPendiente_(ss, nombre) {
+  const sh = ss.getSheetByName(nombre);
+  if (!sh) return [];
+  const datos = sh.getDataRange().getValues();
+  const cab = datos[0].map(String);
+  const col = (t) => cab.indexOf(t);
+  const iNom = col('Nombre'), iAcc = col('Acción pendiente'), iEst = col('Estado'), iFecha = col('Primer contacto'), iTel = col('Teléfono');
+  if (iNom < 0 || iAcc < 0) return [];
+  return datos
+    .slice(1)
+    .filter((f) => String(f[iAcc]).trim())
+    .map((f) => ({
+      nombre: String(f[iNom]),
+      accion: String(f[iAcc]).trim(),
+      estado: iEst >= 0 ? String(f[iEst]) : '',
+      telefono: iTel >= 0 ? String(f[iTel]) : '',
+      fecha: iFecha >= 0 && f[iFecha] instanceof Date ? f[iFecha].getTime() : 0,
+    }))
+    .sort((a, b) => a.fecha - b.fecha);
+}
+
+function solicitudesPendientes_(ss) {
+  const sh = ss.getSheetByName('Solicitudes');
+  if (!sh) return [];
+  return sh
+    .getDataRange()
+    .getValues()
+    .slice(1)
+    .filter((f) => String(f[6]).trim() === 'Pendiente')
+    .map((f) => ({ tipo: String(f[1]), nombre: String(f[2]), email: String(f[3]), mensaje: String(f[5]).slice(0, 160) }));
+}
+
+function correoResumen_(r) {
+  const fecha = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy');
+  const total = r.pendientes.length + r.solicitudes.length;
+  const asunto = `Pendientes de hoy (${fecha}) · ${total} ${total === 1 ? 'tarea' : 'tareas'}`;
+  const intro = total
+    ? `Hoy tenemos ${total} ${total === 1 ? 'cosa pendiente' : 'cosas pendientes'}. Cuando hagáis una, vaciad su «Acción pendiente» en la hoja y desaparecerá del resumen de mañana.`
+    : 'Hoy no hay nada pendiente en la hoja. ¡Buen trabajo!';
+
+  const seccion = (titulo, filas) =>
+    `<tr><td style="padding:24px 40px 0 40px;"><div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#8e6020;">${esc_(titulo)}</div>${filas}</td></tr>`;
+  const item = (principal, secundario) =>
+    `<div style="padding:10px 0;border-bottom:1px solid #e3e7ec;font-size:15px;line-height:1.5;color:#1c2530;"><strong style="color:#0f2138;">${esc_(principal)}</strong>` +
+    (secundario ? `<br><span style="color:#5b6570;">${esc_(secundario)}</span>` : '') + `</div>`;
+  const vacio = (t) => `<div style="padding:10px 0;font-size:15px;color:#5b6570;">${esc_(t)}</div>`;
+
+  const lineaEv = (e) => `${mayus_(e.cuando)} · ${e.ocupadas} de ${e.capacidad} plazas${e.espera ? ` · ${e.espera} en lista de espera` : ''}`;
+  const lineaPend = (p) => [p.estado, p.telefono].filter(Boolean).join(' · ');
+
+  const bloques =
+    seccion(`PRÓXIMOS ENCUENTROS (${DIAS_PROXIMOS} DÍAS)`, r.proximos.length ? r.proximos.map((e) => item(e.titulo, lineaEv(e))).join('') : vacio('No hay encuentros en los próximos días.')) +
+    seccion(`ACCIONES PENDIENTES (${r.pendientes.length})`, r.pendientes.length ? r.pendientes.map((p) => item(`${p.nombre}: ${p.accion}`, lineaPend(p))).join('') : vacio('Nada pendiente en «Contactos».')) +
+    (r.solicitudes.length ? seccion(`SOLICITUDES DE LA WEB SIN ATENDER (${r.solicitudes.length})`, r.solicitudes.map((s) => item(`${s.tipo}: ${s.nombre}`, [s.email, s.mensaje].filter(Boolean).join(' · '))).join('')) : '') +
+    seccion('RESERVAS DE LAS ÚLTIMAS 24 H', r.nuevas.length ? r.nuevas.map((n) => item(`${n.nombre} · ${plazasTxt_(n.plazas)}`, `${n.evento} · ${n.estado}`)).join('') : vacio('Ninguna reserva nueva.')) +
+    `<tr><td style="padding:28px 40px 0 40px;">${botonHtml_(r.url, 'Abrir la hoja')}</td></tr>`;
+
+  const html = marco_({
+    preheader: intro,
+    kicker: 'RESUMEN DEL DÍA',
+    titulo: `Pendientes del ${fecha}`,
+    intro,
+    bloques,
+    cierre: 'Equipo de Encuentros Siloé',
+    nota: 'Correo interno para el comité, generado cada mañana a partir de la hoja de reservas.',
+  });
+
+  const t = [];
+  t.push(intro, '', `PRÓXIMOS ENCUENTROS (${DIAS_PROXIMOS} días)`);
+  r.proximos.forEach((e) => t.push(`- ${e.titulo}: ${lineaEv(e)}`));
+  if (!r.proximos.length) t.push('- Ninguno');
+  t.push('', `ACCIONES PENDIENTES (${r.pendientes.length})`);
+  r.pendientes.forEach((p) => t.push(`- ${p.nombre}: ${p.accion}${lineaPend(p) ? ' (' + lineaPend(p) + ')' : ''}`));
+  if (r.solicitudes.length) {
+    t.push('', `SOLICITUDES DE LA WEB SIN ATENDER (${r.solicitudes.length})`);
+    r.solicitudes.forEach((s) => t.push(`- ${s.tipo}: ${s.nombre} <${s.email}>`));
+  }
+  t.push('', 'RESERVAS DE LAS ÚLTIMAS 24 H');
+  r.nuevas.forEach((n) => t.push(`- ${n.nombre} · ${plazasTxt_(n.plazas)} · ${n.evento} · ${n.estado}`));
+  if (!r.nuevas.length) t.push('- Ninguna');
+  t.push('', 'Hoja: ' + r.url);
+  return { asunto, html, texto: t.join('\n') };
+}
