@@ -307,6 +307,7 @@ export const events: EventItem[] = [
     spots: "Música, película, testimonio y diálogo",
     image: "/images/events/encuentro-adultos.jpg",
     reserveUrl: "/reservar/adultos",
+    full: true,
   },
   {
     month: "Nov",
