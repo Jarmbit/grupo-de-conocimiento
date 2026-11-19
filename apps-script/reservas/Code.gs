@@ -165,7 +165,7 @@ function reservar_(d) {
   const id = d.evento.slice(0, 3).toUpperCase() + '-' + Utilities.getUuid().slice(0, 6).toUpperCase();
   const token = Utilities.getUuid().replace(/-/g, '').slice(0, 16);
 
-  sh.appendRow([new Date(), id, d.evento, nombre, email, telefono, plazas, comentario, estado, token, 'Sí', '', '']);
+  sh.appendRow([new Date(), id, d.evento, texto_(nombre), email, texto_(telefono), plazas, comentario, estado, token, 'Sí', '', '']);
 
   enviarReserva_(estado === ESTADO.OK ? 'confirmada' : 'espera', ev, email, nombre, plazas, id, token);
   enviar_(
@@ -309,6 +309,13 @@ function ocupadas_(filas, evento) {
 
 function limpiar_(v, max) {
   return String(v == null ? '' : v).replace(/[\u0000-\u001f<>]/g, ' ').trim().slice(0, max);
+}
+
+// Valores que la hoja podría leer como fórmula (p. ej. un teléfono «+34 …» o un texto que empieza
+// por «=»): el apóstrofo inicial los guarda como texto y no se ve en la celda.
+function texto_(v) {
+  const t = String(v == null ? '' : v);
+  return /^[=+\-@]/.test(t) ? "'" + t : t;
 }
 
 function esc_(s) {
@@ -464,7 +471,7 @@ function boletin_(d) {
   const sh = pestana_('Boletín', ['Alta', 'Nombre', 'Email', 'Consentimiento', 'Estado']);
   const ya = filas_(sh).some((r) => String(r[2]).toLowerCase() === email && r[4] !== 'Baja');
   if (ya) return { ok: true, yaSuscrito: true };
-  sh.appendRow([new Date(), nombre, email, 'Sí', 'Activa']);
+  sh.appendRow([new Date(), texto_(nombre), email, 'Sí', 'Activa']);
 
   const yo = primerNombre_(nombre);
   const intro = 'Gracias por suscribirte al boletín de Encuentros Siloé. Una vez al mes te contaremos las novedades, los vídeos y los próximos encuentros.';
@@ -500,7 +507,7 @@ function donativo_(d) {
   const sh = pestana_('Donativos', ['Fecha', 'Pedido', 'Nombre', 'Email', 'Importe', 'Tipo', 'Agradecimiento']);
   if (filas_(sh).some((r) => String(r[1]) === pedido)) return { ok: true, repetido: true }; // Redsys puede notificar dos veces
   const valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-  sh.appendRow([new Date(), pedido, nombre, email, importe, tipo, valido ? new Date() : 'Sin correo']);
+  sh.appendRow([new Date(), pedido, texto_(nombre), email, importe, tipo, valido ? new Date() : 'Sin correo']);
   if (!valido) return { ok: true, enviado: false };
 
   const yo = nombre ? primerNombre_(nombre) : '';
@@ -564,7 +571,7 @@ function contacto_(d) {
   if (d.consentimiento !== true) return { ok: false, error: 'falta_consentimiento' };
 
   const sh = pestana_('Solicitudes', ['Fecha', 'Tipo', 'Nombre', 'Email', 'Teléfono', 'Mensaje', 'Estado']);
-  sh.appendRow([new Date(), t.nombre, nombre, email, telefono, mensaje, 'Pendiente']);
+  sh.appendRow([new Date(), t.nombre, texto_(nombre), email, texto_(telefono), texto_(mensaje), 'Pendiente']);
 
   const cita = mensaje
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ${fondo_('#edf0f3')}"><tr><td ${fondo_('#edf0f3')}padding:18px 22px;">` +
