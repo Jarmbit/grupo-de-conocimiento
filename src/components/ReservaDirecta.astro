@@ -6,8 +6,10 @@ interface Props {
   titulo: string;
   cuando: string;
   lugar: string;
+  /** Aforo completo: se muestra el aviso y no el formulario. */
+  completo?: boolean;
 }
-const { evento, titulo, cuando, lugar } = Astro.props;
+const { evento, titulo, cuando, lugar, completo = false } = Astro.props;
 const PLAZAS = [1, 2, 3, 4, 5, 6];
 ---
 
@@ -19,6 +21,13 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
     <p class="aforo" id="reserva-aforo" role="status" aria-live="polite"></p>
   </div>
 
+  {completo ? (
+    <div class="cerrado" role="status">
+      <strong>Aforo completo</strong>
+      <p>Ya no quedan plazas para este encuentro y las reservas están cerradas. Puedes ver los
+      próximos encuentros en la <a href="/#encuentros">página de inicio</a>.</p>
+    </div>
+  ) : (
   <form id="reserva-form" class="form" novalidate>
     <label>Nombre y apellidos
       <input name="nombre" required autocomplete="name" maxlength="80" />
@@ -52,6 +61,7 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
     <button type="submit" class="btn" id="reserva-enviar">Reservar plaza</button>
     <p class="msg" id="reserva-msg" role="status" aria-live="polite"></p>
   </form>
+  )}
 
   <p class="fallback">
     ¿Prefieres escribirnos? <a href="mailto:info@encuentrossiloe.org">info@encuentrossiloe.org</a>
@@ -87,6 +97,9 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
   .msg { font-size: 15px; line-height: 1.45; color: var(--ink-muted); }
   .msg.ok { color: var(--primary-dark); font-weight: 600; }
   .msg.err { color: #8a3b12; }
+  .cerrado { display: flex; flex-direction: column; gap: 8px; padding: 24px 28px; background: var(--bg-alt); border-left: 4px solid #8a3b12; border-radius: 0 var(--radius-card) var(--radius-card) 0; color: var(--ink); line-height: 1.5; }
+  .cerrado strong { color: #8a3b12; font-size: 18px; }
+  .cerrado a { color: var(--primary); text-decoration: underline; }
   .fallback { text-align: center; font-size: 14px; color: var(--ink-muted); }
   .fallback a { color: var(--primary); text-decoration: underline; }
 </style>
