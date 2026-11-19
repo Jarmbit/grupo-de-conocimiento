@@ -37,10 +37,11 @@ const EVENTOS = {
     titulo: 'Encuentro jóvenes',
     fecha: '2026-11-20',
     cuando: 'viernes 20 de noviembre, 20:00 h',
-    lugar: 'Las Rozas (te enviaremos la dirección por privado)',
+    lugar: 'Calle Eucalipto 22, Las Rozas (Madrid)',
     capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_JOVENES
     banner: 'https://encuentrossiloe.org/images/email/jovenes-banner.jpg',
-    mapa: null, // dirección privada: sin botón «Cómo llegar»
+    mapa: 'https://www.google.com/maps/search/?api=1&query=Calle+Eucalipto+22%2C+Las+Rozas%2C+Madrid',
+    casa: true, // encuentro en una casa: se pide traer algo para picar
     resumen: 'la película Jesús de Nazaret, música en directo, testimonio y diálogo',
   },
   razonable: {
@@ -57,10 +58,11 @@ const EVENTOS = {
     titulo: 'Encuentro adultos',
     fecha: '2026-11-21',
     cuando: 'sábado 21 de noviembre, 20:00 h',
-    lugar: 'Las Rozas (te enviaremos la dirección por privado)',
+    lugar: 'Calle Eucalipto 22, Las Rozas (Madrid)',
     capacidad: 100, // provisional: ajústalo en Propiedades del script → CAPACIDAD_ADULTOS
     banner: 'https://encuentrossiloe.org/images/email/adultos-banner.jpg',
-    mapa: null, // dirección privada: sin botón «Cómo llegar»
+    mapa: 'https://www.google.com/maps/search/?api=1&query=Calle+Eucalipto+22%2C+Las+Rozas%2C+Madrid',
+    casa: true, // encuentro en una casa: se pide traer algo para picar
     resumen: 'música, la película Jesús de Nazaret, testimonio y diálogo',
   },
   burgos: {
@@ -346,6 +348,9 @@ const APOYA = SITE + '/apoya';
 const APOYO_TXT = '¿Quieres ayudarnos a llevar los encuentros a más lugares? Puedes hacer un donativo de la cantidad que quieras';
 const APOYO_TXT_PLANO = `\n\n${APOYO_TXT}:\n${APOYA}`;
 
+// Encuentros en una casa (ev.casa): cada uno trae algo para compartir.
+const PICOTEO_TXT = 'El encuentro es en una casa: si puedes, trae algo para picar y compartir entre todos.';
+
 function plazasTxt_(n) {
   return n === 1 ? '1 plaza' : `${n} plazas`;
 }
@@ -362,7 +367,8 @@ function primerNombre_(nombre) {
 function contenidoCorreo_(tipo, ev, nombre, plazas, id, token) {
   const yo = primerNombre_(nombre);
   const baja = enlaceCancelar_(id, token);
-  const datosTxt = `- Fecha y hora: ${ev.cuando}\n- Lugar: ${ev.lugar}\n`;
+  const datosTxt = `- Fecha y hora: ${ev.cuando}\n- Lugar: ${ev.lugar}\n` +
+    (ev.casa && tipo !== 'espera' ? `\n${PICOTEO_TXT}\n` : '');
   const c = { baja, mapa: ev.mapa, plazas: plazasTxt_(plazas), etiquetaPlazas: 'PLAZAS', apoyo: tipo !== 'espera' };
 
   if (tipo === 'espera') {
@@ -619,7 +625,7 @@ function pruebaConfirmaciones() {
     GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto, c.texto, { htmlBody: htmlCorreo_(EVENTOS.razonable, c), name: REMITENTE, replyTo: EQUIPO });
   });
   const c = contenidoCorreo_('confirmada', EVENTOS.jovenes, 'Juan Armada', 1, 'PRU-000000', 'prueba');
-  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto + ' (dirección privada)', c.texto, { htmlBody: htmlCorreo_(EVENTOS.jovenes, c), name: REMITENTE, replyTo: EQUIPO });
+  GmailApp.sendEmail(CORREO_PRUEBAS, '[PRUEBA] ' + c.asunto + ' (encuentro en casa)', c.texto, { htmlBody: htmlCorreo_(EVENTOS.jovenes, c), name: REMITENTE, replyTo: EQUIPO });
 }
 
 function pruebaCorreosNuevos() {
@@ -723,6 +729,9 @@ function htmlCorreo_(ev, c) {
     filaDato_('LUGAR', ev.lugar, false) +
     filaDato_(c.etiquetaPlazas, c.plazas, true) +
     `</table>${comoLlegar}</td></tr></table></td></tr>`;
+  const picoteo = ev.casa && c.apoyo
+    ? `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Trae algo para picar:</strong> el encuentro es en una casa, así que si puedes trae algo para compartir entre todos.</td></tr>`
+    : '';
   const vivir = ev.resumen
     ? `<tr><td style="padding:20px 40px 4px 40px;font-size:16px;line-height:1.6;color:#1c2530;"><strong style="color:#0f2138;">Qué vas a vivir:</strong> ${esc_(ev.resumen)}.</td></tr>`
     : '';
@@ -743,7 +752,7 @@ function htmlCorreo_(ev, c) {
     kicker: c.kicker,
     titulo: c.titulo,
     intro: c.intro,
-    bloques: panel + vivir + apoyo + ig + enlace,
+    bloques: panel + picoteo + vivir + apoyo + ig + enlace,
     cierre: esc_(c.cierre) + '<br>Equipo de Encuentros Siloé',
     nota: 'Recibes este correo porque has reservado plaza en encuentrossiloe.org.',
   });
