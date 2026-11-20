@@ -9,6 +9,8 @@ import { callScript } from "./_lib/script.js";
 const EVENTOS = new Set(["horche", "costarica", "jovenes", "razonable", "adultos", "burgos", "espinosa"]);
 // Encuentros con el aforo completo: no se admiten reservas ni lista de espera (sí cancelaciones).
 const CERRADOS = new Set(["adultos"]);
+// Encuentros ya celebrados: no se admiten reservas (sí cancelaciones de reservas antiguas).
+const CELEBRADOS = new Set(["horche", "jovenes", "razonable"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
 
@@ -53,6 +55,7 @@ export default async function handler(req, res, env = process.env) {
   const email = clean(body.email, 120);
   const plazas = Number(body.plazas);
   if (!EVENTOS.has(evento)) return res.status(400).json({ ok: false, error: "evento_desconocido" });
+  if (CELEBRADOS.has(evento)) return res.status(409).json({ ok: false, error: "evento_celebrado" });
   if (CERRADOS.has(evento)) return res.status(409).json({ ok: false, error: "aforo_completo" });
   if (clean(body.nombre, 80).length < 2) return res.status(400).json({ ok: false, error: "nombre_invalido" });
   if (!EMAIL_RE.test(email)) return res.status(400).json({ ok: false, error: "email_invalido" });

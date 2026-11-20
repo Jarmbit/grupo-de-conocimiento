@@ -274,33 +274,6 @@ export interface EventItem {
 export const events: EventItem[] = [
   {
     month: "Nov",
-    day: "20",
-    title: "Encuentro jóvenes",
-    location: "Las Rozas · 20:00h · Dirección por privado",
-    spots: "Película Jesús de Nazaret, música en directo, testimonio y diálogo",
-    image: "/images/events/encuentro-jovenes.jpg",
-    reserveUrl: "/reservar/jovenes",
-  },
-  {
-    month: "Nov",
-    day: "20",
-    title: "Dios: una creencia razonable",
-    location: "Avenida de los Rubios 18, Las Rozas · 20:00h",
-    spots: "Vídeo y música en directo",
-    image: "/images/events/encuentro-dios-razonable.jpg",
-    reserveUrl: "/reservar/razonable",
-  },
-  {
-    month: "Nov",
-    day: "20",
-    title: "Encuentro en Horche",
-    location: "Prolongación San Roque, 1, Horche (Guadalajara) · 20:00h",
-    spots: "Vídeo Jesús de Nazaret, música en directo y picoteo al final",
-    image: "/images/events/encuentro-horche.jpg",
-    reserveUrl: "/reservar/horche",
-  },
-  {
-    month: "Nov",
     day: "21",
     title: "Encuentro adultos",
     location: "Las Rozas · 20:00h · Dirección por invitación",
@@ -351,6 +324,24 @@ export interface PastEvent {
 
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
 export const pastEvents: PastEvent[] = [
+  {
+    title: "Encuentro en Horche",
+    location: "Prolongación San Roque, 1, Horche (Guadalajara)",
+    date: "20 de noviembre de 2026",
+    photos: ["/images/eventos-pasados/horche/horche-cartel.jpg"],
+  },
+  {
+    title: "Encuentro jóvenes",
+    location: "Las Rozas",
+    date: "20 de noviembre de 2026",
+    photos: ["/images/eventos-pasados/jovenes/jovenes-cartel.jpg"],
+  },
+  {
+    title: "Dios: una creencia razonable",
+    location: "Avenida de los Rubios 18, Las Rozas",
+    date: "20 de noviembre de 2026",
+    photos: ["/images/eventos-pasados/dios-razonable/dios-razonable-cartel.jpg"],
+  },
   {
     title: "Encuentro en Málaga",
     location: "El Cielo, Málaga",

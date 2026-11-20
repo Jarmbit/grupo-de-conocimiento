@@ -8,8 +8,10 @@ interface Props {
   lugar: string;
   /** Aforo completo: se muestra el aviso y no el formulario. */
   completo?: boolean;
+  /** Encuentro ya celebrado: se muestra el aviso y no el formulario. */
+  celebrado?: boolean;
 }
-const { evento, titulo, cuando, lugar, completo = false } = Astro.props;
+const { evento, titulo, cuando, lugar, completo = false, celebrado = false } = Astro.props;
 const PLAZAS = [1, 2, 3, 4, 5, 6];
 ---
 
@@ -21,7 +23,13 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
     <p class="aforo" id="reserva-aforo" role="status" aria-live="polite"></p>
   </div>
 
-  {completo ? (
+  {celebrado ? (
+    <div class="cerrado" role="status">
+      <strong>Este encuentro ya se celebró</strong>
+      <p>Gracias a todos los que nos acompañasteis. Puedes ver los próximos encuentros en la
+      <a href="/#encuentros">página de inicio</a>.</p>
+    </div>
+  ) : completo ? (
     <div class="cerrado" role="status">
       <strong>Aforo completo</strong>
       <p>Ya no quedan plazas para este encuentro y las reservas están cerradas. Puedes ver los
