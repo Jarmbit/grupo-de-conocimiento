@@ -8,9 +8,9 @@ import { callScript } from "./_lib/script.js";
 
 const EVENTOS = new Set(["horche", "costarica", "jovenes", "razonable", "adultos", "burgos", "espinosa"]);
 // Encuentros con el aforo completo: no se admiten reservas ni lista de espera (sí cancelaciones).
-const CERRADOS = new Set(["adultos"]);
+const CERRADOS = new Set([]);
 // Encuentros ya celebrados: no se admiten reservas (sí cancelaciones de reservas antiguas).
-const CELEBRADOS = new Set(["horche", "jovenes", "razonable"]);
+const CELEBRADOS = new Set(["horche", "jovenes", "razonable", "adultos"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, max);
 
