@@ -71,6 +71,7 @@
 </style>
 
 <script>
+  import { medir } from "../scripts/medir";
   const form = document.getElementById("boletin-form") as HTMLFormElement | null;
   if (form) {
     const msg = document.getElementById("boletin-msg") as HTMLElement;
@@ -101,6 +102,7 @@
         });
         const d = await res.json().catch(() => ({}));
         if (d?.ok) {
+          if (!d.yaSuscrito) medir("alta_boletin");
           msg.classList.add("ok");
           msg.textContent = d.yaSuscrito
             ? "Este correo ya estaba suscrito. ¡Gracias!"

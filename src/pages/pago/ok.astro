@@ -51,3 +51,19 @@ import { contact } from "../../data/content";
     justify-content: center;
   }
 </style>
+
+<script>
+  import { medir } from "../../scripts/medir";
+  // Una vez por visita: recargar la página no cuenta un donativo nuevo. El aviso de cookies carga
+  // la etiqueta al momento si ya estaban aceptadas; se espera un instante por si acaso.
+  try {
+    if (!sessionStorage.getItem("siloe-donativo-medido")) {
+      setTimeout(() => {
+        medir("donativo");
+        sessionStorage.setItem("siloe-donativo-medido", "1");
+      }, 500);
+    }
+  } catch {
+    /* sin sessionStorage: no se mide */
+  }
+</script>

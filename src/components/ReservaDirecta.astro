@@ -113,6 +113,7 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
 </style>
 
 <script>
+  import { medir } from "../scripts/medir";
   const section = document.querySelector<HTMLElement>("section.reserva");
   const form = document.getElementById("reserva-form") as HTMLFormElement | null;
   if (section && form) {
@@ -173,6 +174,10 @@ const PLAZAS = [1, 2, 3, 4, 5, 6];
         });
         const d = await res.json().catch(() => ({}));
         if (d?.ok) {
+          medir(d.estado === "Lista de espera" ? "lista_espera" : "reserva_plaza", {
+            encuentro: evento,
+            plazas: Number(f.get("plazas")) || 1,
+          });
           msg.classList.add("ok");
           msg.textContent =
             d.estado === "Lista de espera"
