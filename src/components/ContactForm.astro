@@ -72,6 +72,7 @@ const { tipo, prefill = "", mensajeLabel = "Mensaje", boton = "Enviar" } = Astro
 </style>
 
 <script>
+  import { medir } from "../scripts/medir";
   const ERRORES: Record<string, string> = {
     email_invalido: "Revisa el correo electrónico.",
     nombre_invalido: "Indica tu nombre y apellidos.",
@@ -109,6 +110,7 @@ const { tipo, prefill = "", mensajeLabel = "Mensaje", boton = "Enviar" } = Astro
         });
         const d = await res.json().catch(() => ({}));
         if (d?.ok) {
+          medir("envio_formulario", { tipo: form.dataset.tipo ?? "" });
           msg.classList.add("ok");
           msg.textContent = "¡Recibido! Te hemos enviado un correo de confirmación. Si no lo ves, mira en spam.";
           form.reset();
