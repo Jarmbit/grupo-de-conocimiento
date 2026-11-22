@@ -170,12 +170,12 @@ function reservar_(d) {
   sh.appendRow([new Date(), id, d.evento, texto_(nombre), email, texto_(telefono), plazas, comentario, estado, token, 'Sí', '', '']);
 
   enviarReserva_(estado === ESTADO.OK ? 'confirmada' : 'espera', ev, email, nombre, plazas, id, token);
-  enviar_(
-    EQUIPO,
+  avisarEquipo_(
     `${estado === ESTADO.OK ? 'Nueva reserva' : 'Lista de espera'} · ${ev.titulo}: ${nombre} (${plazas})`,
     `${nombre} <${email}> ${telefono ? '· ' + telefono : ''}\n${plazas} plaza(s) · ${estado}\n` +
       (comentario ? `Comentario: ${comentario}\n` : '') +
-      `Quedan ${Math.max(0, libres - (estado === ESTADO.OK ? plazas : 0))} de ${capacidad}.\nHoja: ${hoja_().getParent().getUrl()}`
+      `Quedan ${Math.max(0, libres - (estado === ESTADO.OK ? plazas : 0))} de ${capacidad}.\nHoja: ${hoja_().getParent().getUrl()}`,
+    email
   );
 
   return { ok: true, estado, plazas, libres: Math.max(0, libres - (estado === ESTADO.OK ? plazas : 0)) };
@@ -194,7 +194,7 @@ function cancelar_(d) {
   fila[C.ESTADO] = ESTADO.CANCELADA;
   const ev = EVENTOS[fila[C.EVENTO]];
 
-  enviar_(EQUIPO, `Cancelación · ${ev.titulo}: ${fila[C.NOMBRE]} (${fila[C.PLAZAS]})`, `${fila[C.NOMBRE]} <${fila[C.EMAIL]}> ha cancelado su reserva (${fila[C.PLAZAS]} plaza/s, estado previo: ${habiaPlaza ? ESTADO.OK : ESTADO.ESPERA}).`);
+  avisarEquipo_(`Cancelación · ${ev.titulo}: ${fila[C.NOMBRE]} (${fila[C.PLAZAS]})`, `${fila[C.NOMBRE]} <${fila[C.EMAIL]}> ha cancelado su reserva (${fila[C.PLAZAS]} plaza/s, estado previo: ${habiaPlaza ? ESTADO.OK : ESTADO.ESPERA}).`, fila[C.EMAIL]);
 
   if (habiaPlaza) promocionarEspera_(sh, filas, fila[C.EVENTO]);
   return { ok: true };
@@ -246,7 +246,7 @@ function enviarAgradecimientos() {
     enviados[ev.titulo] = (enviados[ev.titulo] || 0) + 1;
   });
   Object.keys(enviados).forEach((t) =>
-    enviar_(EQUIPO, `Agradecimiento enviado · ${t}`, `Se ha enviado el correo de agradecimiento a ${enviados[t]} persona(s) con plaza confirmada.`)
+    avisarEquipo_(`Agradecimiento enviado · ${t}`, `Se ha enviado el correo de agradecimiento a ${enviados[t]} persona(s) con plaza confirmada.`)
   );
 }
 
@@ -326,6 +326,31 @@ function esc_(s) {
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Aviso interno de la web (reservas, cancelaciones, boletín, formularios). Llega a info@ SIN LEER,
+// destacado y con la etiqueta «Siloé/Web» (si no, Gmail lo muestra como enviado por «yo» y se pierde),
+// y en copia a las direcciones de la propiedad del script AVISOS_COPIA (separadas por comas).
+const ETIQUETA_AVISOS = 'Siloé/Web';
+function avisarEquipo_(asunto, texto, responderA) {
+  const html = '<div>' + esc_(texto).replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1">$1</a>') + '</div>';
+  const copia = String(props_().getProperty('AVISOS_COPIA') || '').trim();
+  const opciones = { htmlBody: html, name: REMITENTE, replyTo: responderA || EQUIPO };
+  if (copia) opciones.cc = copia;
+  const msg = GmailApp.createDraft(EQUIPO, '[Web] ' + asunto, texto, opciones).send();
+  try {
+    const hilo = msg.getThread();
+    hilo.moveToInbox();
+    hilo.markUnread();
+    msg.star();
+    hilo.addLabel(GmailApp.getUserLabelByName(ETIQUETA_AVISOS) || GmailApp.createLabel(ETIQUETA_AVISOS));
+  } catch (err) {
+    console.error('avisarEquipo_: no se pudo marcar el aviso', err);
+  }
+}
+
+function pruebaAviso() {
+  avisarEquipo_('Prueba de aviso', 'Esto es una prueba: el aviso debería verse sin leer, destacado y con la etiqueta Siloé/Web.');
 }
 
 function enviar_(para, asunto, texto, html) {
@@ -497,7 +522,7 @@ function boletin_(d) {
       nota: 'Recibes este correo porque te has suscrito al boletín en encuentrossiloe.org.',
     })
   );
-  enviar_(EQUIPO, `Nueva suscripción al boletín: ${nombre}`, `${nombre} <${email}> se ha suscrito al boletín.\nHoja: ${sh.getParent().getUrl()}`);
+  avisarEquipo_(`Nueva suscripción al boletín: ${nombre}`, `${nombre} <${email}> se ha suscrito al boletín.\nHoja: ${sh.getParent().getUrl()}`, email);
   return { ok: true };
 }
 
@@ -596,11 +621,10 @@ function contacto_(d) {
       nota: 'Recibes este correo porque nos has escrito desde encuentrossiloe.org.',
     })
   );
-  GmailApp.sendEmail(
-    EQUIPO,
+  avisarEquipo_(
     `${t.nombre}: ${nombre}`,
     `${nombre} <${email}>${telefono ? ' · ' + telefono : ''}\n\n${mensaje || '(sin mensaje)'}\n\nResponde a este correo para escribirle directamente.\nHoja: ${sh.getParent().getUrl()}`,
-    { name: REMITENTE, replyTo: email }
+    email
   );
   return { ok: true };
 }
