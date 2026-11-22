@@ -55,7 +55,7 @@ function thumbnail(path: string) {
                 return (
                   <button
                     type="button"
-                    class="photo"
+                    class={/-cartel\.(jpe?g|png|webp)$/.test(photo) ? "photo poster" : "photo"}
                     data-lightbox-src={photo}
                     data-lightbox-alt={photoAlt}
                     aria-label={`Ver foto ${i + 1} de ${event.title}`}
@@ -195,7 +195,7 @@ function thumbnail(path: string) {
 
   .photos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
 
@@ -225,6 +225,15 @@ function thumbnail(path: string) {
   .event-video img {
     position: absolute;
     inset: 0;
+  }
+
+  /* Carteles: formato vertical y sin recortar, del mismo ancho que una foto. */
+  .photo.poster {
+    aspect-ratio: 3 / 4;
+  }
+
+  .photo.poster img {
+    object-fit: contain;
   }
 
   .photo img {
