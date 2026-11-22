@@ -274,16 +274,6 @@ export interface EventItem {
 export const events: EventItem[] = [
   {
     month: "Nov",
-    day: "21",
-    title: "Encuentro adultos",
-    location: "Las Rozas · 20:00h · Dirección por invitación",
-    spots: "Música, película, testimonio y diálogo",
-    image: "/images/events/encuentro-adultos.jpg",
-    reserveUrl: "/reservar/adultos",
-    full: true,
-  },
-  {
-    month: "Nov",
     day: "28",
     title: "Encuentro en Burgos",
     location: "Auditorio Círculo Católico, C/ Concepción s/n, Burgos · 18:00h",
@@ -324,6 +314,12 @@ export interface PastEvent {
 
 // Fotos y datos de encuentros ya celebrados. Añadir uno nuevo por cada evento pasado.
 export const pastEvents: PastEvent[] = [
+  {
+    title: "Encuentro adultos",
+    location: "Las Rozas",
+    date: "21 de noviembre de 2026",
+    photos: ["/images/eventos-pasados/adultos/adultos-cartel.jpg"],
+  },
   {
     title: "Encuentro en Horche",
     location: "Prolongación San Roque, 1, Horche (Guadalajara)",
